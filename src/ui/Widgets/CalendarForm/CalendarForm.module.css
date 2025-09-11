@@ -1,0 +1,17 @@
+.schedule-main {}
+
+.form {
+    display: grid;
+}
+
+@media (min-width: 78.5em) {
+    .schedule-main .form {
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 61.9988em) {
+    .schedule-main .form {
+        max-width: 32.9375rem;
+    }
+}

@@ -1,0 +1,39 @@
+.personal-text {
+    max-width: 33.25rem;
+}
+
+.form {
+    display: grid;
+}
+
+@media (min-width: 78.5em) {
+    .form {
+        gap: 2rem;
+    }
+
+    .personal-text {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (min-width: 47.9988em) {
+    .form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 20em) and (max-width: 78.5em) {
+    @supports (margin-bottom:clamp(1.5rem, 1.3290598291rem + 0.8547008547vw, 2rem)) {
+        .personal-text {
+            margin-bottom: clamp(1.5rem, 1.3290598291rem + .8547008547vw, 2rem);
+        }
+    }
+}
+
+@media (min-width: 20em) and (max-width: 78.5em) {
+    @supports (gap:clamp(1rem, 0.6581196581rem + 1.7094017094vw, 2rem)) {
+        .form {
+            gap: clamp(1rem, .6581196581rem + 1.7094017094vw, 2rem);
+        }
+    }
+}

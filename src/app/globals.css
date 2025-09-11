@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+:root {
+  --blue: #3C4694;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}

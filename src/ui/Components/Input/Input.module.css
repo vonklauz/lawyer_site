@@ -1,0 +1,64 @@
+.inputWrapper {
+    border-radius: 12px;
+    border: 1px solid var(--blue);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.input,
+.date-input {
+    outline: none;
+    width: 100%;
+    display: block;
+    caret-color: inherit;
+    height: 3.0625rem;
+    color: var(--text-black);
+}
+
+.input {
+    padding: 0 15px;
+}
+
+.input-like-span {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.input-wrapper .input,
+.input-wrapper .date-input {
+    height: 2.1875rem;
+}
+
+.readOnly {
+    background-color: var(--background-gray);
+    color: var(--text-gray);
+}
+
+.input-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 2.5rem;
+    height: 2.25rem;
+    position: absolute;
+    right: 1rem;
+    cursor: pointer;
+}
+
+.light-icon-button {
+    color: var(--line-gray);
+    font-size: 1.125rem;
+}
+
+.icon_eye:before {
+    content: "\e907";
+}
+
+.icon_crossed-eye:before {
+    content: "\e904";
+}
+

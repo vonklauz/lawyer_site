@@ -1,0 +1,250 @@
+.bankruptcy-form .form {
+    max-width: 59.375rem;
+}
+
+.form {
+    display: grid;
+}
+
+.form-item {
+    border-radius: 1.25rem;
+    overflow: hidden;
+    background-color: var(--background-light-blue);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    background-color: var(--background-blue);
+}
+
+.form-header small {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap
+}
+
+.form-body {
+    display: grid;
+    max-width: 37.5rem
+}
+
+@media (min-width: 78.5em) {
+    .bankruptcy-form .form-title {
+        font-size: 2rem;
+    }
+
+    .form-item+.form-item {
+        margin-top: 3.125rem;
+    }
+
+    .form-item {
+        padding-right: 2.5rem;
+        padding-left: 2.5rem;
+    }
+
+    .form-header {
+        margin-right: -2.5rem;
+        margin-left: -2.5rem;
+        padding: 2rem 2.5rem;
+    }
+
+    .form-body {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 20em) {
+    .bankruptcy-form .form-title {
+        font-size: 1.1875rem
+    }
+
+    .form-item {
+        padding-right: 1.25rem;
+        padding-left: 1.25rem;
+    }
+
+    .form-item+.form-item {
+        margin-top: 1.875rem;
+    }
+
+    .form-header {
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        padding: 1.5rem;
+    }
+
+    .form-body {
+        padding-top: 1.25rem
+    }
+
+    .form-body {
+        padding-bottom: 1.25rem
+    }
+
+    .form-body {
+        gap: 1rem
+    }
+}
+
+@media (min-width:20em) and (max-width:78.5em) {
+    @supports (font-size:clamp(1.1875rem, 0.9097222222rem + 1.3888888889vw, 2rem)) {
+        .bankruptcy-form .title_h2 {
+            font-size: clamp(1.1875rem, .9097222222rem + 1.3888888889vw, 2rem)
+        }
+    }
+
+    @supports not (font-size:clamp(1.1875rem, 0.9097222222rem + 1.3888888889vw, 2rem)) {
+        .bankruptcy-form .title_h2 {
+            font-size: calc(1.1875rem + .8125 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-left:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-item {
+            padding-left: clamp(1.25rem, .8226495726rem + 2.1367521368vw, 2.5rem)
+        }
+    }
+
+    @supports not (padding-left:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-item {
+            padding-left: calc(1.25rem + 1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-right:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-item {
+            padding-right: clamp(1.25rem, .8226495726rem + 2.1367521368vw, 2.5rem)
+        }
+    }
+
+    @supports not (padding-right:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-item {
+            padding-right: calc(1.25rem + 1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (margin-top:clamp(1.875rem, 1.4476495726rem + 2.1367521368vw, 3.125rem)) {
+        .form-item+.form-item {
+            margin-top: clamp(1.875rem, 1.4476495726rem + 2.1367521368vw, 3.125rem)
+        }
+    }
+
+    @supports not (margin-top:clamp(1.875rem, 1.4476495726rem + 2.1367521368vw, 3.125rem)) {
+        .form-item+.form-item {
+            margin-top: calc(1.875rem + 1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-top:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-header {
+            padding-top: clamp(1.25rem, .9935897436rem + 1.2820512821vw, 2rem)
+        }
+    }
+
+    @supports not (padding-top:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-header {
+            padding-top: calc(1.25rem + .75 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-bottom:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-header {
+            padding-bottom: clamp(1.25rem, .9935897436rem + 1.2820512821vw, 2rem)
+        }
+    }
+
+    @supports not (padding-bottom:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-header {
+            padding-bottom: calc(1.25rem + .75 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-left:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-header {
+            padding-left: clamp(1.25rem, .8226495726rem + 2.1367521368vw, 2.5rem)
+        }
+    }
+
+    @supports not (padding-left:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-header {
+            padding-left: calc(1.25rem + 1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-right:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-header {
+            padding-right: clamp(1.25rem, .8226495726rem + 2.1367521368vw, 2.5rem)
+        }
+    }
+
+    @supports not (padding-right:clamp(1.25rem, 0.8226495726rem + 2.1367521368vw, 2.5rem)) {
+        .form-header {
+            padding-right: calc(1.25rem + 1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (margin-left:clamp(-2.5rem, -0.8226495726rem + -2.1367521368vw, -1.25rem)) {
+        .form-header {
+            margin-left: clamp(-2.5rem, -.8226495726rem + -2.1367521368vw, -1.25rem)
+        }
+    }
+
+    @supports not (margin-left:clamp(-2.5rem, -0.8226495726rem + -2.1367521368vw, -1.25rem)) {
+        .form-header {
+            margin-left: calc(-1.25rem + -1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (margin-right:clamp(-2.5rem, -0.8226495726rem + -2.1367521368vw, -1.25rem)) {
+        .form-header {
+            margin-right: clamp(-2.5rem, -.8226495726rem + -2.1367521368vw, -1.25rem)
+        }
+    }
+
+    @supports not (margin-right:clamp(-2.5rem, -0.8226495726rem + -2.1367521368vw, -1.25rem)) {
+        .form-header {
+            margin-right: calc(-1.25rem + -1.25 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-top:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-body {
+            padding-top: clamp(1.25rem, .9935897436rem + 1.2820512821vw, 2rem)
+        }
+    }
+
+    @supports not (padding-top:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-body {
+            padding-top: calc(1.25rem + .75 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (padding-bottom:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-body {
+            padding-bottom: clamp(1.25rem, .9935897436rem + 1.2820512821vw, 2rem)
+        }
+    }
+
+    @supports not (padding-bottom:clamp(1.25rem, 0.9935897436rem + 1.2820512821vw, 2rem)) {
+        .form-body {
+            padding-bottom: calc(1.25rem + .75 * (100vw - 20rem)/ 58.5)
+        }
+    }
+
+    @supports (gap:clamp(1rem, 0.8290598291rem + 0.8547008547vw, 1.5rem)) {
+        .form-body {
+            gap: clamp(1rem, .8290598291rem + .8547008547vw, 1.5rem)
+        }
+    }
+
+    @supports not (gap:clamp(1rem, 0.8290598291rem + 0.8547008547vw, 1.5rem)) {
+        .form-body {
+            gap: calc(1rem + .5 * (100vw - 20rem)/ 58.5)
+        }
+    }
+}

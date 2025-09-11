@@ -1,0 +1,112 @@
+.dossiers-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.item {
+    padding: 1.875rem 0;
+    border-radius: 1.25rem;
+    background-color: var(--background-light-blue);
+}
+
+.item-top {
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.item-icon {
+    flex: 0 0 6.375rem;
+}
+
+.item-text:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.item-link {
+    display: flex;
+    gap: .3125rem;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-weight: 500;
+}
+
+.item-link:before {
+    content: "\e900";
+}
+
+.skeleton {
+    height: 420px;
+}
+
+@media (min-width: 78.5em) {
+    .dossiers-items {
+        gap: 2rem;
+    }
+
+    .item {
+        padding-left: 1.875rem;
+        padding-right: 1.875rem;
+    }
+
+    .item-top {
+        gap: 2rem;
+    }
+
+    .item-icon {
+        flex-basis: 6.375rem;
+    }
+}
+
+@media (max-width: 61.9988em) {
+    .dossiers-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 47.9988em) {
+    .item-top {
+        flex-direction: column;
+    }
+
+    .item-icon {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 47.9988em) {
+    .dossiers-items {
+        grid-template-columns: 1fr;
+    }
+
+    .item-top {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .skeleton {
+        height: 360px;
+    }
+}
+
+@media (min-width: 20em) and (max-width: 78.5em) {
+    @supports (gap:clamp(1rem, 0.6581196581rem + 1.7094017094vw, 2rem)) {
+        .dossiers-items {
+            gap: clamp(1rem, .6581196581rem + 1.7094017094vw, 2rem);
+        }
+    }
+
+    @supports (padding-left:clamp(1.25rem, 1.0363247863rem + 1.0683760684vw, 1.875rem)) {
+        .item {
+            padding-left: clamp(1.25rem, 1.0363247863rem + 1.0683760684vw, 1.875rem);
+            padding-right: clamp(1.25rem, 1.0363247863rem + 1.0683760684vw, 1.875rem);
+        }
+    }
+
+    @supports (gap:clamp(0.625rem, 0.1549145299rem + 2.3504273504vw, 2rem)) {
+        .item-top {
+            gap: clamp(.625rem, .1549145299rem + 2.3504273504vw, 2rem);
+        }
+    }
+}
