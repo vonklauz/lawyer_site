@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 import { CYRILLIC_REGEXP, PHONE_REGEXP } from './regexps';
-import type { IDossierFormField, ObjectWithProps } from '~/Models';
+import type { IDossierFormField, ObjectWithProps } from '@/Models';
 
 const REQUIRED_ERROR_MESSAGE = 'Поле обязательно для заполнения';
 

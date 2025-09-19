@@ -7,8 +7,8 @@ export const InputPassword = (props: IInputProps) => {
 
     const renderEyeIcon = () => (
         <button className={`${styles.inputButton} ${styles.lightIconButton}`} onClick={() => setPasswordVisible(!isPasswordVisible)} type="button">
-            {!isPasswordVisible && <i className={styles.iconEye}></i>}
-            {isPasswordVisible && <i className={styles.iconCrossedEye}></i>}
+            {!isPasswordVisible && <i className={`icon ${styles.iconEye}`}></i>}
+            {isPasswordVisible && <i className={`icon ${styles.iconCrossedEye}`}></i>}
         </button>
     )
 

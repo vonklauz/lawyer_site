@@ -1,9 +1,91 @@
 @import "tailwindcss";
+@import "./fonts.css";
+
+@font-face {
+  font-family: icons;
+  font-display: swap;
+  src: url(/fonts/icons.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
 
 :root {
+  --text-black: #0b1f33;
+  --text-red: #FF314F;
+  --black-hover: #14385c;
+  --black-active: #020508;
+  --text-gray: #66727f;
   --blue: #3C4694;
+  --blue-hover: #4F76ED;
+  --blue-active: #143EC2;
+  --blue-light: #4B70E1;
+  --green: #62d28f;
+  --green-hover: #88DDAA;
+  --green-active: #39C672;
+  --red: #d12f2f;
+  --red-hover: #c65252;
+  --gray: #F0F1FB;
+  --gray-hover: #F0F1FB;
+  --gray-active: #C7CAF0;
+  --line-gray: #e1e1e1;
+  --background-light-blue: #fafcff;
+  --background-blue: #EBF3FF;
+  --background-gray: #eff5f9;
+  --white: #fff;
+  --blue-gradient: linear-gradient(180deg, #1f50e8 0%, #4f75ec 100%);
+  --blue-velevet-gradient: linear-gradient(180deg, #2b88e0 0%, #4c78dc 20%, #5f67d9 40%, #6d54d5 60%, #773dd1 80%, #7f1ccd 100%);
+
+
+
+  --basicFont: "MuseoSans", sans-serif;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--basicFont);
+  font-weight: 500;
+}
+
+a {
+  text-decoration: none;
+  font-weight: 300;
+}
+
+a span {
+  color: var(--blue);
+}
+
+button {
+  cursor: pointer;
+}
+
+.dynamic-full-height {
+  height: 100dvh;
+  transition: height 0.2s;
+}
+
+.icon:before,
+.icon:after {
+  font-family: icons;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.right-arrow:after {
+  content: "\2192";
+  font-size: 20px;
+  line-height: 1px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.error {
+  font-weight: 300;
+  color: var(--text-red);
+  font-size: 14px;
 }

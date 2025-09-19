@@ -8,10 +8,11 @@ export default function AuthLayout({
 }) {
     return <>
         <main>
-
-            <div className="h-100 flex justify-center items-center">
-                <div>
-                    <Image src={LogoImage} alt="Logo" />
+            <div className="dynamic-full-height flex justify-center items-center p-[16px]">
+                <div className='w-full max-w-[520px]'>
+                    <div className=" flex justify-center pb-[40px]">
+                        <Image src={LogoImage} alt="Logo"/>
+                    </div>
                     {children}
                 </div>
             </div>

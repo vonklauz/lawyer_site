@@ -1,9 +1,10 @@
-import type { FormAction } from '~/Models'
+import type { FormAction } from '@/Models'
 import { FormItem, type IFormItemProps } from './FormItem'
 import { FormWrapper } from './FormWrapper'
 
 interface IFormProps extends IFormItemProps {
     action: FormAction;
+    className?: string;
 }
 
 export const FormCustom = (props: IFormProps) => {

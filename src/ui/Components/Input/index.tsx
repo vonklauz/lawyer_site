@@ -11,6 +11,7 @@ export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
     children?: ReactNode;
+    marginBottom?: string;
 }
 
 export const Input = ({
@@ -27,12 +28,12 @@ export const Input = ({
     ...props
 }: IInputProps) => {
     return (
-        <div>
+        <div className="mb-[12px]">
             <label
                 htmlFor={id ? id : name ? name : ''}
-                className="form-label"
+                className={styles.label}
             >{label}</label>
-            <div className={`${styles.inputWrapper} ${props.disabled ? styles.readOnly : ''}`}>
+            <div className={`${styles.inputWrapper}`}>
                 <input
                     defaultValue={defaultValue}
                     type={type}
@@ -41,7 +42,7 @@ export const Input = ({
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className={styles.input}
+                    className={`${styles.input} ${props.disabled ? styles.readOnly : ''}`}
                     {...props}
                 />
                 {children}

@@ -1,26 +1,32 @@
 .inputWrapper {
-    border-radius: 12px;
-    border: 1px solid var(--blue);
+
     display: flex;
     align-items: center;
     position: relative;
 }
 
+.label {
+    display: block;
+    padding-bottom: 8px;
+    font-weight: 300;
+}
+
 .input,
-.date-input {
+.dateInput {
     outline: none;
     width: 100%;
     display: block;
     caret-color: inherit;
-    height: 3.0625rem;
     color: var(--text-black);
+    border-radius: 12px;
+    border: 1px solid var(--blue);
 }
 
 .input {
-    padding: 0 15px;
+    padding: 16px;
 }
 
-.input-like-span {
+.inputLikeSpan {
     display: flex;
     align-items: center;
     width: 100%;
@@ -28,17 +34,17 @@
     overflow: hidden;
 }
 
-.input-wrapper .input,
-.input-wrapper .date-input {
+/* .inputWrapper .input,
+.inputWrapper .dateInput {
     height: 2.1875rem;
-}
+} */
 
 .readOnly {
     background-color: var(--background-gray);
     color: var(--text-gray);
 }
 
-.input-button {
+.inputButton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,16 +55,21 @@
     cursor: pointer;
 }
 
-.light-icon-button {
+.lightIconButton {
     color: var(--line-gray);
     font-size: 1.125rem;
 }
 
-.icon_eye:before {
+.iconEye:before {
     content: "\e907";
+
 }
 
-.icon_crossed-eye:before {
+.iconCrossedEye:before {
     content: "\e904";
 }
 
+.iconEye,
+.iconCrossedEye {
+    color: var(--blue);
+}
