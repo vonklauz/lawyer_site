@@ -5,15 +5,15 @@ interface IButtonProps {
     onClick?: () => void,
     type?: "button" | "submit" | "reset" | undefined,
     color?: string
-    classname?: string
+    className?: string
     disabled?: boolean
 }
 
-export const Button = ({ children, onClick, type, color = 'blue', classname, disabled }: IButtonProps) => (
+export const Button = ({ children, onClick, type, color = 'blue', className, disabled }: IButtonProps) => (
     <button
         type={type || 'button'}
         onClick={onClick && onClick}
-        className={`flex justify-center items-center ${styles.button} ${styles[color]} ${classname}`}
+        className={`flex justify-center items-center ${styles.button} ${styles[color]} ${className}`}
         disabled={disabled}
     >{children}</button>
 )

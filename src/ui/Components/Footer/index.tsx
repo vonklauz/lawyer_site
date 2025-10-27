@@ -1,33 +1,20 @@
-import { useMemo } from 'react';
 import styles from './Footer.module.css'
-import { MENU_LINKS } from '@/Consts';
 
 export const Footer = () => {
 
-    const getLinks = useMemo(() => {
-        return MENU_LINKS;
-    }, []);
-
     return (
-        <footer className={styles.footer}>
-            <div className={styles.footerContainer}>
-                <a href="/" className={`${styles.footerLogo} ${styles.logo}`}>
-                    <img src="/logo.svg" alt="Logo" />
-                    Сервис самостоятельного банкротства
-                </a>
-                <div className={styles.footerInfo}>
-                    <ul className={styles.footerInfoMenu}>
-                        {getLinks.map((item) => (
-                            <li key={item.path}>
-                                <a href={item.path}>{item.label}</a>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className={styles.footerInfoCopy}>
-                        <a className={`${styles.footerInfoText} text text_small`} href="">Политика конфиденциальности</a>
-                        <div className={`${styles.footerInfoText}  text text_small`}>© 2025 Богатов Групп</div>
+        <footer>
+            <div className={styles.footer}>
+                <div className="container">
+                    <div className="row flex flex-col md:flex-row items-center justify-between md:divide-x-1 py-6">
+                        <div className={`w-full md:w-33 flex-1 md:text-center ${styles.footerItem}`}><a href="#">Пожелания по доработке кабинета</a></div>
+                        <div className={`w-full md:w-33 flex-1 md:text-center ${styles.footerItem}`}><a href="#">База Знаний Богатов-Групп</a></div>
+                        <div className={`w-full md:w-33 flex-1 md:text-center ${styles.footerItem}`}><a href="#">Условия использования личного кабинета</a></div>
                     </div>
                 </div>
+            </div>
+            <div className="container font-light text-center text-sm">
+                © 2025. Личный кабинет клиента Богатов Групп. Все права защищены.
             </div>
         </footer>
     )

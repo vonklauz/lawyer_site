@@ -1,0 +1,50 @@
+.table-container {
+    padding: 20px;
+    background-color: var(--light-gray);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: max(710px, 100%);
+}
+
+.table-title {
+    padding: 5px 20px;
+    margin: -20px;
+    margin-bottom: 20px;
+    color: var(--white);;
+}
+
+.table-filter {
+    margin-bottom: 20px;
+}
+
+.table-filter select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.data-table {
+    background-color: var(--white);
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #C3C3C3;
+}
+
+.data-table th {
+    font-weight: 600;
+}
+
+.data-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.data-table a {
+    font-weight: 500;
+    text-decoration: underline;
+}

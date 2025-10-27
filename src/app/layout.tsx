@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ReduxProvider } from "@/ui/Components/ReduxProvider";
 
 export default function RootLayout({
   children,
@@ -10,9 +9,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className="antialiased"
+        className="antialiased flex flex-col min-h-dvh justify-between"
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        {children}
       </body>
     </html>
   );

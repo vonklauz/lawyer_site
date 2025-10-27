@@ -1,0 +1,5 @@
+.next
+build
+generated
+node_modules
+README.md

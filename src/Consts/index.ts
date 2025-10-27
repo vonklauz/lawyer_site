@@ -36,7 +36,7 @@ export const MENU_LINKS: Link[] = [
     // },
 ]
 
-export const REDIRECT_TIMING = 3000;
+export const REDIRECT_TIMING = 3500;
 
 export const ALLOWED_FILE_TYPES = [
     'image/jpeg',

@@ -1,7 +1,18 @@
-import { LoginResponse, RegisterData } from "@/Models";
-import { dispatch } from "@/Store";
-import { setUser, getDefaultUser } from "@/Store/User/userSlice";
+import { LoginResponse, RegisterData, User } from "@/Models";
+// import { dispatch } from "@/Store";
+// import { setUser, getDefaultUser } from "@/Store/User/userSlice";
 import { format } from "date-fns";
+
+export const getDefaultUser = (): User => (
+    {
+        firstName: '',
+        secondName: '',
+        lastName: '',
+        userId: '',
+        email: '',
+        phone: ''
+    }
+)
 
 
 export const parseJwt = (token: string) => {
@@ -16,29 +27,37 @@ export const parseJwt = (token: string) => {
 
 export const handleLoginSuccess = (data: LoginResponse) => {
     const accessToken = data.access_token;
+    const refreshToken = data.refresh_token;
     const user = parseJwt(accessToken);
 
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('rawUser', JSON.stringify(user));
+}
+
+export const handleOtpTokenRecieve = (data: LoginResponse) => {
+    const token = parseJwt(data.pending_token);
+    return token;
 }
 
 export const handleLogoutSuccess = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('rawUser');
     sessionStorage.removeItem('user');
-    dispatch(setUser(getDefaultUser()));
+    // dispatch(setUser(getDefaultUser()));
 }
 
 export const clearPhoneNumberString = (phone: string): string => phone.split('').filter((el) => !['(', ')', '-', ' '].includes(el)).join('');
 
-export const remapServerFieldToFrontFormat = (backendField: string): keyof RegisterData => {
-    const fieldsMap: { [key: string]: keyof RegisterData } = {
-        'first_name': 'firstName',
-        'last_name': 'lastName',
-        'second_name': 'secondName',
-    }
-    return fieldsMap[backendField] || backendField;
-}
+// export const remapServerFieldToFrontFormat = (backendField: string): keyof RegisterData => {
+//     const fieldsMap: { [key: string]: keyof RegisterData } = {
+//         'first_name': 'firstName',
+//         'last_name': 'lastName',
+//         'second_name': 'secondName',
+//     }
+//     return fieldsMap[backendField] || backendField;
+// }
 
 export const cloneDeep = <T>(data: T): T => {
     return JSON.parse(JSON.stringify(data));
@@ -68,3 +87,5 @@ export const isEmpty = (value: any[] | object): boolean => {
 
     return false;
 }
+
+export const isNullOrUndefined = (value: any): boolean => value === null || value === undefined;

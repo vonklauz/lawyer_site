@@ -1,0 +1,42 @@
+.headerTop {
+    padding: 20px 0;
+}
+
+/* .headerItem {
+    border-right: 1px solid var(--gray);
+} */
+
+.headerItem,
+.headerItemLast {
+    padding: 0 10px 10px;
+}
+
+.logo {
+    width: 100%;
+    max-width: 360px;
+}
+
+.headerTopIcon img {
+    width: 25px;
+    height: 25px;
+}
+
+.headerBottom {
+    background-color: var(--blue);
+    padding: 30px 0;
+}
+
+.headerLink {
+    color: var(--white);
+    font-weight: 500;
+    padding: 0 20px;
+    border-right: 1px solid var(--white);
+}
+
+.headerLink:first-child {
+    padding-left: 0;
+}
+
+.headerLink:last-child {
+    border: none;
+}

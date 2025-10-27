@@ -7,7 +7,7 @@ export default defineConfig({
   lawyersSiteApi: {
     from: {
       source: "url",
-      url: "http://46.173.17.231:8000/openapi.json",
+      url: "http://109.172.46.169:8001/openapi.json",
     },
     outputDir: "generated",
     to: async (context) => {
