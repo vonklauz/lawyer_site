@@ -82,6 +82,8 @@ const getDefaultEntitites = () => ({
     company: [],
 })
 
+export const isEmptyEntities = (entities: Entities): boolean => Object.values(entities).every((value) => value.length === 0);
+
 const useEntitiesStore = create<EntitiesState>()(
     immer(
         persist(
@@ -103,7 +105,7 @@ const useEntitiesStore = create<EntitiesState>()(
                             ],
                         },
                     })),
-                chooseEntity: (item: EntityItem) => set((state) => ({ chosenEntity: { ...item } })),
+                chooseEntity: (item: EntityItem) => set(() => ({ chosenEntity: { ...item } })),
                 hasHydrated: false,
                 setHasHydrated: (state: boolean) => set({ hasHydrated: state }),
             })),

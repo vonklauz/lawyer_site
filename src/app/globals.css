@@ -142,6 +142,14 @@ h4 {
   background-color: var(--gray);
 }
 
+.green-font {
+  color: var(--green);
+}
+
+.green-bg {
+  background-color: var(--green);
+}
+
 .red-font {
   color: var(--red);
 }

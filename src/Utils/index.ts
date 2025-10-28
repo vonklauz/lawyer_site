@@ -89,3 +89,5 @@ export const isEmpty = (value: any[] | object): boolean => {
 }
 
 export const isNullOrUndefined = (value: any): boolean => value === null || value === undefined;
+
+export const isSkipToken = (value: any) => typeof value === 'symbol';

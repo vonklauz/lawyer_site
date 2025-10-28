@@ -1,9 +1,13 @@
 "use client"
-import { handleLoginSuccess, handleLogoutSuccess } from "@/Utils";
+import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
 import { useRotateAuthRotateTokensPost } from "@generated/lawyersSiteApiComponents";
+import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const useInterceptor = (request: () => Promise<any>) => {
+export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
+    if (isSkipToken(request)) {
+        return [{}, false];
+    }
     const [tries, setTries] = useState(1);
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
     const [propRequestResponse, setPropRequestResponse] = useState({});

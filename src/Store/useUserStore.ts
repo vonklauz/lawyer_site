@@ -20,6 +20,7 @@ const useUserStore = create<UserState>()(
                 setUser: (newUser: User) => set({ user: { ...newUser } }),
                 removeUser: () => set({ user: getDefaultUser() }),
                 hasHydrated: false,
+                setHasHydrated: (state: boolean) => set({ hasHydrated: state }),
             })),
             {
                 name: 'user-storage',

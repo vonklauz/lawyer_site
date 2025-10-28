@@ -3,7 +3,7 @@ import { Select } from '@/ui/Components/Select';
 import styles from './User.module.css'
 import { TSelectOption } from '@/Models';
 import { useRouter } from 'next/navigation';
-import useEntitiesStore from '@/Store/useEntitiesStore';
+import useEntitiesStore, { Entities, EntityItem } from '@/Store/useEntitiesStore';
 
 interface IUserThumbProps {
     isAuthorized: boolean | undefined;
@@ -22,6 +22,7 @@ export const UserThumb = ({ isAuthorized, options }: IUserThumbProps) => {
     const router = useRouter();
     const chosenEntity = useEntitiesStore((state) => state.chosenEntity);
     const chooseEntity = useEntitiesStore((state) => state.chooseEntity);
+    const entities = useEntitiesStore((state) => state.entities);
     const getOptions = () => {
         const mappedOptions: TSelectOption<string>[] = [];
         if (Object.keys(options).length) {
@@ -31,7 +32,7 @@ export const UserThumb = ({ isAuthorized, options }: IUserThumbProps) => {
                     const { entity_id, name, first_name, last_name, middle_name } = entity;
                     mappedOptions.push({
                         label: key === 'company' ? name : key === 'sole_proprietor' ? `ИП ${last_name} ${first_name} ${middle_name}` : `${last_name} ${first_name} ${middle_name}`,
-                        value: `/profile/requisites/form?entityType=${key}&entityId=${entity_id}`,
+                        value: `${key}/${entity_id}`,
                     })
                 })
 
@@ -44,9 +45,7 @@ export const UserThumb = ({ isAuthorized, options }: IUserThumbProps) => {
     const getChosenEntityName = () => {
         if (!chosenEntity) {
             return 'Создайте или выберите тип профиля'
-        }
-
-        else {
+        } else {
             return chosenEntity.name || `${chosenEntity.registration_num ? 'ИП ' : ''}${chosenEntity.last_name} ${chosenEntity.first_name} ${chosenEntity.middle_name}`
         }
     }
@@ -61,16 +60,28 @@ export const UserThumb = ({ isAuthorized, options }: IUserThumbProps) => {
         )
     }
 
+    /**
+     * Выбираем сущность
+     * @param value строка в виде entityType/entityId
+     */
+    const handleChooseEntity = (value: string) => {
+        const params = value.split('/');
+        const key = params[0] as keyof Entities;
+        const link = `/profile/requisites/form?entityType=${key}&entityId=${params[1]}`;
+        const entitiesTypeList = entities[key];
+        const chosenEntity = entitiesTypeList.find((entity) => entity.entity_id === params[1]) as EntityItem;
+
+        chooseEntity(chosenEntity);
+        router.push(link)
+    }
+
     return (
         <div className={`${styles.profile} ${isAuthorized ? 'justify-between' : 'justify-center'}`}>
             {isAuthorized && <div className="flex items-center mb-[10px]">
                 <div className='mr-[10px] w-[25px] flex-shrink-0'>
                     <img src="/icons/truck.svg" alt="" />
                 </div>
-                <Select className='w-full' placeholder={getChosenEntityName()} options={getOptions()} onChange={function (value: string): void {
-
-                    router.push(value)
-                }} />
+                <Select className='w-full' placeholder={getChosenEntityName()} options={getOptions()} onChange={handleChooseEntity} />
             </div>}
             <div className="flex items-center">
                 <div className='mr-[10px]  w-[25px]'>

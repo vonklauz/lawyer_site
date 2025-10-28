@@ -1,10 +1,12 @@
 export const TWO_FA_SETTINGS = [
     {
-        title: "Номер телефона",
-        description: "Код в смс на номер телефона",
+        code: 'totp',
+        title: "Приложение-генератор OTP кодов",
+        description: "Код в приложении",
         linkText: "Подключить",
     },
     {
+        code: 'email',
         title: "E-mail",
         description: "Код на эл. почту",
         linkText: "Подключить",
