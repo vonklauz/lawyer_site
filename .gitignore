@@ -11,7 +11,7 @@
 !.yarn/versions
 
 # openapi generated
-/generated
+/src/generated
 
 # testing
 /coverage

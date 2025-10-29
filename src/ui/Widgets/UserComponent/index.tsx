@@ -24,6 +24,7 @@ export const UserComponent = () => {
     }
     const getEntitiesRq = hasHydrated ? (isEmptyEntities(entities) ? getUserEntities : skipToken) : skipToken;
     const [response, isLoading] = useInterceptor(getEntitiesRq);
+    console.log(response)
     const isRenderSkeleton = isLoading || !hasHydrated;
 
     useEffect(() => {

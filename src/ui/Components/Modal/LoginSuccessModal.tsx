@@ -25,7 +25,7 @@ export const LoginSuccessModal = ({ isOpen, onOtpSubmit, error }: LoginSuccessMo
                         <OTPInput onOtpSubmit={onOtpSubmit} />
                         {error && <p className='mt-2 text-sm red-font text-center'>{error}</p>}
                         <p className="text-black mt-5 text-center">
-                            Введите код из приложения-генератора OTP кодов, чтобы продолжить.
+                            Введите код из приложения-генератора OTP кодов или письма на эл. почте, указанной при регистрации, чтобы продолжить.
                         </p>
                         {/* <div className="mt-4">
                             <p className="mt-2 text-sm font-normal text-center blue-font">

@@ -5,10 +5,7 @@ import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
-    if (isSkipToken(request)) {
-        return [{}, false];
-    }
-    const [tries, setTries] = useState(1);
+    const [tries, setTries] = useState(0);
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
     const [propRequestResponse, setPropRequestResponse] = useState({});
     const rq = useRotateAuthRotateTokensPost();
@@ -24,18 +21,29 @@ export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
     }
 
     const fetchData = async () => {
+        if (isSkipToken(request)) {
+            return;
+        }
         const data = await request();
         setPropRequestResponse(data);
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (isSkipToken(request)) {
+            setIsPropRequestLoading(false);
+            return;
+        }
+        if (tries === 0) {
+            fetchData();
+            setTries(1);
+        }
+
+    }, [request, tries]);
 
     useEffect(() => {
         //@ts-expect-error позже типизировать
         if (propRequestResponse?.error?.code === 403) {
-            if (tries < 2) {
+            if (tries < 3) {
                 refreshTokens();
                 setIsPropRequestLoading(false);
             }
