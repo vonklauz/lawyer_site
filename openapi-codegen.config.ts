@@ -9,7 +9,7 @@ export default defineConfig({
       source: "url",
       url: "http://109.172.46.169:8001/openapi.json",
     },
-    outputDir: "generated",
+    outputDir: "src/generated",
     to: async (context) => {
       const filenamePrefix = "lawyersSiteApi";
       const { schemasFiles } = await generateSchemaTypes(context, {

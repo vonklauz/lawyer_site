@@ -9,7 +9,7 @@
     "start": "next build && next start",
     "gen": "openapi-codegen",
     "lint": "eslint",
-    "clean": "shx rm -rf .next generated"
+    "clean": "shx rm -rf .next src/generated"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",

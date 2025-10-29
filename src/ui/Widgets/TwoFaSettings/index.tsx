@@ -13,7 +13,7 @@ export const TwoFaSettings = () => {
     const [otpMethod, setOtpMethod] = useState<string | null>(null);
     const [modalMode, setModalMode] = useState<string | null>(null);
     const [isOpen, setOpen] = useState(false);
-    
+
     const getUser2FaType = async () => {
         const data = await fetchGetUserByUserId2faUsersGet({
             headers: {
@@ -65,6 +65,6 @@ export const TwoFaSettings = () => {
             }
 
         </div>
-        <TwoFaModal isOpen={isOpen} mode={modalMode} isChosenMode={otpMethod === modalMode} handleClose={() => setOpen(false)} onChange2FaMethod={onChange2FaMethod}/>
+        <TwoFaModal isOpen={isOpen} mode={modalMode} isChosenMode={otpMethod === modalMode} handleClose={() => setOpen(false)} onChange2FaMethod={onChange2FaMethod} />
     </div>
 }
