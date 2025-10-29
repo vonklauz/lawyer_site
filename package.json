@@ -6,7 +6,7 @@
     "dev": "npm run clean && npm run gen && next dev --turbopack",
     "build": "next build --turbopack",
     "prestart": "npm run clean && npm run gen",
-    "start": "next start",
+    "start": "next build && next start",
     "gen": "openapi-codegen",
     "lint": "eslint",
     "clean": "shx rm -rf .next generated"
@@ -21,6 +21,7 @@
     "date-fns": "^4.1.0",
     "next": "15.5.2",
     "react": "19.1.0",
+    "react-datepicker": "^8.8.0",
     "react-dom": "19.1.0",
     "react-redux": "^9.2.0",
     "yup": "^1.7.0",

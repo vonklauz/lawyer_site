@@ -35,7 +35,7 @@ export const HeaderComponent = (props: IHeaderProps) => {
                 <div className="container">
                     <div className="flex mx-[-15px] divide-x-1 divide-gray-300">
                         <div className={`w-33 flex items-center flex-1 ${styles.headerItem}`}>
-                            <img className={styles.logo} src="/logo.svg" alt="Богатов Групп" />
+                            <img className={styles.logo} src="/Logo.svg" alt="Богатов Групп" />
                         </div>
                         <div className={`w-33 flex items-end justify-end flex-1 ${styles.headerItem}`}>
                             <div className='flex items-center justify-center gap-3'>
