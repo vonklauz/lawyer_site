@@ -8,6 +8,7 @@ export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
     id?: string;
     value?: string;
     error?: string;
+    className?: string;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
     children?: ReactNode;
@@ -21,6 +22,7 @@ export const Input = ({
     id,
     value,
     error,
+    className,
     onChange,
     placeholder,
     children,
@@ -42,7 +44,7 @@ export const Input = ({
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className={`${styles.input} ${props.disabled ? styles.readOnly : ''}`}
+                    className={`${styles.input} ${props.disabled ? styles.readOnly : ''} ${className}`}
                     {...props}
                 />
                 {children}

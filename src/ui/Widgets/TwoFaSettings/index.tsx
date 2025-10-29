@@ -5,18 +5,15 @@ import { useEffect, useState } from "react";
 import { TwoFaModal } from "../TwoFaModal";
 import {
     fetchGetUserByUserId2faUsersGet,
-    useActivation2faEmailDeactivatePost,
-    useActivation2faTotpDeactivatePost
 } from "@generated/lawyersSiteApiComponents";
 import { useInterceptor } from "@/Service/useInterceptor";
 import { Skeleton } from "@/ui/Components/Skeleton";
 
 export const TwoFaSettings = () => {
     const [otpMethod, setOtpMethod] = useState<string | null>(null);
-    const [modalMode, setModalMode] = useState<string>();
+    const [modalMode, setModalMode] = useState<string | null>(null);
     const [isOpen, setOpen] = useState(false);
-    useActivation2faTotpDeactivatePost
-    useActivation2faEmailDeactivatePost
+    
     const getUser2FaType = async () => {
         const data = await fetchGetUserByUserId2faUsersGet({
             headers: {
@@ -34,6 +31,16 @@ export const TwoFaSettings = () => {
             setOtpMethod(response?.data?.method.name)
         }
     }, [response])
+
+    const onChange2FaMethod = (twoFaState: string, mode: string | null) => {
+        if (twoFaState === 'disable') {
+            setOtpMethod(null);
+        }
+
+        else {
+            setOtpMethod(mode)
+        }
+    }
 
     return <div>
         <p className="text-center font-light">Для обеспечения безопасности мы рекомендуем использовать двухфакторную аутентификацию,
@@ -58,6 +65,6 @@ export const TwoFaSettings = () => {
             }
 
         </div>
-        <TwoFaModal isOpen={isOpen} mode={modalMode} isChosenMode={otpMethod === modalMode} handleClose={() => setOpen(false)} />
+        <TwoFaModal isOpen={isOpen} mode={modalMode} isChosenMode={otpMethod === modalMode} handleClose={() => setOpen(false)} onChange2FaMethod={onChange2FaMethod}/>
     </div>
 }
