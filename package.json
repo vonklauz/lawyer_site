@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "npm run clean && npm run gen && next dev --turbopack",
     "build": "next build --turbopack",
-    "prestart": "npm run clean && npm run gen",
-    "start": "next build && next start",
+    "prestart": "npm run gen",
+    "start": "next start",
     "gen": "openapi-codegen",
     "lint": "eslint",
     "clean": "shx rm -rf .next src/generated"
