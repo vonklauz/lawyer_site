@@ -13,12 +13,13 @@ const REQUISITES_FORM_TITLES = {
 export const SearchParamsProvider = (props: any) => {
     const searchParams = useSearchParams();
     const entityType = searchParams.get("entityType") as "individual" | "sole_proprietor" | "company";
+    const entityId = searchParams.get("entityId") as string;
 
     return <>
         <h2>{REQUISITES_FORM_TITLES[entityType]}</h2>
         <div className="flex justify-center mt-3 lg:mt-5">
             <div className="w-[100%] max-w-[500px]">
-                <RequisitesForm entityType={entityType} />
+                <RequisitesForm entityType={entityType} entityId={entityId}/>
             </div>
         </div>
     </>

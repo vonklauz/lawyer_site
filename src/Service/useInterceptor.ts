@@ -1,4 +1,5 @@
 "use client"
+import useEntitiesStore from "@/Store/useEntitiesStore";
 import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
 import { useRotateAuthRotateTokensPost } from "@generated/lawyersSiteApiComponents";
 import { SkipToken } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
     const [tries, setTries] = useState(0);
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
     const [propRequestResponse, setPropRequestResponse] = useState({});
+    const clearEntities = useEntitiesStore((state) => state.clearEntities);
     const rq = useRotateAuthRotateTokensPost();
     const { mutate: refreshTokensRq, data: refreshTokensData, error: refreshTokensError, isPending: isRefreshTokensPending } = rq;
     const isLoading = isRefreshTokensPending || isPropRequestLoading;
@@ -58,7 +60,8 @@ export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
         //@ts-expect-error позже типизировать
         if (refreshTokensData?.error) {
             setTries(tries + 2);
-            handleLogoutSuccess()
+            clearEntities();
+            handleLogoutSuccess();
             return;
         }
         //@ts-expect-error позже типизировать

@@ -1,5 +1,6 @@
 import { object, string } from 'yup';
 import { CYRILLIC_REGEXP, PHONE_REGEXP } from './regexps';
+import { ObjectWithProps } from '@/Models';
 
 const REQUIRED_ERROR_MESSAGE = 'Поле обязательно для заполнения';
 
@@ -38,21 +39,21 @@ export const registerSchema = object({
  * Собираем схему валидации из массивов полей форм заполнения анкеты.
  * @param data массив полей форм заполнения анкеты.
  */
-// export const mapSchemaFromData = (data:  IDossierFormField[][]) => {
-//     const schema: ObjectWithProps = {};
+export const mapSchemaFromData = (data: [][]) => {
+    const schema: ObjectWithProps = {};
 
-//     data.forEach((fields) => {
-//         fields.forEach(({id, required, length, title}) => {
-//             let fieldSchema = string();
-//             if (required) {
-//                 fieldSchema = fieldSchema.required(REQUIRED_ERROR_MESSAGE);
-//             }
-//             if (length) {
-//                 fieldSchema = fieldSchema.max(length, getMaxLengthMessage(title));
-//             }
-//             schema[id] = fieldSchema;
-//         })
-//     })
+    data.forEach((fields) => {
+        fields.forEach(({ name, required, length, title }) => {
+            let fieldSchema = string();
+            if (required) {
+                fieldSchema = fieldSchema.required(REQUIRED_ERROR_MESSAGE);
+            }
+            if (length) {
+                fieldSchema = fieldSchema.max(length, getMaxLengthMessage(title));
+            }
+            schema[name] = fieldSchema;
+        })
+    })
 
-//     return object(schema)
-// }
+    return object(schema)
+}

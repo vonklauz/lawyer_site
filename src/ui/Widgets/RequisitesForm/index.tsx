@@ -1,10 +1,16 @@
 "use client"
-
 import { ObjectWithProps } from "@/Models";
+import { useInterceptor } from "@/Service/useInterceptor";
+import useEntitiesStore from "@/Store/useEntitiesStore";
 import { Button } from "@/ui/Components/Button";
 import { FormWrapper } from "@/ui/Components/FormCustom/FormWrapper";
 import { Input } from "@/ui/Components/Input";
+import { FormSkeleton } from "@/ui/Components/Skeleton/FormSkeleton";
+import { mapSchemaFromData } from "@/Utils/validation";
 import {
+    fetchGetSchemaEntitiesCompaniesSchemaGet,
+    fetchGetSchemaEntitiesIndividualsSchemaGet,
+    fetchGetSchemaEntitiesSoleProprietorSchemaGet,
     useCreateEntityEntitiesCompaniesPost,
     useCreateEntityEntitiesIndividualsPost,
     useCreateEntityEntitiesSoleProprietorPost,
@@ -13,80 +19,126 @@ import {
     useGetEntitiesUserEntitiesSoleProprietorEntityIdPut
 } from "@generated/lawyersSiteApiComponents";
 import { format } from "date-fns";
-import { useActionState, useState } from "react";
+import { ChangeEvent, useActionState, useEffect, useState } from "react";
+import { ValidationError } from "yup";
+import { RequisitesModal } from "../RequisitesModal";
 
 interface RequisitesFormProps {
     entityType: "individual" | "sole_proprietor" | "company";
+    entityId?: string
 }
 
 const REQUISITES_FORM_CONFIG = {
     individual: {
         title: "Реквизиты физического лица",
-        fields: [
-            { label: "Имя", name: "first_name" },
-            { label: "Фамилия", name: "last_name" },
-            { label: "Отчество", name: "middle_name" },
-            { label: "Дата рождения", name: "birth_date" },
-            { label: "Кем выдан", name: "issued_by" },
-            { label: "Дата выдачи", name: "issued_date" },
-            { label: "Место рождения", name: "place_of_birth" },
-            { label: "Адрес регистрации", name: "registration_address" },
-            { label: "Номер паспорта", name: "passport_number" },
-            { label: "Серия паспорта", name: "passport_serial" },
-            { label: "Код подразделения", name: "code_department" },
-        ],
-        submit: useCreateEntityEntitiesIndividualsPost
+        getSchemaRq: fetchGetSchemaEntitiesIndividualsSchemaGet,
+        submit: useCreateEntityEntitiesIndividualsPost,
+        update: useGetEntitiesUserEntitiesIndividualsEntityIdPut,
     },
     sole_proprietor: {
         title: "Реквизиты ИП",
-        fields: [
-            { label: "Фамилия", name: "last_name" },
-            { label: "Имя", name: "first_name" },
-            { label: "Отчество", name: "middle_name" },
-            { label: "ИНН", name: "inn" },
-            { label: "Регистрационный номер", name: "registration_num" },
-            { label: "Дата регистрации", name: "registration_date" },
-            { label: "Юридический адрес", name: "legal_address" },
-            { label: "Номер расчётного счёта", name: "account_number" },
-            { label: "Название банка", name: "bank_name" },
-            { label: "БИК", name: "bik" },
-            { label: "Корреспондентский счёт", name: "corr_account" },
-        ],
-        submit: useCreateEntityEntitiesSoleProprietorPost
+        getSchemaRq: fetchGetSchemaEntitiesSoleProprietorSchemaGet,
+        submit: useCreateEntityEntitiesSoleProprietorPost,
+        update: useGetEntitiesUserEntitiesSoleProprietorEntityIdPut,
     },
     company: {
         title: "Реквизиты организации",
-        fields: [
-            { label: "Наименование", name: "name" },
-            { label: "Регистрационный номер", name: "registration_num" },
-            { label: "ИНН", name: "inn" },
-            { label: "КПП", name: "kpp" },
-            { label: "Юридический адрес", name: "legal_address" },
-            { label: "ФИО руководителя", name: "ceo_name" },
-            { label: "Номер расчётного счёта", name: "account_number" },
-            { label: "Название банка", name: "bank_name" },
-            { label: "БИК", name: "bik" },
-            { label: "Корреспондентский счёт", name: "corr_account" },
-        ],
-        submit: useCreateEntityEntitiesCompaniesPost
+        getSchemaRq: fetchGetSchemaEntitiesCompaniesSchemaGet,
+        submit: useCreateEntityEntitiesCompaniesPost,
+        update: useGetEntitiesUserEntitiesCompaniesEntityIdPut,
     }
 }
 
-export const RequisitesForm = ({ entityType }: RequisitesFormProps) => {
+export const RequisitesForm = ({ entityType, entityId }: RequisitesFormProps) => {
+    const [form, setForm] = useState({});
+    const [formSchema, setFormSchema] = useState([]);
+    const [isFormChanged, setFormChanged] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [errors, setErrors] = useState<ObjectWithProps<string> | null>(null);
+    const entities = useEntitiesStore((state) => state.entities);
+    const setEntities = useEntitiesStore((state) => state.setEntities);
+    const hasHydrated = useEntitiesStore((state) => state.hasHydrated);
     const requestData = REQUISITES_FORM_CONFIG[entityType].submit();
+    const updateData = REQUISITES_FORM_CONFIG[entityType].update();
     const {
-        mutate: request,
-        isPending: isLoading,
+        mutate: createEntityRq,
+        isPending: isCreatingEntity,
     } = requestData;
-    const { mutate: rq } = useGetEntitiesUserEntitiesCompaniesEntityIdPut()
-    const { mutate: rqPhysical } = useGetEntitiesUserEntitiesIndividualsEntityIdPut()
-    const { mutate: rqIp } = useGetEntitiesUserEntitiesSoleProprietorEntityIdPut()
-    console.log('data', requestData)
-    const requestDataResponse = requestData.data as any;
+    const {
+        mutate: updateEntityRq,
+        isPending: isUpdatingEntoty,
+    } = updateData;
+    const requestDataResponse = requestData.data || updateData.data as any;
+
+
+    const getSchema = async () => {
+        const data = await REQUISITES_FORM_CONFIG[entityType].getSchemaRq({
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        return data;
+    }
+
+    const [schemaResponse, isSchemaLoading] = useInterceptor(getSchema);
+    const isLoading = isCreatingEntity || isUpdatingEntoty || isSchemaLoading as boolean;
+
+    // console.log('formSchema', formSchema)
+    // console.log('form', form)
+
+    useEffect(() => {
+        {/**@ts-expect-error позже типизировать */ }
+        if (!schemaResponse?.data) {
+            return;
+        }
+        {/**@ts-expect-error позже типизировать */ }
+        const newSchema = []
+        {/**@ts-expect-error позже типизировать */ }
+        schemaResponse?.data?.blocks?.forEach((block) => newSchema.push(...block.fields));
+        {/**@ts-expect-error позже типизировать */ }
+        setFormSchema(newSchema)
+    }, [schemaResponse])
+
+    useEffect(() => {
+        console.log(requestDataResponse)
+        if (requestDataResponse?.success) {
+            setIsConfirmModalOpen(false);
+            const newEntities = { ...entities };
+            if (entityId) {
+                const index = newEntities[entityType].findIndex((item) => item.entity_id === entityId);
+                {/**@ts-expect-error позже типизировать */ }
+                newEntities[entityType][index] = { ...form };
+            } else {
+                newEntities[entityType].push({ ...requestDataResponse?.data });
+            }
+            setEntities({...newEntities})
+        }
+    }, [requestDataResponse])
+
+    useEffect(() => {
+        if (hasHydrated && entityId) {
+            const prefilledForm = entities[entityType].find((item) => item.entity_id === entityId);
+            setForm({ ...prefilledForm });
+        }
+    }, [hasHydrated, entityType, entityId]);
+
+
     //@ts-expect-error типизировать позже
     const validateAndSend = (requestData) => {
-        console.log(requestData)
+        {/**@ts-expect-error позже типизировать */ }
+        const validationSchema = mapSchemaFromData(schemaResponse?.data?.blocks?.map((block) => block.fields));
+        try {
+            validationSchema.validateSync(form, { abortEarly: false })
+        } catch (err) {
+            const validationErrors = err as ValidationError;
+            const newErrors: ObjectWithProps<string> = {};
+            validationErrors.inner.forEach((e) => {
+                newErrors[e.path as string] = e.message;
+            });
+            setErrors(newErrors);
+            return;
+        }
+        setIsConfirmModalOpen(true)
         // try {
         //     REQUISITES_FORM_CONFIG[entityType].validationSchema.validateSync({ ...requestData }, { abortEarly: false })
         // } catch (err) {
@@ -100,15 +152,15 @@ export const RequisitesForm = ({ entityType }: RequisitesFormProps) => {
         // }
         // setErrors(null);
 
-        rqIp({
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
-            pathParams: {
-                entityId: '019a02ec-827c-7963-bef8-1ee8de967698'
-            },
-            body: requestData
-        })
+        // rqIp({
+        //     headers: {
+        //         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        //     },
+        //     pathParams: {
+        //         entityId: '019a02ec-827c-7963-bef8-1ee8de967698'
+        //     },
+        //     body: requestData
+        // })
         // request({
         //     headers: {
         //         'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
@@ -118,47 +170,67 @@ export const RequisitesForm = ({ entityType }: RequisitesFormProps) => {
     }
     async function handleFormAction(prevState: unknown, formData: FormData) {
         if (isLoading || isPending) return;
-        console.log(formData)
         const requestData = {};
-
-        REQUISITES_FORM_CONFIG[entityType].fields.forEach(({ name }) => {
-            if (name.includes('date')) {
-                //@ts-expect-error типизировать позже
-                const [day, month, year] = formData.get(name).split(".");
-                const date = new Date(+year, +month - 1, +day);
-                // console.log(formData.get(name))
-                //@ts-expect-error типизировать позже
-                requestData[name] = format(date, 'yyyy-MM-dd');
-            } else {
-                //@ts-expect-error
-                requestData[name] = formData.get(name);
-            }
-            // if (fieldName === 'phone') {
-            //     //@ts-expect-error
-            //     requestData[fieldName] = clearPhoneNumberString(formData.get(fieldName));
-            // } else {
-            //     //@ts-expect-error
-            //     requestData[fieldName] = formData.get(fieldName);
-            // }
-
-
-
-        });
         validateAndSend(requestData);
 
         return requestData
     }
+
+    const onChange = (name: string) => (e: ChangeEvent<HTMLInputElement>) => {
+        const newForm = { ...form };
+        {/**@ts-expect-error позже типизировать */ }
+        newForm[name] = e.target.value;
+        setForm(newForm);
+        setFormChanged(true);
+    }
+
+    const submitRequest = () => {
+        const params = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            pathParams: {},
+            body: form,
+        }
+        if (entityId) {
+            params.pathParams = { entityId }
+            {/**@ts-expect-error позже типизировать */ }
+            updateEntityRq({ ...params });
+        } else {
+            {/**@ts-expect-error позже типизировать */ }
+            createEntityRq({ ...params })
+        }
+    }
+
     const [actionState, action, isPending] = useActionState(handleFormAction, {});
+
+    if (isLoading) {
+        return (
+            <FormSkeleton />
+        )
+    }
+
     return <div>
-        <FormWrapper
-            action={action}
-        // className={formStyles.authForm}
-        >
-            {REQUISITES_FORM_CONFIG[entityType].fields.map((field) => (
-                //@ts-expect-error типизировать позже
-                <Input key={`${field.name}`} label={field.label} type="text" name={field.name} id={`${field.name}Input`} defaultValue={actionState?.[field.name]} disabled={isLoading} error={errors?.[field.name]} />
-            ))}
+        <FormWrapper action={action}>
+            {formSchema?.map(({ name, title, type, }) => {
+                const isDateField = type === 'date';
+                return (
+                    <div className={`${isDateField ? "w-[30%]" : "w-[100%]"}`} key={name}>
+                        <Input
+                            type={isDateField ? 'date' : 'text'}
+                            key={name}
+                            label={title}
+                            onChange={onChange(name)}
+                            value={form[name] ?? ''}
+                            error={errors?.[name]}
+                            disabled={isLoading}
+                        />
+                    </div>
+                )
+
+            })}
             <Button type="submit" disabled={isLoading} className={`mt-[16px]`}><p>Сохранить</p></Button>
         </FormWrapper>
+        <RequisitesModal schema={formSchema} details={form} isOpen={isConfirmModalOpen} onConfirm={submitRequest} onEdit={() => setIsConfirmModalOpen(false)} />
     </div>;
 }
