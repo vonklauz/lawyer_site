@@ -10,18 +10,23 @@ export const MENU_LINKS: Link[] = [
         isProtected: true
     },
     {
+        label: 'Мои организации',
+        path: '/organizations',
+        isProtected: false
+    },
+    {
         label: 'Суды',
-        path: '/dossiers-list',
+        path: '/trials',
         isProtected: false
     },
     {
         label: 'Штрафы',
-        path: '/documents',
+        path: '/fines',
         isProtected: true
     },
     {
         label: 'Услуги',
-        path: '/calendar',
+        path: '/service',
         isProtected: true
     },
     // {

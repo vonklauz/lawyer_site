@@ -36,7 +36,7 @@ const config = {
     email: {
         title: {
             enable: 'Подключить двухфакторную аутентификацию по электронной почте?',
-            disable: 'Отключить двухфакторную аутентификацию через приложение-генератор кодов?',
+            disable: 'Отключить двухфакторную аутентификацию по электронной почте?',
         },
         button: {
             enable: 'Подключить',
@@ -61,15 +61,13 @@ export const TwoFaForm = ({ mode, isChosenMode, onChange2FaMethod, handleClose }
 
     useEffect(() => {
         if (data?.success) {
-            if (activateState === 'disable') {
-                handleClose();
-                onChange2FaMethod(activateState, mode);
+            if (data?.data?.qr) {
+                setQrCode(data?.data?.qr);
             } else {
-                if (data?.data?.qr) {
-                    setQrCode(data?.data?.qr);
-                }
+                handleClose();
             }
 
+            onChange2FaMethod(activateState, mode);
         }
     }, [data]);
 

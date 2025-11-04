@@ -1,9 +1,24 @@
 "use client"
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import styles from './Table.module.css';
 import Link from 'next/link';
 import { TableWrapper } from './TableWrapper';
 import { TableSingle } from './TableSingle';
+
+const tableStructure = {
+    name: {
+        label: 'Наименование'
+    },
+    sendDate: {
+        label: 'Дата подачи'
+    },
+    status: {
+        label: 'Статус'
+    },
+    info: {
+        label: 'Информация'
+    },
+}
 
 const testData: TableItem[] = [
     {
@@ -36,22 +51,23 @@ const testData: TableItem[] = [
     }
 ];
 
-interface TableItem {
-    id: number;
+export interface TableItem {
+    id: number | string;
     name: string;
-    submissionDate: string;
-    status: 'new' | 'in_progress' | 'completed';
-    detailsUrl: string;
+    submissionDate?: string;
+    status?: 'new' | 'in_progress' | 'completed';
+    detailsUrl?: string;
 }
 
-interface TableProps {
-    title: string;
+export interface TableProps {
+    title: JSX.Element | string;
     colorScheme?: 'blue' | 'red';
+    structure?: Record<string, { label: string }>;
     data?: TableItem[];
 }
 
-export const Table = ({ title, colorScheme = 'blue', data = testData }: TableProps) => (
+export const Table = ({ title, colorScheme = 'blue', structure = tableStructure, data = testData }: TableProps) => (
     <TableWrapper>
-        <TableSingle title={title} colorScheme={colorScheme} data={data} />
+        <TableSingle title={title} colorScheme={colorScheme} structure={structure} data={data} />
     </TableWrapper>
 )

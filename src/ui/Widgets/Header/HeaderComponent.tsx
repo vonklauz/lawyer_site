@@ -65,7 +65,10 @@ export const HeaderComponent = (props: IHeaderProps) => {
                         <a href="/">Главная</a>
                     </div>
                     <div className={styles.headerLink}>
-                        <a href="/courts">Суды</a>
+                        <a href="/organizations">Мои организации</a>
+                    </div>
+                    <div className={styles.headerLink}>
+                        <a href="/trials">Суды</a>
                     </div>
                     <div className={styles.headerLink}>
                         <a href="/fines">Штрафы</a>

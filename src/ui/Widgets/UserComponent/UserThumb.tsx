@@ -67,12 +67,12 @@ export const UserThumb = ({ isAuthorized, options }: IUserThumbProps) => {
     const handleChooseEntity = (value: string) => {
         const params = value.split('/');
         const key = params[0] as keyof Entities;
-        const link = `/profile/requisites/form?entityType=${key}&entityId=${params[1]}`;
+        // const link = `/profile/requisites/form?entityType=${key}&entityId=${params[1]}`;
         const entitiesTypeList = entities[key];
         const chosenEntity = entitiesTypeList.find((entity) => entity.entity_id === params[1]) as EntityItem;
 
         chooseEntity(chosenEntity);
-        router.push(link)
+        // router.push(link)
     }
 
     return (

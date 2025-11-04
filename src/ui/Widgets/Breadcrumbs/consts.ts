@@ -1,5 +1,7 @@
 export const LINK_NAMES = {
     home: "Главная",
+    form: "Форма",
+    organizations: "Мои организации",
     profile: "Профиль",
     requisites: "Настройка реквизитов",
     settings: "Настройки",

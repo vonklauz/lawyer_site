@@ -1,5 +1,4 @@
 "use client"
-import useUserStore from '@/Store/useUserStore';
 import { UserThumb } from './UserThumb';
 import { useEffect, useState } from 'react';
 import { fetchGetEntitiesUserEntitiesUserGet } from '@generated/lawyersSiteApiComponents';
@@ -9,7 +8,7 @@ import { skipToken } from '@tanstack/react-query';
 import { isSkipToken } from '@/Utils';
 
 export const UserComponent = () => {
-    const hasHydrated = useUserStore((state) => state.hasHydrated);
+    const hasHydrated = useEntitiesStore((state) => state.hasHydrated);
     const entities = useEntitiesStore((state) => state.entities);
     const setEntities = useEntitiesStore((state) => state.setEntities);
     const [isAuthorized, setIsAuthorized] = useState<undefined | boolean>();

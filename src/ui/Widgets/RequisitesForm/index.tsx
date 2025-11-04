@@ -18,7 +18,6 @@ import {
     useGetEntitiesUserEntitiesIndividualsEntityIdPut,
     useGetEntitiesUserEntitiesSoleProprietorEntityIdPut
 } from "@generated/lawyersSiteApiComponents";
-import { format } from "date-fns";
 import { ChangeEvent, useActionState, useEffect, useState } from "react";
 import { ValidationError } from "yup";
 import { RequisitesModal } from "../RequisitesModal";
@@ -212,7 +211,7 @@ export const RequisitesForm = ({ entityType, entityId }: RequisitesFormProps) =>
 
     return <div>
         <FormWrapper action={action}>
-            {formSchema?.map(({ name, title, type, }) => {
+            {formSchema?.map(({ name, title, type, max_length}) => {
                 const isDateField = type === 'date';
                 return (
                     <div className={`${isDateField ? "w-[30%]" : "w-[100%]"}`} key={name}>
@@ -224,6 +223,7 @@ export const RequisitesForm = ({ entityType, entityId }: RequisitesFormProps) =>
                             value={form[name] ?? ''}
                             error={errors?.[name]}
                             disabled={isLoading}
+                            maxLength={max_length}
                         />
                     </div>
                 )

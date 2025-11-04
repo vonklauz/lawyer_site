@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <h1>Статусы дел, находящихся в работе</h1>
-      <Gap size={20} />
+      <Gap size={32} />
       <Table title="Заявления" />
     </div>
   );
