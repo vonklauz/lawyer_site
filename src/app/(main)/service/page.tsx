@@ -1,5 +1,5 @@
-import { Gap } from "@/ui/Components/Gap";
-import { ServiceItem } from "@/ui/Components/ServiceItem";
+import { Gap } from "@/shared/Ui/Gap";
+import { ServiceItem } from "@/shared/Ui/ServiceItem";
 
 export default function ServicePage() {
     return (

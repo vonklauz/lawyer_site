@@ -1,0 +1,51 @@
+.hero {
+    color: var(--white);
+    padding: 1.25rem 0;
+    background-color: var(--blue);
+}
+
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 13.125rem;
+    gap: 2.5rem;
+}
+
+.breadcrumbs {
+    color: var(--white);
+}
+
+.breadcrumbs-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.breadcrumbs-item {
+    line-height: 1.25;
+}
+
+.breadcrumbs-link {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs-link::after {
+    content: "/";
+    font-size: 1rem;
+    margin: 0 .625em;
+}
+
+.breadcrumbs-current {
+    text-decoration: underline;
+}
+
+.hero .title_h1 {
+    max-width: 49.375rem;
+}
+
+@media (min-width: 78.5em) {
+    .breadcrumbs {
+        font-size: 1rem;
+    }
+}

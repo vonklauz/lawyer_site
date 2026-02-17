@@ -1,4 +1,4 @@
-import { RequisitesSettings } from "@/ui/Widgets/RequisitesSettings";
+import { RequisitesSettings } from "@/Widgets/RequisitesSettings";
 
 
 

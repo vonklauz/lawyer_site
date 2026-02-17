@@ -3,23 +3,181 @@
  *
  * @version 1.0.0
  */
-export type AuthLoginDTO = {
+export type AuthConfirmResetPasswordDTO = {
+  token: string;
+  new_password: string;
+};
+
+export type AuthEnabling2FADTO = {
+  user_id: string;
+};
+
+export type AuthHTTPValidationError = {
+  detail?: AuthValidationError[];
+};
+
+export type AuthInternalLoginDTO = {
+  /**
+   * @format uuid
+   */
+  user_id: string;
+};
+
+export type AuthLoginUserDTO = {
   /**
    * @format email
    */
   email: string;
   password: string;
+};
+
+export type AuthLogoutUserDTO = {
+  refresh_token: string;
+};
+
+export type AuthPasswordResetRequestDTO = {
+  email: string;
 };
 
 export type AuthRegistrationDTO = {
-  /**
-   * @format email
-   */
   email: string;
   password: string;
 };
 
-export type CompanyCreateDTO = {
+export type AuthRotationRefreshTokenRequestDTO = {
+  refresh_token: string;
+};
+
+export type AuthValidationError = {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+};
+
+export type AuthVerifyEmailAfterRegistrationDTO = {
+  token: string;
+};
+
+export type ServicesCreateRequestedFieldDTO = {
+  field_keys: string[];
+  /**
+   * @format uuid
+   */
+  instance_id: string;
+};
+
+export type ServicesCreateServiceDTO = {
+  title: string;
+  description: string;
+  entity_type: ServicesEntityType;
+};
+
+export type ServicesCreateServiceFieldDTO = {
+  service_ids: string[];
+  name: string;
+  type: ServicesFieldType;
+  required: boolean;
+  options?: {
+    [key: string]: any;
+  } | null;
+  key?: string | null;
+};
+
+export type ServicesCreateServiceFieldValueDTO = {
+  /**
+   * @format uuid
+   */
+  service_id: string;
+  fields: ServicesServiceFieldValueDTO[];
+};
+
+export type ServicesDataRequestedFieldDTO = {
+  /**
+   * @format uuid
+   */
+  field_id: string;
+  value: void;
+};
+
+export type ServicesEntityType = "INDIVIDUAL" | "COMPANY" | "SOLE_PROPRIETOR";
+
+export type ServicesFieldType = "text" | "number" | "date" | "file" | "select";
+
+export type ServicesHTTPValidationError = {
+  detail?: ServicesValidationError[];
+};
+
+export type ServicesSaveRequestedFieldDTO = {
+  fields: ServicesDataRequestedFieldDTO[];
+};
+
+export type ServicesServiceFieldValueDTO = {
+  /**
+   * @format uuid
+   */
+  field_id: string;
+  value: string | number;
+};
+
+export type ServicesValidationError = {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+};
+
+export type EntityBlockSchemaDTO = {
+  block: string;
+  fields: EntityFieldSchemaDTO[];
+};
+
+export type EntityCompanyCreateFromUserDTO = {
+  /**
+   * Наименование компании
+   */
+  name: string;
+  /**
+   * ОГРН
+   */
+  registration_num: string;
+  /**
+   * ИНН
+   */
+  inn: string;
+  /**
+   * КПП
+   */
+  kpp: string;
+  /**
+   * Юридический адрес
+   */
+  legal_address: string;
+  /**
+   * ФИО руководителя
+   */
+  ceo_name: string;
+  /**
+   * Расчётный счёт (20 цифр)
+   */
+  account_number: string;
+  /**
+   * Наименование банка
+   */
+  bank_name: string;
+  /**
+   * БИК банка (9 цифр)
+   */
+  bik: string;
+  /**
+   * Корреспондентский счёт (20 цифр)
+   */
+  corr_account: string;
+};
+
+export type EntityCompanyOutputDTO = {
+  /**
+   * @format uuid
+   */
+  entity_id: string;
   name: string;
   registration_num: string;
   inn: string;
@@ -32,7 +190,7 @@ export type CompanyCreateDTO = {
   corr_account: string;
 };
 
-export type CompanyUpdateDTO = {
+export type EntityCompanyUpdateFromUserDTO = {
   name?: string | null;
   registration_num?: string | null;
   inn?: string | null;
@@ -45,7 +203,7 @@ export type CompanyUpdateDTO = {
   corr_account?: string | null;
 };
 
-export type CreateIndividualDTO = {
+export type EntityCreateIndividualFromUserDTO = {
   first_name: string;
   last_name: string;
   middle_name: string | null;
@@ -65,7 +223,74 @@ export type CreateIndividualDTO = {
   code_department: string;
 };
 
-export type CreateSoleProprietorDTO = {
+export type EntityErrorDTO = {
+  code: number;
+  message: EntityErrorFields | EntityErrorFields[];
+};
+
+export type EntityErrorFields = {
+  field: string;
+  message: string;
+};
+
+export type EntityFieldSchemaDTO = {
+  title: string;
+  name: string;
+  type: string;
+  required: boolean;
+  max_length: number | null;
+};
+
+export type EntityHTTPValidationError = {
+  detail?: EntityValidationError[];
+};
+
+export type EntityIndividualOutputDTO = {
+  /**
+   * @format uuid
+   */
+  entity_id: string;
+  first_name: string;
+  last_name: string;
+  middle_name: string | null;
+  /**
+   * @format date
+   */
+  birth_date: string;
+  issued_by: string;
+  /**
+   * @format date
+   */
+  issued_date: string;
+  place_of_birth: string;
+  registration_address: string;
+  passport_number: string;
+  passport_serial: string;
+  code_department: string;
+};
+
+export type EntityResponseDTO = {
+  success: boolean;
+  data:
+    | EntityCompanyOutputDTO
+    | EntityCompanyOutputDTO[]
+    | EntityIndividualOutputDTO
+    | EntityIndividualOutputDTO[]
+    | EntitySchemaDTO
+    | EntitySoleProprietorOutputDTO
+    | EntitySoleProprietorOutputDTO[]
+    | {
+        [key: string]: any;
+      }
+    | null;
+  error: EntityErrorDTO | null;
+};
+
+export type EntitySchemaDTO = {
+  blocks: EntityBlockSchemaDTO[];
+};
+
+export type EntitySoleProprietorCreateFromUserDTO = {
   last_name: string;
   first_name: string;
   middle_name: string | null;
@@ -82,37 +307,28 @@ export type CreateSoleProprietorDTO = {
   corr_account: string;
 };
 
-export type HTTPValidationError = {
-  detail?: ValidationError[];
-};
-
-export type PasswordResetConfirmDTO = {
-  new_password: string;
-  token: string;
-};
-
-export type PasswordResetRequestDTO = {
+export type EntitySoleProprietorOutputDTO = {
   /**
    * @format uuid
    */
-  user_id: string;
+  entity_id: string;
+  last_name: string;
+  first_name: string;
+  middle_name: string | null;
+  inn: string;
+  registration_num: string;
+  /**
+   * @format date
+   */
+  registration_date: string;
+  legal_address: string;
+  account_number: string;
+  bank_name: string;
+  bik: string;
+  corr_account: string;
 };
 
-export type UpdateIndividualDTO = {
-  first_name?: string | null;
-  last_name?: string | null;
-  middle_name?: string | null;
-  birth_date?: string | null;
-  issued_by?: string | null;
-  issued_date?: string | null;
-  place_of_birth?: string | null;
-  registration_address?: string | null;
-  passport_number?: string | null;
-  passport_serial?: string | null;
-  code_department?: string | null;
-};
-
-export type UpdateSoleProprietorDTO = {
+export type EntitySoleProprietorUpdateFromUserDTO = {
   last_name?: string | null;
   first_name?: string | null;
   middle_name?: string | null;
@@ -126,12 +342,22 @@ export type UpdateSoleProprietorDTO = {
   corr_account?: string | null;
 };
 
-export type ValidationError = {
+export type EntityUpdateIndividualFromUserDTO = {
+  first_name?: string | null;
+  last_name?: string | null;
+  middle_name?: string | null;
+  birth_date?: string | null;
+  issued_by?: string | null;
+  issued_date?: string | null;
+  place_of_birth?: string | null;
+  registration_address?: string | null;
+  passport_number?: string | null;
+  passport_serial?: string | null;
+  code_department?: string | null;
+};
+
+export type EntityValidationError = {
   loc: (string | number)[];
   msg: string;
   type: string;
-};
-
-export type VerifyCodeTwoFaMethod = {
-  code: number;
 };

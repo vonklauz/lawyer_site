@@ -1,7 +1,7 @@
-import { Footer } from "@/ui/Components/Footer"
-import { Gap } from "@/ui/Components/Gap"
-import { Breadcrumbs } from "@/ui/Widgets/Breadcrumbs"
-import { Header } from "@/ui/Widgets/Header"
+import { Footer } from "@/shared/Ui/Footer"
+import { Gap } from "@/shared/Ui/Gap"
+import { Breadcrumbs } from "@/Widgets/Breadcrumbs"
+import { Header } from "@/Widgets/Header"
 
 export default function MainLayout({
     children,

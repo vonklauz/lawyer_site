@@ -4,11 +4,12 @@ import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
 import { useRotateAuthRotateTokensPost } from "@generated/lawyersSiteApiComponents";
 import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { IBaseSuccessResponse } from "@/Models";
 
-export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
+export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (() => Promise<T>) | SkipToken): [T | IBaseSuccessResponse<any>, boolean] => {
     const [tries, setTries] = useState(0);
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
-    const [propRequestResponse, setPropRequestResponse] = useState({});
+    const [propRequestResponse, setPropRequestResponse] = useState<T | IBaseSuccessResponse<any>>({} as T);
     const clearEntities = useEntitiesStore((state) => state.clearEntities);
     const rq = useRotateAuthRotateTokensPost();
     const { mutate: refreshTokensRq, data: refreshTokensData, error: refreshTokensError, isPending: isRefreshTokensPending } = rq;
@@ -43,31 +44,28 @@ export const useInterceptor = (request: (() => Promise<any>) | SkipToken) => {
     }, [request, tries]);
 
     useEffect(() => {
-        //@ts-expect-error позже типизировать
-        if (propRequestResponse?.error?.code === 403) {
+        const response = propRequestResponse as any;
+        if (response?.error?.code === 403) {
             if (tries < 3) {
                 refreshTokens();
                 setIsPropRequestLoading(false);
             }
         }
-        //@ts-expect-error позже типизировать
-        if (propRequestResponse?.success) {
+        if (response?.success) {
             setIsPropRequestLoading(false);
         }
     }, [propRequestResponse])
 
     useEffect(() => {
-        //@ts-expect-error позже типизировать
-        if (refreshTokensData?.error) {
+        const data = refreshTokensData as any;
+        if (data?.error) {
             setTries(tries + 2);
             clearEntities();
             handleLogoutSuccess();
             return;
         }
-        //@ts-expect-error позже типизировать
-        if (refreshTokensData?.data) {
-            //@ts-expect-error позже типизировать
-            handleLoginSuccess(refreshTokensData?.data)
+        if (data?.data) {
+            handleLoginSuccess(data?.data)
             setTries(tries + 1);
         }
     }, [refreshTokensData])

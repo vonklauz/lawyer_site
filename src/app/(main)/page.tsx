@@ -1,5 +1,5 @@
-import { Gap } from "@/ui/Components/Gap";
-import { Table } from "@/ui/Components/Table";
+import { Gap } from "@/shared/Ui/Gap";
+import { Table } from "@/shared/Ui/Table";
 
 
 

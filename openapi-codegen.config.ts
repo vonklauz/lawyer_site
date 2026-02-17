@@ -7,7 +7,7 @@ export default defineConfig({
   lawyersSiteApi: {
     from: {
       source: "url",
-      url: "http://109.172.46.169:8001/openapi.json",
+      url: "http://109.172.46.169:8080/swagger/swagger.json",
     },
     outputDir: "src/generated",
     to: async (context) => {

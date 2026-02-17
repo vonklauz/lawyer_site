@@ -1,5 +1,5 @@
 "use client"
-import { AuthForm } from "@/ui/Widgets/AuthForm";
+import { AuthForm } from "@/Widgets/AuthForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 

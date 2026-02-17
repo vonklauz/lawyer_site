@@ -1,6 +1,6 @@
 "use client"
-import { Gap } from "@/ui/Components/Gap";
-import { OrganizationsList } from "@/ui/Widgets/OrganizationsList";
+import { Gap } from "@/shared/Ui/Gap";
+import { OrganizationsList } from "@/Widgets/OrganizationsList";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 

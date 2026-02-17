@@ -1,0 +1,9 @@
+.button {
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.blue {
+    background-color: var(--blue);
+    color: var(--white);
+}

@@ -1,0 +1,13 @@
+.footer {
+    background-color: var(--blue);
+}
+
+.footerItem {
+    color: var(--white);
+    font-weight: 500;
+    padding: 10px;
+}
+
+/* .footerItem:not(:last-child) {
+    border-right: 1px solid var(--white);
+} */
