@@ -1,8 +1,8 @@
 "use client"
-import { AuthForm } from "@/Widgets/AuthForm";
+import { Login } from "@/features/login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 export default function LoginPage() {
-    return <QueryClientProvider client={queryClient}><AuthForm mode="login" /></QueryClientProvider>;
+    return <QueryClientProvider client={queryClient}><Login /></QueryClientProvider>;
 }

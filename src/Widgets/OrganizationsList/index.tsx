@@ -1,6 +1,5 @@
 "use client";
 import useEntitiesStore, { Entities } from "@/Store/useEntitiesStore";
-import useUserStore from "@/Store/useUserStore";
 import { Gap } from "@/shared/Ui/Gap";
 import { Table, TableItem } from "@/shared/Ui/Table";
 import Link from "next/link";
@@ -14,6 +13,7 @@ const tableStructure = {
         label: 'Информация'
     },
 }
+
 
 export const OrganizationsList = () => {
     const hasHydrated = useEntitiesStore((state) => state.hasHydrated);

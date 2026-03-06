@@ -1,7 +1,7 @@
 "use client"
 import useEntitiesStore from "@/Store/useEntitiesStore";
 import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
-import { useRotateAuthRotateTokensPost } from "@generated/lawyersSiteApiComponents";
+import { useRegisterUserApiV1AuthJwtRotateRefreshPost } from "@generated/lawyersSiteApiComponents";
 import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { IBaseSuccessResponse } from "@/Models";
@@ -11,7 +11,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
     const [propRequestResponse, setPropRequestResponse] = useState<T | IBaseSuccessResponse<any>>({} as T);
     const clearEntities = useEntitiesStore((state) => state.clearEntities);
-    const rq = useRotateAuthRotateTokensPost();
+    const rq = useRegisterUserApiV1AuthJwtRotateRefreshPost();
     const { mutate: refreshTokensRq, data: refreshTokensData, error: refreshTokensError, isPending: isRefreshTokensPending } = rq;
     const isLoading = isRefreshTokensPending || isPropRequestLoading;
 

@@ -1,6 +1,6 @@
 import { LawyersSiteApiContext } from "./lawyersSiteApiContext";
 
-const baseUrl = "/";
+const baseUrl = "http://109.172.46.169:8080";
 
 export type ErrorWrapper<TError> =
   | TError

@@ -1,0 +1,1 @@
+import { useLoginAuthLoginPost, useRegistrationAuthRegisterPost, useVerifyCode2faTotpVerifyCodePost } from "@generated/lawyersSiteApiComponents";

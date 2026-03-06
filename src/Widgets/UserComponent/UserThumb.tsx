@@ -4,7 +4,7 @@ import styles from './User.module.css'
 import { TSelectOption } from '@/Models';
 import { useRouter } from 'next/navigation';
 import useEntitiesStore, { Entities, EntityItem } from '@/Store/useEntitiesStore';
-import { UserThumbProps } from './lib/types';
+import { UserThumbProps } from './model/types';
 
 export const UserThumb = ({ isAuthorized, options }: UserThumbProps) => {
     // const navigate = () => { };

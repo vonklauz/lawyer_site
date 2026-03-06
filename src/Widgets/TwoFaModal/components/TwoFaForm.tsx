@@ -7,7 +7,7 @@ import {
     useActivation2faTotpDeactivatePost
 } from "@generated/lawyersSiteApiComponents";
 import { useEffect, useState } from "react";
-import { TwoFaFormProps, TwoFaConfig, TwoFaMode, TwoFaActivationResponse } from "../lib/types";
+import { TwoFaFormProps, TwoFaConfig, TwoFaMode, TwoFaActivationResponse } from "../model/types";
 
 const config: Record<TwoFaMode, TwoFaConfig> = {
     totp: {

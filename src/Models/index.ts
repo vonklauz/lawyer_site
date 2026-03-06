@@ -1,3 +1,5 @@
+import { LoginResponse } from "@/Widgets/AuthForm/api";
+
 export type Link = {
     label: string,
     path: string,
@@ -52,13 +54,6 @@ export interface IRegisterResponse {
     is_active: boolean;
     is_email_verified: boolean;
     roles: Role[];
-}
-
-export interface LoginResponse {
-    access_token: string;
-    refresh_token: string;
-    pending_token: string;
-    two_fa_required?: boolean,
 }
 
 export interface AuthResponse extends IRegisterResponse, LoginResponse { }

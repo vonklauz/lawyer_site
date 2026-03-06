@@ -1,7 +1,7 @@
 "use client"
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { TwoFaForm } from './components/TwoFaForm'
-import { TwoFaMode, TwoFaConfig } from './lib/types'
+import { TwoFaMode, TwoFaConfig } from './model/types'
 
 interface TwoFaModalProps {
     isOpen: boolean

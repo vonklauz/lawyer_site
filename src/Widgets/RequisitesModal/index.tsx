@@ -1,7 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useState } from "react";
 import { format } from "date-fns";
-import { RequisitesModalProps, SchemaField } from "./lib/types";
+import { RequisitesModalProps, SchemaField } from "./model/types";
 
 export const RequisitesModal = ({ isOpen, schema, details, onConfirm, onEdit }: RequisitesModalProps) => {
   const [checked, setChecked] = useState(false);

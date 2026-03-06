@@ -1,7 +1,7 @@
 "use client"
 import useEntitiesStore from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
-import { useRotateAuthRotateTokensPost } from "@generated/lawyersSiteApiComponents";
+import { useRegisterUserApiV1AuthJwtRotateRefreshPost } from "@generated/lawyersSiteApiComponents";
 import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { IBaseSuccessResponse } from "@/Models";
@@ -11,7 +11,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
     const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
     const [propRequestResponse, setPropRequestResponse] = useState<T | IBaseSuccessResponse<any>>({} as T);
     const clearEntities = useEntitiesStore((state) => state.clearEntities);
-    const rq = useRotateAuthRotateTokensPost();
+    const rq = useRegisterUserApiV1AuthJwtRotateRefreshPost();
     const { mutate: refreshTokensRq, data: refreshTokensData, error: refreshTokensError, isPending: isRefreshTokensPending } = rq;
     const isLoading = isRefreshTokensPending || isPropRequestLoading;
 
@@ -19,6 +19,9 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
         refreshTokensRq({
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('refreshToken')}`
+            },
+            body: {
+                refresh_token: localStorage.getItem('refreshToken')
             }
         })
     }
@@ -27,10 +30,16 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
         if (isSkipToken(request)) {
             return;
         }
-        const data = await request();
-        setPropRequestResponse(data);
-    };
+        try {
+            setIsPropRequestLoading(true);
+            const data = await request();
+            setPropRequestResponse(data);
+        } catch (error) {
+            setPropRequestResponse(error as any);
+            setIsPropRequestLoading(false);
 
+        };
+    }
     useEffect(() => {
         if (isSkipToken(request)) {
             setIsPropRequestLoading(false);
@@ -45,7 +54,8 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
 
     useEffect(() => {
         const response = propRequestResponse as any;
-        if (response?.error?.code === 403) {
+        console.log('response', response)
+        if (response?.error?.code === 401) {
             if (tries < 3) {
                 refreshTokens();
                 setIsPropRequestLoading(false);

@@ -9,41 +9,41 @@ import { FormSkeleton } from "@/shared/Ui/Skeleton/FormSkeleton";
 import { mapSchemaFromData } from "@/Utils/validation";
 import {
     fetchGetSchemaCompanyEntityApiV1CompaniesSchemaGet,
-    fetchGetSchemaEntitiesIndividualsSchemaGet,
-    fetchGetSchemaEntitiesSoleProprietorSchemaGet,
-    useCreateEntityEntitiesCompaniesPost,
-    useCreateEntityEntitiesIndividualsPost,
-    useCreateEntityEntitiesSoleProprietorPost,
-    useGetEntitiesUserEntitiesCompaniesEntityIdPut,
-    useGetEntitiesUserEntitiesIndividualsEntityIdPut,
-    useGetEntitiesUserEntitiesSoleProprietorEntityIdPut
+    fetchGetSchemaIndividualEntityApiV1IndividualsSchemaGet,
+    fetchGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet,
+    useCreateCompanyEntityApiV1CompaniesPost,
+    useCreateIndividualEntityApiV1IndividualsPost,
+    useCreateSoleProprietorEntityApiV1SoleProprietorsPost,
+    useUpdateCompanyEntityApiV1CompaniesEntityIdPut,
+    useUpdateIndividualEntityApiV1IndividualsEntityIdPut,
+    useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut
 } from "@generated/lawyersSiteApiComponents";
 import { ChangeEvent, FC, useActionState, useEffect, useState } from "react";
 import { ValidationError } from "yup";
 import { RequisitesModal } from "../RequisitesModal";
 import { RequisitesFormProps } from "./models";
-import { SchemaField, SchemaResponse, EntityFormData, RequestParams, EntityResponse } from "./lib/types";
+import { SchemaField, SchemaResponse, EntityFormData, RequestParams, EntityResponse } from "./model/types";
 
 
 
 const REQUISITES_FORM_CONFIG = {
     individual: {
         title: "Реквизиты физического лица",
-        getSchemaRq: fetchGetSchemaEntitiesIndividualsSchemaGet,
-        submit: useCreateEntityEntitiesIndividualsPost,
-        update: useGetEntitiesUserEntitiesIndividualsEntityIdPut,
+        getSchemaRq: fetchGetSchemaIndividualEntityApiV1IndividualsSchemaGet,
+        submit: useCreateIndividualEntityApiV1IndividualsPost,
+        update: useUpdateIndividualEntityApiV1IndividualsEntityIdPut,
     },
     sole_proprietor: {
         title: "Реквизиты ИП",
-        getSchemaRq: fetchGetSchemaEntitiesSoleProprietorSchemaGet,
-        submit: useCreateEntityEntitiesSoleProprietorPost,
-        update: useGetEntitiesUserEntitiesSoleProprietorEntityIdPut,
+        getSchemaRq: fetchGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet,
+        submit: useCreateSoleProprietorEntityApiV1SoleProprietorsPost,
+        update: useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut,
     },
     company: {
         title: "Реквизиты организации",
         getSchemaRq: fetchGetSchemaCompanyEntityApiV1CompaniesSchemaGet,
-        submit: useCreateEntityEntitiesCompaniesPost,
-        update: useGetEntitiesUserEntitiesCompaniesEntityIdPut,
+        submit: useCreateCompanyEntityApiV1CompaniesPost,
+        update: useUpdateCompanyEntityApiV1CompaniesEntityIdPut,
     }
 }
 

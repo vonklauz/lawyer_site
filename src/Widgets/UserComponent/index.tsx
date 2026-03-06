@@ -1,12 +1,12 @@
 "use client"
 import { UserThumb } from './UserThumb';
 import { useEffect, useState } from 'react';
-import { fetchGetEntitiesUserEntitiesUserGet } from '@generated/lawyersSiteApiComponents';
-import { useInterceptor } from '@/Service/useInterceptor';
+import { fetchGetAllEntitiesApiV1EntitiesGet } from '@generated/lawyersSiteApiComponents';
 import useEntitiesStore, { isEmptyEntities, Entities } from '@/Store/useEntitiesStore';
 import { skipToken } from '@tanstack/react-query';
 import { isSkipToken } from '@/Utils';
-import { UserEntitiesResponse } from './lib/types';
+import { UserEntitiesResponse } from './model/types';
+import { useInterceptor } from '@/shared/hooks/useInterceptor';
 
 export const UserComponent = () => {
     const hasHydrated = useEntitiesStore((state) => state.hasHydrated);
@@ -15,7 +15,7 @@ export const UserComponent = () => {
     const [isAuthorized, setIsAuthorized] = useState<undefined | boolean>();
 
     const getUserEntities = async () => {
-        const data = await fetchGetEntitiesUserEntitiesUserGet({
+        const data = await fetchGetAllEntitiesApiV1EntitiesGet({
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
