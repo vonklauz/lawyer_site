@@ -1,25 +1,32 @@
+"use client"
+import { Breadcrumbs } from "@/shared/entities/breadcrumbs"
 import { Footer } from "@/shared/Ui/Footer"
 import { Gap } from "@/shared/Ui/Gap"
-import { Breadcrumbs } from "@/Widgets/Breadcrumbs"
 import { Header } from "@/Widgets/Header"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+const queryClient = new QueryClient();
 
 export default function MainLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    return <>
-        <div>
-            <Header />
-            <Gap size={16} />
-            <main>
-                <div className="container">
-                    <Breadcrumbs />
-                    {children}
+    return (
+        <QueryClientProvider client={queryClient}>
+            <>
+                <div>
+                    <Header />
+                    <Gap size={16} />
+                    <main>
+                        <div className="container">
+                            <Breadcrumbs />
+                            {children}
+                        </div>
+                    </main>
+                    <Gap size={16} />
                 </div>
-            </main>
-            <Gap size={16} />
-        </div>
-        <Footer />
-    </>
+                <Footer />
+            </>
+        </QueryClientProvider>
+    )
 }

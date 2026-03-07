@@ -1,7 +1,7 @@
 "use client"
 import { ObjectWithProps } from "@/Models";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
-import useEntitiesStore from "@/Store/useEntitiesStore";
+import useEntitiesStore from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { Button } from "@/shared/Ui/Button";
 import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Input } from "@/shared/Ui/Input";

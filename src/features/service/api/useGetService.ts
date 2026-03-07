@@ -1,14 +1,15 @@
-import { useSuspenseGetByEntityIdApiV1ServicesGet } from "@/generated/lawyersSiteApiComponents";
+import { useGetByEntityIdApiV1ServicesGet } from "@/generated/lawyersSiteApiComponents";
 import { ServicesEntityType } from "@/generated/lawyersSiteApiSchemas";
 
-export const useGetService = (entity_type: ServicesEntityType | undefined) => {
-    const data = useSuspenseGetByEntityIdApiV1ServicesGet({
+export const useGetService = (entityType: ServicesEntityType | undefined) => {
+
+    const data = useGetByEntityIdApiV1ServicesGet({
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'application/json'
         },
-        queryParams: { entity_type }
+        queryParams: { entity_type: entityType }
     });
 
-    return data;
+    return data?.data;
 }

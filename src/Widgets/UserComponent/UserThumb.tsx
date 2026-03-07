@@ -1,10 +1,12 @@
 "use client";
-import { Select } from '@/ui/Components/Select';
+import { Select } from '@/shared/Ui/Select';
 import styles from './User.module.css'
 import { TSelectOption } from '@/Models';
 import { useRouter } from 'next/navigation';
-import useEntitiesStore, { Entities, EntityItem } from '@/Store/useEntitiesStore';
+
 import { UserThumbProps } from './model/types';
+import useEntitiesStore from '@/shared/Store/EntitiesSlice/useEntitiesStore';
+import { Entities, EntityItem } from '@/shared/Store/EntitiesSlice/models';
 
 export const UserThumb = ({ isAuthorized, options }: UserThumbProps) => {
     // const navigate = () => { };
@@ -19,8 +21,9 @@ export const UserThumb = ({ isAuthorized, options }: UserThumbProps) => {
                 const entitiesList = options[key as keyof Entities];
                 entitiesList.forEach((entity) => {
                     const { entity_id, name, first_name, last_name, middle_name } = entity;
+                    const entityName = name || `${last_name} ${first_name} ${middle_name || ''}`;
                     mappedOptions.push({
-                        label: key === 'company' ? name : key === 'sole_proprietor' ? `ИП ${last_name} ${first_name} ${middle_name}` : `${last_name} ${first_name} ${middle_name}`,
+                        label: key === 'sole_proprietor' ? `ИП ${entityName}` : entityName,
                         value: `${key}/${entity_id}`,
                     })
                 })
@@ -35,7 +38,7 @@ export const UserThumb = ({ isAuthorized, options }: UserThumbProps) => {
         if (!chosenEntity) {
             return 'Создайте или выберите тип профиля'
         } else {
-            return chosenEntity.name || `${chosenEntity.registration_num ? 'ИП ' : ''}${chosenEntity.last_name} ${chosenEntity.first_name} ${chosenEntity.middle_name}`
+            return chosenEntity.name || `${chosenEntity.registration_num ? 'ИП ' : ''}${chosenEntity.last_name} ${chosenEntity.first_name} ${chosenEntity.middle_name || ''}`
         }
     }
 

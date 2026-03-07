@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LINK_NAMES } from "./consts";
+import { LINK_NAMES } from "../model/consts";
 
 export const Breadcrumbs = () => {
     const pathname = usePathname();

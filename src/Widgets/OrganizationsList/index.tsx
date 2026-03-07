@@ -1,5 +1,5 @@
 "use client";
-import useEntitiesStore, { Entities } from "@/Store/useEntitiesStore";
+import useEntitiesStore, { Entities } from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { Gap } from "@/shared/Ui/Gap";
 import { Table, TableItem } from "@/shared/Ui/Table";
 import Link from "next/link";

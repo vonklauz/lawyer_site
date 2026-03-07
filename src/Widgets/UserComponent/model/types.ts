@@ -3,7 +3,7 @@
  * Следуют правилам Feature-Sliced Design (FSD)
  */
 
-import { Entities, EntityItem } from "@/Store/useEntitiesStore";
+import { Entities, EntityItem } from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { IBaseSuccessResponse } from "@/Models";
 
 export interface UserEntitiesResponse extends IBaseSuccessResponse<Entities> {

@@ -2,11 +2,12 @@
 import { UserThumb } from './UserThumb';
 import { useEffect, useState } from 'react';
 import { fetchGetAllEntitiesApiV1EntitiesGet } from '@generated/lawyersSiteApiComponents';
-import useEntitiesStore, { isEmptyEntities, Entities } from '@/Store/useEntitiesStore';
+import useEntitiesStore, { isEmptyEntities, } from '@/shared/Store/EntitiesSlice/useEntitiesStore';
 import { skipToken } from '@tanstack/react-query';
 import { isSkipToken } from '@/Utils';
 import { UserEntitiesResponse } from './model/types';
 import { useInterceptor } from '@/shared/hooks/useInterceptor';
+import { Entities } from '@/shared/Store/EntitiesSlice/models';
 
 export const UserComponent = () => {
     const hasHydrated = useEntitiesStore((state) => state.hasHydrated);

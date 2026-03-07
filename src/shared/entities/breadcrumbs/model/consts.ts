@@ -4,6 +4,7 @@ export const LINK_NAMES = {
     organizations: "Мои организации",
     profile: "Профиль",
     requisites: "Настройка реквизитов",
+    service: "Услуги",
     settings: "Настройки",
     dashboard: "Панель управления",
     notFound: "Страница не найдена",

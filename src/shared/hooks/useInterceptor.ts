@@ -1,4 +1,5 @@
 "use client"
+
 import useEntitiesStore from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
 import { useRegisterUserApiV1AuthJwtRotateRefreshPost } from "@generated/lawyersSiteApiComponents";
@@ -16,12 +17,13 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
     const isLoading = isRefreshTokensPending || isPropRequestLoading;
 
     const refreshTokens = () => {
+        const refreshToken = localStorage.getItem('refreshToken') || '';
         refreshTokensRq({
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('refreshToken')}`
+                'Authorization': `Bearer ${refreshToken}`
             },
             body: {
-                refresh_token: localStorage.getItem('refreshToken')
+                refresh_token: refreshToken
             }
         })
     }
@@ -54,7 +56,6 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
 
     useEffect(() => {
         const response = propRequestResponse as any;
-        console.log('response', response)
         if (response?.error?.code === 401) {
             if (tries < 3) {
                 refreshTokens();
