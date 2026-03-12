@@ -1,19 +1,19 @@
-import { fetchGetByEntityIdApiV1ServicesGet } from "@/generated/lawyersSiteApiComponents";
-import { ServicesEntityType } from "@/generated/lawyersSiteApiSchemas";
+import { fetchGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet } from "@/generated/lawyersSiteApiComponents";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
 import { useCallback } from "react";
 
-export const useGetService = (entityType: ServicesEntityType | undefined) => {
+export const useGetServiceFormById = (serviceId: string) => {
     const getServiceByEntitytype = useCallback(async () => {
-        const data = await fetchGetByEntityIdApiV1ServicesGet({
+        const data = await fetchGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet({
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
-            queryParams: { entity_type: entityType }
+            pathParams: { serviceId }
         });
         return data;
-    }, [entityType]);
+    }, [serviceId]);
 
     const [result, isLoading] = useInterceptor(getServiceByEntitytype);
+
     return [result, isLoading];
-};
+}

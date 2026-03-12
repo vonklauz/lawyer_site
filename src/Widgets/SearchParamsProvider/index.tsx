@@ -15,7 +15,7 @@ export const SearchParamsProvider = ({ component }: SearchParamsProviderProps) =
     const searchParams = useSearchParams();
     const [isLoading, setLoading] = useState(true);
     const [paramsForRender, setParamsForRender] = useState<ParamsState>(DEFAULT_PARAMS_STATE);
-    console.log('paramsForRender', paramsForRender)
+    
     useEffect(() => {
         const newParamsForRender = { ...paramsForRender };
         (Object.keys(newParamsForRender) as Array<keyof ParamsState>).forEach(key => {

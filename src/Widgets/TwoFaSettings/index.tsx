@@ -1,7 +1,7 @@
 "use client";
 import { ServiceItem } from "@/shared/Ui/ServiceItem";
 import { TWO_FA_SETTINGS } from "./consts";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TwoFaModal } from "../TwoFaModal";
 import {
     fetchGetUserByUserId2faUsersGet,
@@ -15,14 +15,15 @@ export const TwoFaSettings = () => {
     const [modalMode, setModalMode] = useState<TwoFaMode | null>(null);
     const [isOpen, setOpen] = useState(false);
 
-    const getUser2FaType = async (): Promise<TwoFaResponse> => {
+    const getUser2FaType = useCallback(async (): Promise<TwoFaResponse> => {
         const data = await fetchGetUserByUserId2faUsersGet({
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
         })
         return data as unknown as TwoFaResponse;
-    }
+    }, []);
+    
     const [response, isLoading] = useInterceptor<TwoFaResponse>(getUser2FaType);
 
     useEffect(() => {

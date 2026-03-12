@@ -42,6 +42,11 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
 
         };
     }
+
+    useEffect(() => {
+        setTries(0);
+    }, [request]);
+
     useEffect(() => {
         if (isSkipToken(request)) {
             setIsPropRequestLoading(false);
@@ -63,6 +68,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(request: (()
             }
         }
         if (response?.success) {
+
             setIsPropRequestLoading(false);
         }
     }, [propRequestResponse])

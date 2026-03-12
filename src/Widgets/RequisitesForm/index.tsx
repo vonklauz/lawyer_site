@@ -18,7 +18,7 @@ import {
     useUpdateIndividualEntityApiV1IndividualsEntityIdPut,
     useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut
 } from "@generated/lawyersSiteApiComponents";
-import { ChangeEvent, FC, useActionState, useEffect, useState } from "react";
+import { ChangeEvent, FC, useActionState, useCallback, useEffect, useState } from "react";
 import { ValidationError } from "yup";
 import { RequisitesModal } from "../RequisitesModal";
 import { RequisitesFormProps } from "./models";
@@ -69,14 +69,14 @@ export const RequisitesForm: FC<RequisitesFormProps> = ({ entityType, entityId }
     const requestDataResponse = (requestData.data || updateData.data) as EntityResponse | undefined;
 
 
-    const getSchema = async (): Promise<SchemaResponse> => {
+    const getSchema = useCallback(async (): Promise<SchemaResponse> => {
         const data = await REQUISITES_FORM_CONFIG[entityType].getSchemaRq({
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
             }
         })
         return data as any;
-    }
+    }, [entityType, entityId])
 
     const [schemaResponse, isSchemaLoading] = useInterceptor<SchemaResponse>(getSchema);
     const isLoading = isCreatingEntity || isUpdatingEntoty || isSchemaLoading as boolean;
@@ -107,7 +107,7 @@ export const RequisitesForm: FC<RequisitesFormProps> = ({ entityType, entityId }
                     newEntities[entityType].push({ ...requestDataResponse?.data } as any);
                 }
             }
-            setEntities({...newEntities})
+            setEntities({ ...newEntities })
         }
     }, [requestDataResponse])
 
@@ -208,7 +208,7 @@ export const RequisitesForm: FC<RequisitesFormProps> = ({ entityType, entityId }
 
     return <div>
         <FormWrapper action={action}>
-            {formSchema?.map(({ name, title, type, max_length}) => {
+            {formSchema?.map(({ name, title, type, max_length }) => {
                 const isDateField = type === 'date';
                 return (
                     <div className={`${isDateField ? "w-[30%]" : "w-[100%]"}`} key={name}>

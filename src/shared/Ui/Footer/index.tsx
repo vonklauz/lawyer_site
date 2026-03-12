@@ -14,7 +14,7 @@ export const Footer = () => {
                 </div>
             </div>
             <div className="container font-light text-center text-sm">
-                © 2025. Личный кабинет клиента Богатов Групп. Все права защищены.
+                © 2025-2026. Личный кабинет клиента Богатов Групп. Все права защищены.
             </div>
         </footer>
     )

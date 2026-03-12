@@ -7,5 +7,6 @@ export interface SearchParamsProviderProps {
 export interface ParamsState {
     entityType: EEntityTypes | null;
     entityId?: string | null;
+    serviceId?: string;
 }
 

@@ -37,7 +37,7 @@ export const Select = ({ options, value, onChange, placeholder = "Select option"
                                         } ${value === option.value ? 'bg-gray-50' : ''
                                         } group flex w-full items-center px-4 py-2 text-sm`}
                                 >
-                                    {option.label}
+                                    {option.label || option.value}
                                 </button>
                             )}
                         </MenuItem>
