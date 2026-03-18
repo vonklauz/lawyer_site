@@ -77,9 +77,11 @@ export type ServicesCreateServiceFieldDTO = {
   name: string;
   type: ServicesFieldType;
   required: boolean;
-  options?: {
-    [key: string]: any;
-  } | null;
+  options?:
+    | {
+        [key: string]: string;
+      }[]
+    | null;
   key?: string | null;
 };
 
@@ -101,7 +103,15 @@ export type ServicesDataRequestedFieldDTO = {
 
 export type ServicesEntityType = "INDIVIDUAL" | "COMPANY" | "SOLE_PROPRIETOR";
 
-export type ServicesFieldType = "text" | "number" | "date" | "file" | "select";
+export type ServicesFieldType =
+  | "INTEGER"
+  | "STRING"
+  | "DATE"
+  | "SELECT"
+  | "URL"
+  | "BOOL"
+  | "FILE"
+  | "{'integer': 'INTEGER', 'string': 'STRING', 'datetime': 'DATE', 'date': 'DATE', 'enumeration': 'SELECT', 'url': 'URL', 'boolean': 'BOOL', 'double': 'INTEGER', 'address': 'STRING', 'stageid': 'STRING'}";
 
 export type ServicesHTTPValidationError = {
   detail?: ServicesValidationError[];

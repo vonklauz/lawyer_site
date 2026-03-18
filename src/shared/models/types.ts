@@ -73,3 +73,8 @@ export type TSelectOption<T = string> = {
 };
 
 export type { LoginResponse };
+
+export type ServiceSelectOption = {
+  ID: string;
+  VALUE: string;
+};

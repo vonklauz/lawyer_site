@@ -1,22 +1,114 @@
 "use client";
 
-import { FC } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useGetServiceFormById } from "../api/useGetServiceFormById";
 import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Button } from "@/shared/Ui/Button";
 import { Input } from "@/shared/Ui/Input";
-import { Select } from "@/shared/Ui/Select";
 import { FormSelect } from "@/shared/Ui/formSelect";
+import { useCreateApiV1ServiceFieldValuePost } from "@/generated/lawyersSiteApiComponents";
+import { ServiceFormData, ServiceFormFieldType } from "../model/types";
+import { mapSchemaFromServiceFormData } from "../lib/validation";
+import { ObjectWithProps } from "@/Models";
+import { ValidationError } from "yup";
+import { RequisitesModal } from "@/entities/requisitesModal";
+import { getOptionIdByValue } from "@/shared/lib";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
+  const [form, setForm] = useState<ServiceFormData>({});
+  const router = useRouter();
+  const [errors, setErrors] = useState<ObjectWithProps<string>>({});
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [response, isLoading] = useGetServiceFormById(serviceId);
-  const { data } = response || {};
-  console.log(data);
+  const {
+    mutate: submitForm,
+    data: submitResponse,
+    isPending,
+    error,
+    isSuccess,
+  } = useCreateApiV1ServiceFieldValuePost();
+  //@ts-expect-error позже типизровать
+  const { data: initialFormFields } = response || {};
+  console.log(submitResponse);
+
+  useEffect(() => {
+    //@ts-expect-error позже типизровать
+    if (submitResponse?.success) {
+      setIsConfirmModalOpen(false);
+      toast("Услуга успешно зарегистрирована", {
+        position: "top-right",
+        autoClose: 1800,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      setTimeout(() => {
+        router.push(`/service/ordered?serviceId=${serviceId}`);
+      }, 2200);
+    }
+  }, [submitResponse]);
+
+  const submitRequest = () => {
+    const fields = Object.entries(form).map(([key, value]) => ({
+      field_id: key,
+      value,
+    }));
+    submitForm({
+      headers: {
+        //@ts-expect-error позже типизровать
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: {
+        service_id: serviceId,
+        //@ts-expect-error позже типизровать
+        fields,
+      },
+    });
+  };
 
   const onChange =
-    (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      // Логика обработки изменения поля формы
+    (id: string) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      //@ts-expect-error позже типизровать
+      const field = initialFormFields?.find((f) => f.id === id);
+      const { value } = e.target;
+      const formattedValue =
+        field?.type === "INTEGER"
+          ? Number(value)
+          : field.type === "SELECT"
+            ? getOptionIdByValue(field.options, value)
+            : field.type === "BOOL"
+              ? Boolean(value)
+              : value;
+      const newForm = { ...form, [id]: formattedValue };
+
+      setForm(newForm);
+      if (errors?.[id]) {
+        setErrors({ ...errors, [id]: "" });
+      }
     };
+
+  const validateAndSend = (): void => {
+    const validationSchema = mapSchemaFromServiceFormData(initialFormFields);
+    try {
+      validationSchema.validateSync(form, { abortEarly: false });
+    } catch (err) {
+      const validationErrors = err as ValidationError;
+      const newErrors: ObjectWithProps<string> = {};
+      validationErrors.inner.forEach((e) => {
+        newErrors[e.path as string] = e.message;
+      });
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsConfirmModalOpen(true);
+  };
 
   const mapOptions = (
     options: Array<{ ID: string; VALUE: string; LABEL?: string }>,
@@ -29,50 +121,65 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
 
   return (
     <>
+      <ToastContainer progressClassName="form-progressbar" />
       <h2>Форма услуги</h2>
       <div className="flex justify-center mt-3 lg:mt-5">
         <FormWrapper className="w-[100%] max-w-[500px]">
-          {data?.map(({ name, id, key, type, options, reqiured }) => {
-            const isDateField = type === "DATE";
-            const isSelectField = type === "SELECT";
+          {initialFormFields?.map(
+            ({ name, id, key, type, options }: ServiceFormFieldType) => {
+              const isDateField = type === "DATE";
+              const isSelectField = type === "SELECT";
+              // const isNumberField = type === "INTEGER";
+              // const isRadioField = type === "BOOL";
 
-            if (isSelectField) {
+              if (isSelectField) {
+                return (
+                  <div className="w-[100%]" key={name}>
+                    <FormSelect
+                      label={name}
+                      options={mapOptions(options || [])}
+                      onChange={onChange(id)}
+                      value={form[id] as string}
+                      error={errors?.[id]}
+                      disabled={isLoading as boolean}
+                    />
+                  </div>
+                );
+              }
               return (
-                <div className="w-[100%]" key={name}>
-                  <FormSelect
-                    className="w-full border"
+                <div
+                  className={`${isDateField ? "w-[30%]" : "w-[100%]"}`}
+                  key={name}
+                >
+                  <Input
+                    type={isDateField ? "date" : "text"}
+                    key={name}
                     label={name}
-                    options={mapOptions(options || [])}
-                    onChange={onChange(name)}
-                    // value={form[name] ?? ''}
-                    // error={errors?.[name]}
-                    disabled={isLoading}
+                    onChange={onChange(id)}
+                    value={String(form[id] ?? "")}
+                    error={errors?.[id]}
+                    disabled={isLoading as boolean}
+                    // maxLength={max_length}
                   />
                 </div>
               );
-            }
-            return (
-              <div
-                className={`${isDateField ? "w-[30%]" : "w-[100%]"}`}
-                key={name}
-              >
-                <Input
-                  type={isDateField ? "date" : "text"}
-                  key={name}
-                  label={name}
-                  onChange={onChange(name)}
-                  // value={form[name] ?? ''}
-                  // error={errors?.[name]}
-                  // disabled={isLoading}
-                  // maxLength={max_length}
-                />
-              </div>
-            );
-          })}
-          <Button type="submit" disabled={isLoading} className={`mt-[16px]`}>
+            },
+          )}
+          <Button
+            disabled={isLoading as boolean}
+            className={`mt-[16px]`}
+            onClick={validateAndSend}
+          >
             <p>Сохранить</p>
           </Button>
         </FormWrapper>
+        <RequisitesModal
+          schema={initialFormFields}
+          details={form}
+          isOpen={isConfirmModalOpen}
+          onConfirm={submitRequest}
+          onEdit={() => setIsConfirmModalOpen(false)}
+        />
       </div>
     </>
   );

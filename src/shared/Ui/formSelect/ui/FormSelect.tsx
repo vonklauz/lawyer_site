@@ -1,15 +1,18 @@
+import { FormSelectProps } from "../model/types";
 import styles from "./FormSelect.module.css";
 
 export const FormSelect = ({
   label,
   id,
   name,
+  error,
   options,
   value,
   onChange,
-  placeholder = "Select option",
+  disabled = false,
+  placeholder = "Выберите значение",
   className = "",
-}) => {
+}: FormSelectProps) => {
   return (
     <div className="mb-[12px]">
       <label htmlFor={id ? id : name ? name : ""} className={styles.label}>
@@ -18,14 +21,15 @@ export const FormSelect = ({
       <div className={styles.inputWrapper}>
         <select
           className={`${styles.input} cursor-pointer ${className}`}
-          value={value}
+          value={value && value !== "" ? value : ""}
           onChange={onChange}
+          disabled={disabled || options.length === 0}
         >
-          {/* {placeholder && (
-        <option value="" disabled>
-          {placeholder}
-        </option>
-      )} */}
+          {placeholder && (
+            <option value="" disabled>
+              {placeholder}
+            </option>
+          )}
           {options.map((option) => (
             <option
               className="cursor-pointer"
@@ -37,6 +41,7 @@ export const FormSelect = ({
           ))}
         </select>
       </div>
+      {error && <span className="error">{error}</span>}
     </div>
   );
 };

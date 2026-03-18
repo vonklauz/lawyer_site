@@ -8,9 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body
-        className="antialiased flex flex-col min-h-dvh justify-between"
-      >
+      <body className="antialiased flex flex-col min-h-dvh justify-between">
         {children}
       </body>
     </html>
