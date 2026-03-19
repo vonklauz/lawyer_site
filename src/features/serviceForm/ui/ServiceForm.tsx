@@ -12,9 +12,12 @@ import { mapSchemaFromServiceFormData } from "../lib/validation";
 import { ObjectWithProps } from "@/Models";
 import { ValidationError } from "yup";
 import { RequisitesModal } from "@/entities/requisitesModal";
-import { getOptionIdByValue } from "@/shared/lib";
+import { getDefaultRadioOptions, getOptionIdByValue } from "@/shared/lib";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { RadioButton } from "@/shared/Ui/radioButton";
+import { id } from "date-fns/locale";
+import { v4 as uuidv4 } from "uuid";
 
 export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
   const [form, setForm] = useState<ServiceFormData>({});
@@ -31,7 +34,6 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
   } = useCreateApiV1ServiceFieldValuePost();
   //@ts-expect-error позже типизровать
   const { data: initialFormFields } = response || {};
-  console.log(submitResponse);
 
   useEffect(() => {
     //@ts-expect-error позже типизровать
@@ -82,9 +84,7 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
           ? Number(value)
           : field.type === "SELECT"
             ? getOptionIdByValue(field.options, value)
-            : field.type === "BOOL"
-              ? Boolean(value)
-              : value;
+            : value;
       const newForm = { ...form, [id]: formattedValue };
 
       setForm(newForm);
@@ -111,11 +111,12 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
   };
 
   const mapOptions = (
-    options: Array<{ ID: string; VALUE: string; LABEL?: string }>,
+    options: Array<{ ID: string; VALUE: string; LABEL?: string }> = [],
   ) => {
-    return options.map((option) => ({
+    return options?.map((option) => ({
       value: option.VALUE,
       label: option.LABEL || option.VALUE,
+      id: option.ID || uuidv4(),
     }));
   };
 
@@ -130,18 +131,30 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
               const isDateField = type === "DATE";
               const isSelectField = type === "SELECT";
               // const isNumberField = type === "INTEGER";
-              // const isRadioField = type === "BOOL";
+              const isRadioField = type === "BOOL";
 
               if (isSelectField) {
                 return (
                   <div className="w-[100%]" key={name}>
                     <FormSelect
                       label={name}
-                      options={mapOptions(options || [])}
+                      options={mapOptions(options)}
                       onChange={onChange(id)}
                       value={form[id] as string}
                       error={errors?.[id]}
                       disabled={isLoading as boolean}
+                    />
+                  </div>
+                );
+              } else if (isRadioField) {
+                return (
+                  <div className="w-[100%]" key={name}>
+                    <RadioButton
+                      id={name}
+                      label={name}
+                      options={mapOptions(options) || getDefaultRadioOptions()}
+                      onChange={onChange(id)}
+                      value={form[id] as string}
                     />
                   </div>
                 );
@@ -165,6 +178,7 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
               );
             },
           )}
+
           <Button
             disabled={isLoading as boolean}
             className={`mt-[16px]`}

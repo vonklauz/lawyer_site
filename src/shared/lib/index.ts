@@ -110,3 +110,8 @@ export const getOptionIdByValue = (
   }
   return options.find((option) => option.ID === value)?.VALUE as string;
 };
+
+export const getDefaultRadioOptions = () => [
+  { id: "true", value: "Да", label: "Да" },
+  { id: "false", value: "Нет", label: "Нет" },
+];

@@ -1,7 +1,8 @@
+import { FC } from "react";
 import { FormSelectProps } from "../model/types";
 import styles from "./FormSelect.module.css";
 
-export const FormSelect = ({
+export const FormSelect: FC<FormSelectProps> = ({
   label,
   id,
   name,
@@ -12,7 +13,7 @@ export const FormSelect = ({
   disabled = false,
   placeholder = "Выберите значение",
   className = "",
-}: FormSelectProps) => {
+}) => {
   return (
     <div className="mb-[12px]">
       <label htmlFor={id ? id : name ? name : ""} className={styles.label}>

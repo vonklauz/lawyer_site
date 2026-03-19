@@ -78,3 +78,9 @@ export type ServiceSelectOption = {
   ID: string;
   VALUE: string;
 };
+
+export type BaseInputOption = {
+  id: string;
+  label: string;
+  value?: string;
+};

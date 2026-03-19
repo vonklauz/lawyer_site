@@ -1,3 +1,4 @@
+import { BaseInputOption } from "@/shared/models/types";
 import { ChangeEvent } from "react";
 
 export type FormSelectProps = {
@@ -5,7 +6,7 @@ export type FormSelectProps = {
   id?: string;
   name?: string;
   error?: string;
-  options: Array<{ value: string; label: string }>;
+  options: BaseInputOption[];
   value: string;
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
   disabled?: boolean;
