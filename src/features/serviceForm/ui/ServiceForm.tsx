@@ -16,8 +16,8 @@ import { getDefaultRadioOptions, getOptionIdByValue } from "@/shared/lib";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { RadioButton } from "@/shared/Ui/radioButton";
-import { id } from "date-fns/locale";
 import { v4 as uuidv4 } from "uuid";
+import { MaskedInput } from "@/shared/Ui/MaskedInput";
 
 export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
   const [form, setForm] = useState<ServiceFormData>({});
@@ -84,7 +84,9 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
           ? Number(value)
           : field.type === "SELECT"
             ? getOptionIdByValue(field.options, value)
-            : value;
+            : field.type === "BOOL"
+              ? value === "true"
+              : value;
       const newForm = { ...form, [id]: formattedValue };
 
       setForm(newForm);
@@ -130,7 +132,7 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
             ({ name, id, key, type, options }: ServiceFormFieldType) => {
               const isDateField = type === "DATE";
               const isSelectField = type === "SELECT";
-              // const isNumberField = type === "INTEGER";
+              const isNumberField = type === "INTEGER";
               const isRadioField = type === "BOOL";
 
               if (isSelectField) {
@@ -155,6 +157,20 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
                       options={mapOptions(options) || getDefaultRadioOptions()}
                       onChange={onChange(id)}
                       value={form[id] as string}
+                    />
+                  </div>
+                );
+              } else if (isNumberField) {
+                return (
+                  <div className="w-[100%]" key={name}>
+                    <MaskedInput
+                      id={name}
+                      mask="ddddddddd"
+                      label={name}
+                      replacement={{ d: /\d/ }}
+                      onChange={onChange(id)}
+                      value={form[id] ? Number(form[id]) : ""}
+                      error={errors?.[id]}
                     />
                   </div>
                 );
