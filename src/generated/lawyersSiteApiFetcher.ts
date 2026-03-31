@@ -1,4 +1,4 @@
-import { LawyersSiteApiContext } from "./lawyersSiteApiContext";
+import type { LawyersSiteApiContext } from "./lawyersSiteApiContext";
 
 const baseUrl = "http://109.172.46.169:8080";
 

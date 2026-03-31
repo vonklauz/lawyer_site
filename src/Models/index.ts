@@ -1,4 +1,4 @@
-import { LoginResponse } from "@/Widgets/AuthForm/api";
+import { LoginResponse } from "@/shared/models/types";
 
 export type Link = {
   label: string;

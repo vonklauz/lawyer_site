@@ -5,8 +5,8 @@
  */
 import * as reactQuery from "@tanstack/react-query";
 import {
+  type LawyersSiteApiContext,
   useLawyersSiteApiContext,
-  LawyersSiteApiContext,
   queryKeyFn,
 } from "./lawyersSiteApiContext";
 import { deepMerge } from "./lawyersSiteApiUtils";
@@ -18,10 +18,20 @@ type QueryFnOptions = {
   signal?: AbortController["signal"];
 };
 
-export type RegisterUserApiV1AuthRegistrationPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.AuthHTTPValidationError;
-}>;
+export type RegisterUserApiV1AuthRegistrationPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 409;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.AuthHTTPValidationError;
+    }
+>;
 
 export type RegisterUserApiV1AuthRegistrationPostVariables = {
   body: Schemas.AuthRegistrationDTO;
@@ -38,7 +48,7 @@ export const fetchRegisterUserApiV1AuthRegistrationPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponsePresentationUserDTO,
     RegisterUserApiV1AuthRegistrationPostError,
     Schemas.AuthRegistrationDTO,
     {},
@@ -55,7 +65,7 @@ export const fetchRegisterUserApiV1AuthRegistrationPost = (
 export const useRegisterUserApiV1AuthRegistrationPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.AuthSuccessResponsePresentationUserDTO,
       RegisterUserApiV1AuthRegistrationPostError,
       RegisterUserApiV1AuthRegistrationPostVariables
     >,
@@ -64,7 +74,7 @@ export const useRegisterUserApiV1AuthRegistrationPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.AuthSuccessResponsePresentationUserDTO,
     RegisterUserApiV1AuthRegistrationPostError,
     RegisterUserApiV1AuthRegistrationPostVariables
   >({
@@ -77,27 +87,31 @@ export const useRegisterUserApiV1AuthRegistrationPost = (
 };
 
 export type VerifyEmailApiV1AuthRegistrationVerifyEmailPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.AuthHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.AuthHTTPValidationError;
+      }
+  >;
 
 export type VerifyEmailApiV1AuthRegistrationVerifyEmailPostVariables = {
   body: Schemas.AuthVerifyEmailAfterRegistrationDTO;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-/**
- * Регистрация пользователя
- * :param dto: DTO для регистрации пользователя
- * :param use_case: Use Case для регистрации пользователя
- * :return: DTO зарегистрированного пользователя
- */
 export const fetchVerifyEmailApiV1AuthRegistrationVerifyEmailPost = (
   variables: VerifyEmailApiV1AuthRegistrationVerifyEmailPostVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponseBool,
     VerifyEmailApiV1AuthRegistrationVerifyEmailPostError,
     Schemas.AuthVerifyEmailAfterRegistrationDTO,
     {},
@@ -110,16 +124,10 @@ export const fetchVerifyEmailApiV1AuthRegistrationVerifyEmailPost = (
     signal,
   });
 
-/**
- * Регистрация пользователя
- * :param dto: DTO для регистрации пользователя
- * :param use_case: Use Case для регистрации пользователя
- * :return: DTO зарегистрированного пользователя
- */
 export const useVerifyEmailApiV1AuthRegistrationVerifyEmailPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.AuthSuccessResponseBool,
       VerifyEmailApiV1AuthRegistrationVerifyEmailPostError,
       VerifyEmailApiV1AuthRegistrationVerifyEmailPostVariables
     >,
@@ -128,7 +136,7 @@ export const useVerifyEmailApiV1AuthRegistrationVerifyEmailPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.AuthSuccessResponseBool,
     VerifyEmailApiV1AuthRegistrationVerifyEmailPostError,
     VerifyEmailApiV1AuthRegistrationVerifyEmailPostVariables
   >({
@@ -142,10 +150,20 @@ export const useVerifyEmailApiV1AuthRegistrationVerifyEmailPost = (
   });
 };
 
-export type LoginUserApiV1AuthLoginPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.AuthHTTPValidationError;
-}>;
+export type LoginUserApiV1AuthLoginPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 401;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.AuthHTTPValidationError;
+    }
+>;
 
 export type LoginUserApiV1AuthLoginPostVariables = {
   body: Schemas.AuthLoginUserDTO;
@@ -156,7 +174,7 @@ export const fetchLoginUserApiV1AuthLoginPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponseLoginResponseDTO,
     LoginUserApiV1AuthLoginPostError,
     Schemas.AuthLoginUserDTO,
     {},
@@ -167,7 +185,7 @@ export const fetchLoginUserApiV1AuthLoginPost = (
 export const useLoginUserApiV1AuthLoginPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.AuthSuccessResponseLoginResponseDTO,
       LoginUserApiV1AuthLoginPostError,
       LoginUserApiV1AuthLoginPostVariables
     >,
@@ -176,7 +194,7 @@ export const useLoginUserApiV1AuthLoginPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.AuthSuccessResponseLoginResponseDTO,
     LoginUserApiV1AuthLoginPostError,
     LoginUserApiV1AuthLoginPostVariables
   >({
@@ -187,27 +205,31 @@ export const useLoginUserApiV1AuthLoginPost = (
 };
 
 export type RequestResetPasswordApiV1AuthPasswordResetRequestPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.AuthHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.AuthHTTPValidationError;
+      }
+  >;
 
 export type RequestResetPasswordApiV1AuthPasswordResetRequestPostVariables = {
   body: Schemas.AuthPasswordResetRequestDTO;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-/**
- * Регистрация пользователя
- * :param dto: DTO для регистрации пользователя
- * :param use_case: Use Case для регистрации пользователя
- * :return: DTO зарегистрированного пользователя
- */
 export const fetchRequestResetPasswordApiV1AuthPasswordResetRequestPost = (
   variables: RequestResetPasswordApiV1AuthPasswordResetRequestPostVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponseBool,
     RequestResetPasswordApiV1AuthPasswordResetRequestPostError,
     Schemas.AuthPasswordResetRequestDTO,
     {},
@@ -220,16 +242,10 @@ export const fetchRequestResetPasswordApiV1AuthPasswordResetRequestPost = (
     signal,
   });
 
-/**
- * Регистрация пользователя
- * :param dto: DTO для регистрации пользователя
- * :param use_case: Use Case для регистрации пользователя
- * :return: DTO зарегистрированного пользователя
- */
 export const useRequestResetPasswordApiV1AuthPasswordResetRequestPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.AuthSuccessResponseBool,
       RequestResetPasswordApiV1AuthPasswordResetRequestPostError,
       RequestResetPasswordApiV1AuthPasswordResetRequestPostVariables
     >,
@@ -238,7 +254,7 @@ export const useRequestResetPasswordApiV1AuthPasswordResetRequestPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.AuthSuccessResponseBool,
     RequestResetPasswordApiV1AuthPasswordResetRequestPostError,
     RequestResetPasswordApiV1AuthPasswordResetRequestPostVariables
   >({
@@ -252,23 +268,33 @@ export const useRequestResetPasswordApiV1AuthPasswordResetRequestPost = (
   });
 };
 
-export type RequestResetPasswordApiV1AuthPasswordResetConfirmPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.AuthHTTPValidationError;
-  }>;
+export type ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.AuthHTTPValidationError;
+      }
+  >;
 
-export type RequestResetPasswordApiV1AuthPasswordResetConfirmPostVariables = {
+export type ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostVariables = {
   body: Schemas.AuthConfirmResetPasswordDTO;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchRequestResetPasswordApiV1AuthPasswordResetConfirmPost = (
-  variables: RequestResetPasswordApiV1AuthPasswordResetConfirmPostVariables,
+export const fetchConfirmResetPasswordApiV1AuthPasswordResetConfirmPost = (
+  variables: ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    RequestResetPasswordApiV1AuthPasswordResetConfirmPostError,
+    Schemas.AuthSuccessResponseBool,
+    ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostError,
     Schemas.AuthConfirmResetPasswordDTO,
     {},
     {},
@@ -280,36 +306,46 @@ export const fetchRequestResetPasswordApiV1AuthPasswordResetConfirmPost = (
     signal,
   });
 
-export const useRequestResetPasswordApiV1AuthPasswordResetConfirmPost = (
+export const useConfirmResetPasswordApiV1AuthPasswordResetConfirmPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
-      RequestResetPasswordApiV1AuthPasswordResetConfirmPostError,
-      RequestResetPasswordApiV1AuthPasswordResetConfirmPostVariables
+      Schemas.AuthSuccessResponseBool,
+      ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostError,
+      ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostVariables
     >,
     "mutationFn"
   >,
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
-    RequestResetPasswordApiV1AuthPasswordResetConfirmPostError,
-    RequestResetPasswordApiV1AuthPasswordResetConfirmPostVariables
+    Schemas.AuthSuccessResponseBool,
+    ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostError,
+    ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostVariables
   >({
     mutationFn: (
-      variables: RequestResetPasswordApiV1AuthPasswordResetConfirmPostVariables,
+      variables: ConfirmResetPasswordApiV1AuthPasswordResetConfirmPostVariables,
     ) =>
-      fetchRequestResetPasswordApiV1AuthPasswordResetConfirmPost(
+      fetchConfirmResetPasswordApiV1AuthPasswordResetConfirmPost(
         deepMerge(fetcherOptions, variables),
       ),
     ...options,
   });
 };
 
-export type LogoutUserApiV1AuthLogoutPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.AuthHTTPValidationError;
-}>;
+export type LogoutUserApiV1AuthLogoutPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 401;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.AuthHTTPValidationError;
+    }
+>;
 
 export type LogoutUserApiV1AuthLogoutPostVariables = {
   body: Schemas.AuthLogoutUserDTO;
@@ -320,7 +356,7 @@ export const fetchLogoutUserApiV1AuthLogoutPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponseBool,
     LogoutUserApiV1AuthLogoutPostError,
     Schemas.AuthLogoutUserDTO,
     {},
@@ -331,7 +367,7 @@ export const fetchLogoutUserApiV1AuthLogoutPost = (
 export const useLogoutUserApiV1AuthLogoutPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.AuthSuccessResponseBool,
       LogoutUserApiV1AuthLogoutPostError,
       LogoutUserApiV1AuthLogoutPostVariables
     >,
@@ -340,7 +376,7 @@ export const useLogoutUserApiV1AuthLogoutPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.AuthSuccessResponseBool,
     LogoutUserApiV1AuthLogoutPostError,
     LogoutUserApiV1AuthLogoutPostVariables
   >({
@@ -350,49 +386,59 @@ export const useLogoutUserApiV1AuthLogoutPost = (
   });
 };
 
-export type RegisterUserApiV1AuthJwtRotateRefreshPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.AuthHTTPValidationError;
-  }>;
+export type RotateRefreshTokenApiV1AuthJwtRotateRefreshPostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 401;
+        payload: Schemas.AuthErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.AuthHTTPValidationError;
+      }
+  >;
 
-export type RegisterUserApiV1AuthJwtRotateRefreshPostVariables = {
+export type RotateRefreshTokenApiV1AuthJwtRotateRefreshPostVariables = {
   body: Schemas.AuthRotationRefreshTokenRequestDTO;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchRegisterUserApiV1AuthJwtRotateRefreshPost = (
-  variables: RegisterUserApiV1AuthJwtRotateRefreshPostVariables,
+export const fetchRotateRefreshTokenApiV1AuthJwtRotateRefreshPost = (
+  variables: RotateRefreshTokenApiV1AuthJwtRotateRefreshPostVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    RegisterUserApiV1AuthJwtRotateRefreshPostError,
+    Schemas.AuthSuccessResponseDict,
+    RotateRefreshTokenApiV1AuthJwtRotateRefreshPostError,
     Schemas.AuthRotationRefreshTokenRequestDTO,
     {},
     {},
     {}
   >({ url: "/auth/jwt/rotate/refresh/", method: "post", ...variables, signal });
 
-export const useRegisterUserApiV1AuthJwtRotateRefreshPost = (
+export const useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
-      RegisterUserApiV1AuthJwtRotateRefreshPostError,
-      RegisterUserApiV1AuthJwtRotateRefreshPostVariables
+      Schemas.AuthSuccessResponseDict,
+      RotateRefreshTokenApiV1AuthJwtRotateRefreshPostError,
+      RotateRefreshTokenApiV1AuthJwtRotateRefreshPostVariables
     >,
     "mutationFn"
   >,
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
-    RegisterUserApiV1AuthJwtRotateRefreshPostError,
-    RegisterUserApiV1AuthJwtRotateRefreshPostVariables
+    Schemas.AuthSuccessResponseDict,
+    RotateRefreshTokenApiV1AuthJwtRotateRefreshPostError,
+    RotateRefreshTokenApiV1AuthJwtRotateRefreshPostVariables
   >({
     mutationFn: (
-      variables: RegisterUserApiV1AuthJwtRotateRefreshPostVariables,
+      variables: RotateRefreshTokenApiV1AuthJwtRotateRefreshPostVariables,
     ) =>
-      fetchRegisterUserApiV1AuthJwtRotateRefreshPost(
+      fetchRotateRefreshTokenApiV1AuthJwtRotateRefreshPost(
         deepMerge(fetcherOptions, variables),
       ),
     ...options,
@@ -406,10 +452,20 @@ export type DataUserApiV1AuthUsersUserIdGetPathParams = {
   userId: string;
 };
 
-export type DataUserApiV1AuthUsersUserIdGetError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.AuthHTTPValidationError;
-}>;
+export type DataUserApiV1AuthUsersUserIdGetError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.AuthErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.AuthHTTPValidationError;
+    }
+>;
 
 export type DataUserApiV1AuthUsersUserIdGetVariables = {
   pathParams: DataUserApiV1AuthUsersUserIdGetPathParams;
@@ -420,7 +476,7 @@ export const fetchDataUserApiV1AuthUsersUserIdGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.AuthSuccessResponsePresentationUserDTO,
     DataUserApiV1AuthUsersUserIdGetError,
     undefined,
     {},
@@ -432,14 +488,20 @@ export function dataUserApiV1AuthUsersUserIdGetQuery(
   variables: DataUserApiV1AuthUsersUserIdGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.AuthSuccessResponsePresentationUserDTO>;
 };
 
 export function dataUserApiV1AuthUsersUserIdGetQuery(
   variables: DataUserApiV1AuthUsersUserIdGetVariables | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.AuthSuccessResponsePresentationUserDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function dataUserApiV1AuthUsersUserIdGetQuery(
@@ -459,11 +521,13 @@ export function dataUserApiV1AuthUsersUserIdGetQuery(
   };
 }
 
-export const useSuspenseDataUserApiV1AuthUsersUserIdGet = <TData = void,>(
+export const useSuspenseDataUserApiV1AuthUsersUserIdGet = <
+  TData = Schemas.AuthSuccessResponsePresentationUserDTO,
+>(
   variables: DataUserApiV1AuthUsersUserIdGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.AuthSuccessResponsePresentationUserDTO,
       DataUserApiV1AuthUsersUserIdGetError,
       TData
     >,
@@ -472,7 +536,7 @@ export const useSuspenseDataUserApiV1AuthUsersUserIdGet = <TData = void,>(
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.AuthSuccessResponsePresentationUserDTO,
     DataUserApiV1AuthUsersUserIdGetError,
     TData
   >({
@@ -484,11 +548,13 @@ export const useSuspenseDataUserApiV1AuthUsersUserIdGet = <TData = void,>(
   });
 };
 
-export const useDataUserApiV1AuthUsersUserIdGet = <TData = void,>(
+export const useDataUserApiV1AuthUsersUserIdGet = <
+  TData = Schemas.AuthSuccessResponsePresentationUserDTO,
+>(
   variables: DataUserApiV1AuthUsersUserIdGetVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.AuthSuccessResponsePresentationUserDTO,
       DataUserApiV1AuthUsersUserIdGetError,
       TData
     >,
@@ -496,73 +562,22 @@ export const useDataUserApiV1AuthUsersUserIdGet = <TData = void,>(
   >,
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
-  return reactQuery.useQuery<void, DataUserApiV1AuthUsersUserIdGetError, TData>(
-    {
-      ...dataUserApiV1AuthUsersUserIdGetQuery(
-        variables === reactQuery.skipToken
-          ? variables
-          : deepMerge(fetcherOptions, variables),
-      ),
-      ...options,
-      ...queryOptions,
-    },
-  );
-};
-
-export type CreateApiV1ServicesPostHeaders = {
-  ["X-User-Id"]: string;
-  ["X-User-Roles"]: string;
-};
-
-export type CreateApiV1ServicesPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
-
-export type CreateApiV1ServicesPostVariables = {
-  body: Schemas.ServicesCreateServiceDTO;
-  headers: CreateApiV1ServicesPostHeaders;
-} & LawyersSiteApiContext["fetcherOptions"];
-
-export const fetchCreateApiV1ServicesPost = (
-  variables: CreateApiV1ServicesPostVariables,
-  signal?: AbortSignal,
-) =>
-  lawyersSiteApiFetch<
-    void,
-    CreateApiV1ServicesPostError,
-    Schemas.ServicesCreateServiceDTO,
-    CreateApiV1ServicesPostHeaders,
-    {},
-    {}
-  >({ url: "/services/", method: "post", ...variables, signal });
-
-export const useCreateApiV1ServicesPost = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<
-      void,
-      CreateApiV1ServicesPostError,
-      CreateApiV1ServicesPostVariables
-    >,
-    "mutationFn"
-  >,
-) => {
-  const { fetcherOptions } = useLawyersSiteApiContext();
-  return reactQuery.useMutation<
-    void,
-    CreateApiV1ServicesPostError,
-    CreateApiV1ServicesPostVariables
+  return reactQuery.useQuery<
+    Schemas.AuthSuccessResponsePresentationUserDTO,
+    DataUserApiV1AuthUsersUserIdGetError,
+    TData
   >({
-    mutationFn: (variables: CreateApiV1ServicesPostVariables) =>
-      fetchCreateApiV1ServicesPost(deepMerge(fetcherOptions, variables)),
+    ...dataUserApiV1AuthUsersUserIdGetQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
     ...options,
+    ...queryOptions,
   });
 };
 
 export type GetByEntityIdApiV1ServicesGetQueryParams = {
-  /**
-   * Тип услуги
-   */
   entity_type?: Schemas.ServicesEntityType;
 };
 
@@ -571,10 +586,20 @@ export type GetByEntityIdApiV1ServicesGetHeaders = {
   ["X-User-Roles"]: string;
 };
 
-export type GetByEntityIdApiV1ServicesGetError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
+export type GetByEntityIdApiV1ServicesGetError = Fetcher.ErrorWrapper<
+  | {
+      status: 401;
+      payload: Schemas.ServicesErrorResponse;
+    }
+  | {
+      status: 403;
+      payload: Schemas.ServicesErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.ServicesErrorResponse;
+    }
+>;
 
 export type GetByEntityIdApiV1ServicesGetVariables = {
   headers: GetByEntityIdApiV1ServicesGetHeaders;
@@ -586,7 +611,7 @@ export const fetchGetByEntityIdApiV1ServicesGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.ServicesSuccessResponseListOutputServiceDTO,
     GetByEntityIdApiV1ServicesGetError,
     undefined,
     GetByEntityIdApiV1ServicesGetHeaders,
@@ -598,14 +623,20 @@ export function getByEntityIdApiV1ServicesGetQuery(
   variables: GetByEntityIdApiV1ServicesGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.ServicesSuccessResponseListOutputServiceDTO>;
 };
 
 export function getByEntityIdApiV1ServicesGetQuery(
   variables: GetByEntityIdApiV1ServicesGetVariables | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.ServicesSuccessResponseListOutputServiceDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getByEntityIdApiV1ServicesGetQuery(
@@ -625,16 +656,22 @@ export function getByEntityIdApiV1ServicesGetQuery(
   };
 }
 
-export const useSuspenseGetByEntityIdApiV1ServicesGet = <TData = void,>(
+export const useSuspenseGetByEntityIdApiV1ServicesGet = <
+  TData = Schemas.ServicesSuccessResponseListOutputServiceDTO,
+>(
   variables: GetByEntityIdApiV1ServicesGetVariables,
   options?: Omit<
-    reactQuery.UseQueryOptions<void, GetByEntityIdApiV1ServicesGetError, TData>,
+    reactQuery.UseQueryOptions<
+      Schemas.ServicesSuccessResponseListOutputServiceDTO,
+      GetByEntityIdApiV1ServicesGetError,
+      TData
+    >,
     "queryKey" | "queryFn" | "initialData"
   >,
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.ServicesSuccessResponseListOutputServiceDTO,
     GetByEntityIdApiV1ServicesGetError,
     TData
   >({
@@ -644,15 +681,25 @@ export const useSuspenseGetByEntityIdApiV1ServicesGet = <TData = void,>(
   });
 };
 
-export const useGetByEntityIdApiV1ServicesGet = <TData = void,>(
+export const useGetByEntityIdApiV1ServicesGet = <
+  TData = Schemas.ServicesSuccessResponseListOutputServiceDTO,
+>(
   variables: GetByEntityIdApiV1ServicesGetVariables | reactQuery.SkipToken,
   options?: Omit<
-    reactQuery.UseQueryOptions<void, GetByEntityIdApiV1ServicesGetError, TData>,
+    reactQuery.UseQueryOptions<
+      Schemas.ServicesSuccessResponseListOutputServiceDTO,
+      GetByEntityIdApiV1ServicesGetError,
+      TData
+    >,
     "queryKey" | "queryFn" | "initialData"
   >,
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
-  return reactQuery.useQuery<void, GetByEntityIdApiV1ServicesGetError, TData>({
+  return reactQuery.useQuery<
+    Schemas.ServicesSuccessResponseListOutputServiceDTO,
+    GetByEntityIdApiV1ServicesGetError,
+    TData
+  >({
     ...getByEntityIdApiV1ServicesGetQuery(
       variables === reactQuery.skipToken
         ? variables
@@ -663,93 +710,113 @@ export const useGetByEntityIdApiV1ServicesGet = <TData = void,>(
   });
 };
 
-export type GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetPathParams = {
+export type GetByServiceIdApiV1ServicesServiceIdFieldsGetPathParams = {
   /**
    * @format uuid
    */
   serviceId: string;
 };
 
-export type GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetHeaders = {
+export type GetByServiceIdApiV1ServicesServiceIdFieldsGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.ServicesHTTPValidationError;
-  }>;
+export type GetByServiceIdApiV1ServicesServiceIdFieldsGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.ServicesErrorResponse;
+      }
+  >;
 
-export type GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables = {
-  headers: GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetHeaders;
-  pathParams: GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetPathParams;
+export type GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables = {
+  headers: GetByServiceIdApiV1ServicesServiceIdFieldsGetHeaders;
+  pathParams: GetByServiceIdApiV1ServicesServiceIdFieldsGetPathParams;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = (
-  variables: GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables,
+export const fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet = (
+  variables: GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError,
+    Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
+    GetByServiceIdApiV1ServicesServiceIdFieldsGetError,
     undefined,
-    GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetHeaders,
+    GetByServiceIdApiV1ServicesServiceIdFieldsGetHeaders,
     {},
-    GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetPathParams
+    GetByServiceIdApiV1ServicesServiceIdFieldsGetPathParams
   >({
-    url: "/services/service-fields/service/{serviceId}/",
+    url: "/services/{serviceId}/fields",
     method: "get",
     ...variables,
     signal,
   });
 
-export function getByServiceIdApiV1ServiceFieldsServiceServiceIdGetQuery(
-  variables: GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables,
+export function getByServiceIdApiV1ServicesServiceIdFieldsGetQuery(
+  variables: GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.ServicesSuccessResponseListOutputServiceFieldDTO>;
 };
 
-export function getByServiceIdApiV1ServiceFieldsServiceServiceIdGetQuery(
+export function getByServiceIdApiV1ServicesServiceIdFieldsGetQuery(
   variables:
-    | GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables
+    | GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.ServicesSuccessResponseListOutputServiceFieldDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getByServiceIdApiV1ServiceFieldsServiceServiceIdGetQuery(
+export function getByServiceIdApiV1ServicesServiceIdFieldsGetQuery(
   variables:
-    | GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables
+    | GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables
     | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
-      path: "/services/service-fields/service/{serviceId}/",
-      operationId: "getByServiceIdApiV1ServiceFieldsServiceServiceIdGet",
+      path: "/services/{serviceId}/fields",
+      operationId: "getByServiceIdApiV1ServicesServiceIdFieldsGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet(
+            fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet(
               variables,
               signal,
             ),
   };
 }
 
-export const useSuspenseGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
-  TData = void,
+export const useSuspenseGetByServiceIdApiV1ServicesServiceIdFieldsGet = <
+  TData = Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
 >(
-  variables: GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables,
+  variables: GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError,
+      Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
+      GetByServiceIdApiV1ServicesServiceIdFieldsGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -757,11 +824,11 @@ export const useSuspenseGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
-    GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError,
+    Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
+    GetByServiceIdApiV1ServicesServiceIdFieldsGetError,
     TData
   >({
-    ...getByServiceIdApiV1ServiceFieldsServiceServiceIdGetQuery(
+    ...getByServiceIdApiV1ServicesServiceIdFieldsGetQuery(
       deepMerge(fetcherOptions, variables),
     ),
     ...options,
@@ -769,16 +836,16 @@ export const useSuspenseGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
   });
 };
 
-export const useGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
-  TData = void,
+export const useGetByServiceIdApiV1ServicesServiceIdFieldsGet = <
+  TData = Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
 >(
   variables:
-    | GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables
+    | GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError,
+      Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
+      GetByServiceIdApiV1ServicesServiceIdFieldsGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -786,11 +853,11 @@ export const useGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
-    GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetError,
+    Schemas.ServicesSuccessResponseListOutputServiceFieldDTO,
+    GetByServiceIdApiV1ServicesServiceIdFieldsGetError,
     TData
   >({
-    ...getByServiceIdApiV1ServiceFieldsServiceServiceIdGetQuery(
+    ...getByServiceIdApiV1ServicesServiceIdFieldsGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -800,171 +867,231 @@ export const useGetByServiceIdApiV1ServiceFieldsServiceServiceIdGet = <
   });
 };
 
-export type CreateApiV1ServiceFieldValuePostHeaders = {
+export type CreateApiV1ServiceFieldValuesServiceServiceIdPostPathParams = {
+  /**
+   * @format uuid
+   */
+  serviceId: string;
+};
+
+export type CreateApiV1ServiceFieldValuesServiceServiceIdPostHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type CreateApiV1ServiceFieldValuePostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
+export type CreateApiV1ServiceFieldValuesServiceServiceIdPostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.ServicesErrorResponse;
+      }
+  >;
 
-export type CreateApiV1ServiceFieldValuePostVariables = {
-  body: Schemas.ServicesCreateServiceFieldValueDTO;
-  headers: CreateApiV1ServiceFieldValuePostHeaders;
+export type CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables = {
+  body: Schemas.ServicesCreateServiceFieldFromUserDTO;
+  headers: CreateApiV1ServiceFieldValuesServiceServiceIdPostHeaders;
+  pathParams: CreateApiV1ServiceFieldValuesServiceServiceIdPostPathParams;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchCreateApiV1ServiceFieldValuePost = (
-  variables: CreateApiV1ServiceFieldValuePostVariables,
+export const fetchCreateApiV1ServiceFieldValuesServiceServiceIdPost = (
+  variables: CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    CreateApiV1ServiceFieldValuePostError,
-    Schemas.ServicesCreateServiceFieldValueDTO,
-    CreateApiV1ServiceFieldValuePostHeaders,
+    Schemas.ServicesSuccessResponseNoneType,
+    CreateApiV1ServiceFieldValuesServiceServiceIdPostError,
+    Schemas.ServicesCreateServiceFieldFromUserDTO,
+    CreateApiV1ServiceFieldValuesServiceServiceIdPostHeaders,
     {},
-    {}
+    CreateApiV1ServiceFieldValuesServiceServiceIdPostPathParams
   >({
-    url: "/services/service-field-value/",
+    url: "/field-values/service/{serviceId}",
     method: "post",
     ...variables,
     signal,
   });
 
-export const useCreateApiV1ServiceFieldValuePost = (
+export const useCreateApiV1ServiceFieldValuesServiceServiceIdPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
-      CreateApiV1ServiceFieldValuePostError,
-      CreateApiV1ServiceFieldValuePostVariables
+      Schemas.ServicesSuccessResponseNoneType,
+      CreateApiV1ServiceFieldValuesServiceServiceIdPostError,
+      CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables
     >,
     "mutationFn"
   >,
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
-    CreateApiV1ServiceFieldValuePostError,
-    CreateApiV1ServiceFieldValuePostVariables
+    Schemas.ServicesSuccessResponseNoneType,
+    CreateApiV1ServiceFieldValuesServiceServiceIdPostError,
+    CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables
   >({
-    mutationFn: (variables: CreateApiV1ServiceFieldValuePostVariables) =>
-      fetchCreateApiV1ServiceFieldValuePost(
+    mutationFn: (
+      variables: CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables,
+    ) =>
+      fetchCreateApiV1ServiceFieldValuesServiceServiceIdPost(
         deepMerge(fetcherOptions, variables),
       ),
     ...options,
   });
 };
 
-export type GetApiV1ServiceInstancesGetQueryParams = {
-  /**
-   * ID услуги
-   *
-   * @format uuid
-   */
-  service_id?: string;
-  /**
-   * ID инстанса
-   *
-   * @format uuid
-   */
-  instance_id?: string;
-};
-
-export type GetApiV1ServiceInstancesGetHeaders = {
+export type GetUserInstancesWithServicesApiV1ServiceInstancesUserGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type GetApiV1ServiceInstancesGetError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
+export type GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.ServicesHTTPValidationError;
+      }
+  >;
 
-export type GetApiV1ServiceInstancesGetVariables = {
-  headers: GetApiV1ServiceInstancesGetHeaders;
-  queryParams?: GetApiV1ServiceInstancesGetQueryParams;
-} & LawyersSiteApiContext["fetcherOptions"];
+export type GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables =
+  {
+    headers: GetUserInstancesWithServicesApiV1ServiceInstancesUserGetHeaders;
+  } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchGetApiV1ServiceInstancesGet = (
-  variables: GetApiV1ServiceInstancesGetVariables,
+/**
+ * Получает все инстансы пользователя, сгруппированные по сервисам.
+ */
+export const fetchGetUserInstancesWithServicesApiV1ServiceInstancesUserGet = (
+  variables: GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetApiV1ServiceInstancesGetError,
+    Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+    GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError,
     undefined,
-    GetApiV1ServiceInstancesGetHeaders,
-    GetApiV1ServiceInstancesGetQueryParams,
+    GetUserInstancesWithServicesApiV1ServiceInstancesUserGetHeaders,
+    {},
     {}
-  >({
-    url: "/services/service-instances/",
-    method: "get",
-    ...variables,
-    signal,
-  });
+  >({ url: "/instances/user/", method: "get", ...variables, signal });
 
-export function getApiV1ServiceInstancesGetQuery(
-  variables: GetApiV1ServiceInstancesGetVariables,
+/**
+ * Получает все инстансы пользователя, сгруппированные по сервисам.
+ */
+export function getUserInstancesWithServicesApiV1ServiceInstancesUserGetQuery(
+  variables: GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO>;
 };
 
-export function getApiV1ServiceInstancesGetQuery(
-  variables: GetApiV1ServiceInstancesGetVariables | reactQuery.SkipToken,
+export function getUserInstancesWithServicesApiV1ServiceInstancesUserGetQuery(
+  variables:
+    | GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables
+    | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getApiV1ServiceInstancesGetQuery(
-  variables: GetApiV1ServiceInstancesGetVariables | reactQuery.SkipToken,
+export function getUserInstancesWithServicesApiV1ServiceInstancesUserGetQuery(
+  variables:
+    | GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables
+    | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
-      path: "/services/service-instances/",
-      operationId: "getApiV1ServiceInstancesGet",
+      path: "/instances/user/",
+      operationId: "getUserInstancesWithServicesApiV1ServiceInstancesUserGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetApiV1ServiceInstancesGet(variables, signal),
+            fetchGetUserInstancesWithServicesApiV1ServiceInstancesUserGet(
+              variables,
+              signal,
+            ),
   };
 }
 
-export const useSuspenseGetApiV1ServiceInstancesGet = <TData = void,>(
-  variables: GetApiV1ServiceInstancesGetVariables,
+/**
+ * Получает все инстансы пользователя, сгруппированные по сервисам.
+ */
+export const useSuspenseGetUserInstancesWithServicesApiV1ServiceInstancesUserGet =
+  <TData = Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,>(
+    variables: GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables,
+    options?: Omit<
+      reactQuery.UseQueryOptions<
+        Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+        GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError,
+        TData
+      >,
+      "queryKey" | "queryFn" | "initialData"
+    >,
+  ) => {
+    const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+    return reactQuery.useSuspenseQuery<
+      Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+      GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError,
+      TData
+    >({
+      ...getUserInstancesWithServicesApiV1ServiceInstancesUserGetQuery(
+        deepMerge(fetcherOptions, variables),
+      ),
+      ...options,
+      ...queryOptions,
+    });
+  };
+
+/**
+ * Получает все инстансы пользователя, сгруппированные по сервисам.
+ */
+export const useGetUserInstancesWithServicesApiV1ServiceInstancesUserGet = <
+  TData = Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+>(
+  variables:
+    | GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables
+    | reactQuery.SkipToken,
   options?: Omit<
-    reactQuery.UseQueryOptions<void, GetApiV1ServiceInstancesGetError, TData>,
+    reactQuery.UseQueryOptions<
+      Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+      GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError,
+      TData
+    >,
     "queryKey" | "queryFn" | "initialData"
   >,
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
-  return reactQuery.useSuspenseQuery<
-    void,
-    GetApiV1ServiceInstancesGetError,
+  return reactQuery.useQuery<
+    Schemas.ServicesSuccessResponseListGroupedServiceInstanceOutputDTO,
+    GetUserInstancesWithServicesApiV1ServiceInstancesUserGetError,
     TData
   >({
-    ...getApiV1ServiceInstancesGetQuery(deepMerge(fetcherOptions, variables)),
-    ...options,
-    ...queryOptions,
-  });
-};
-
-export const useGetApiV1ServiceInstancesGet = <TData = void,>(
-  variables: GetApiV1ServiceInstancesGetVariables | reactQuery.SkipToken,
-  options?: Omit<
-    reactQuery.UseQueryOptions<void, GetApiV1ServiceInstancesGetError, TData>,
-    "queryKey" | "queryFn" | "initialData"
-  >,
-) => {
-  const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
-  return reactQuery.useQuery<void, GetApiV1ServiceInstancesGetError, TData>({
-    ...getApiV1ServiceInstancesGetQuery(
+    ...getUserInstancesWithServicesApiV1ServiceInstancesUserGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -974,58 +1101,175 @@ export const useGetApiV1ServiceInstancesGet = <TData = void,>(
   });
 };
 
-export type CreateApiV1RequestedFieldsPostHeaders = {
+export type GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetPathParams =
+  {
+    /**
+     * ID инстанса
+     *
+     * @format uuid
+     */
+    instanceId: string;
+  };
+
+export type GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type CreateApiV1RequestedFieldsPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
+export type GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.ServicesErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.ServicesHTTPValidationError;
+      }
+  >;
 
-export type CreateApiV1RequestedFieldsPostVariables = {
-  body: Schemas.ServicesCreateRequestedFieldDTO;
-  headers: CreateApiV1RequestedFieldsPostHeaders;
-} & LawyersSiteApiContext["fetcherOptions"];
+export type GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables =
+  {
+    headers: GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetHeaders;
+    pathParams: GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetPathParams;
+  } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchCreateApiV1RequestedFieldsPost = (
-  variables: CreateApiV1RequestedFieldsPostVariables,
+/**
+ * Получает полную информацию об инстансе (все поля + requested_fields).
+ */
+export const fetchGetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet = (
+  variables: GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    CreateApiV1RequestedFieldsPostError,
-    Schemas.ServicesCreateRequestedFieldDTO,
-    CreateApiV1RequestedFieldsPostHeaders,
+    Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+    GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError,
+    undefined,
+    GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetHeaders,
     {},
-    {}
+    GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetPathParams
   >({
-    url: "/services/requested-fields/instance/",
-    method: "post",
+    url: "/instances/detail/{instanceId}",
+    method: "get",
     ...variables,
     signal,
   });
 
-export const useCreateApiV1RequestedFieldsPost = (
-  options?: Omit<
-    reactQuery.UseMutationOptions<
-      void,
-      CreateApiV1RequestedFieldsPostError,
-      CreateApiV1RequestedFieldsPostVariables
+/**
+ * Получает полную информацию об инстансе (все поля + requested_fields).
+ */
+export function getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetQuery(
+  variables: GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.ServicesSuccessResponseServiceInstanceOutputDTO>;
+};
+
+export function getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetQuery(
+  variables:
+    | GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables
+    | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.ServicesSuccessResponseServiceInstanceOutputDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetQuery(
+  variables:
+    | GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables
+    | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/instances/detail/{instanceId}",
+      operationId: "getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchGetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet(
+              variables,
+              signal,
+            ),
+  };
+}
+
+/**
+ * Получает полную информацию об инстансе (все поля + requested_fields).
+ */
+export const useSuspenseGetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet =
+  <TData = Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,>(
+    variables: GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables,
+    options?: Omit<
+      reactQuery.UseQueryOptions<
+        Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+        GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError,
+        TData
+      >,
+      "queryKey" | "queryFn" | "initialData"
     >,
-    "mutationFn"
+  ) => {
+    const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+    return reactQuery.useSuspenseQuery<
+      Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+      GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError,
+      TData
+    >({
+      ...getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetQuery(
+        deepMerge(fetcherOptions, variables),
+      ),
+      ...options,
+      ...queryOptions,
+    });
+  };
+
+/**
+ * Получает полную информацию об инстансе (все поля + requested_fields).
+ */
+export const useGetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet = <
+  TData = Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+>(
+  variables:
+    | GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables
+    | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+      GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
   >,
 ) => {
-  const { fetcherOptions } = useLawyersSiteApiContext();
-  return reactQuery.useMutation<
-    void,
-    CreateApiV1RequestedFieldsPostError,
-    CreateApiV1RequestedFieldsPostVariables
+  const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.ServicesSuccessResponseServiceInstanceOutputDTO,
+    GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetError,
+    TData
   >({
-    mutationFn: (variables: CreateApiV1RequestedFieldsPostVariables) =>
-      fetchCreateApiV1RequestedFieldsPost(deepMerge(fetcherOptions, variables)),
+    ...getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
     ...options,
+    ...queryOptions,
   });
 };
 
@@ -1041,10 +1285,24 @@ export type SaveApiV1RequestedFieldsInstanceIdPostHeaders = {
   ["X-User-Roles"]: string;
 };
 
-export type SaveApiV1RequestedFieldsInstanceIdPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.ServicesHTTPValidationError;
-}>;
+export type SaveApiV1RequestedFieldsInstanceIdPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 401;
+      payload: Schemas.ServicesErrorResponse;
+    }
+  | {
+      status: 403;
+      payload: Schemas.ServicesErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.ServicesErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.ServicesErrorResponse;
+    }
+>;
 
 export type SaveApiV1RequestedFieldsInstanceIdPostVariables = {
   body: Schemas.ServicesSaveRequestedFieldDTO;
@@ -1057,14 +1315,14 @@ export const fetchSaveApiV1RequestedFieldsInstanceIdPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.ServicesSuccessResponseBool,
     SaveApiV1RequestedFieldsInstanceIdPostError,
     Schemas.ServicesSaveRequestedFieldDTO,
     SaveApiV1RequestedFieldsInstanceIdPostHeaders,
     {},
     SaveApiV1RequestedFieldsInstanceIdPostPathParams
   >({
-    url: "/services/requested-fields/instance/{instanceId}/",
+    url: "/requested-fields/{instanceId}",
     method: "post",
     ...variables,
     signal,
@@ -1073,7 +1331,7 @@ export const fetchSaveApiV1RequestedFieldsInstanceIdPost = (
 export const useSaveApiV1RequestedFieldsInstanceIdPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.ServicesSuccessResponseBool,
       SaveApiV1RequestedFieldsInstanceIdPostError,
       SaveApiV1RequestedFieldsInstanceIdPostVariables
     >,
@@ -1082,7 +1340,7 @@ export const useSaveApiV1RequestedFieldsInstanceIdPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.ServicesSuccessResponseBool,
     SaveApiV1RequestedFieldsInstanceIdPostError,
     SaveApiV1RequestedFieldsInstanceIdPostVariables
   >({
@@ -1094,15 +1352,622 @@ export const useSaveApiV1RequestedFieldsInstanceIdPost = (
   });
 };
 
+export type GetUserByUserIdApiV1UserGetHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type GetUserByUserIdApiV1UserGetError = Fetcher.ErrorWrapper<
+  | {
+      status: 401;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.TwoFaHTTPValidationError;
+    }
+>;
+
+export type GetUserByUserIdApiV1UserGetVariables = {
+  headers: GetUserByUserIdApiV1UserGetHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchGetUserByUserIdApiV1UserGet = (
+  variables: GetUserByUserIdApiV1UserGetVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseUserOutputDTO,
+    GetUserByUserIdApiV1UserGetError,
+    undefined,
+    GetUserByUserIdApiV1UserGetHeaders,
+    {},
+    {}
+  >({ url: "/2fa/user/", method: "get", ...variables, signal });
+
+export function getUserByUserIdApiV1UserGetQuery(
+  variables: GetUserByUserIdApiV1UserGetVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.TwoFaSuccessResponseUserOutputDTO>;
+};
+
+export function getUserByUserIdApiV1UserGetQuery(
+  variables: GetUserByUserIdApiV1UserGetVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.TwoFaSuccessResponseUserOutputDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function getUserByUserIdApiV1UserGetQuery(
+  variables: GetUserByUserIdApiV1UserGetVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/2fa/user/",
+      operationId: "getUserByUserIdApiV1UserGet",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchGetUserByUserIdApiV1UserGet(variables, signal),
+  };
+}
+
+export const useSuspenseGetUserByUserIdApiV1UserGet = <
+  TData = Schemas.TwoFaSuccessResponseUserOutputDTO,
+>(
+  variables: GetUserByUserIdApiV1UserGetVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.TwoFaSuccessResponseUserOutputDTO,
+      GetUserByUserIdApiV1UserGetError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.TwoFaSuccessResponseUserOutputDTO,
+    GetUserByUserIdApiV1UserGetError,
+    TData
+  >({
+    ...getUserByUserIdApiV1UserGetQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export const useGetUserByUserIdApiV1UserGet = <
+  TData = Schemas.TwoFaSuccessResponseUserOutputDTO,
+>(
+  variables: GetUserByUserIdApiV1UserGetVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.TwoFaSuccessResponseUserOutputDTO,
+      GetUserByUserIdApiV1UserGetError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+  return reactQuery.useQuery<
+    Schemas.TwoFaSuccessResponseUserOutputDTO,
+    GetUserByUserIdApiV1UserGetError,
+    TData
+  >({
+    ...getUserByUserIdApiV1UserGetQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export type ActivationApiV1TwoFactorTotpActivatePostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type ActivationApiV1TwoFactorTotpActivatePostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 401;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.TwoFaHTTPValidationError;
+      }
+  >;
+
+export type ActivationApiV1TwoFactorTotpActivatePostVariables = {
+  headers: ActivationApiV1TwoFactorTotpActivatePostHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchActivationApiV1TwoFactorTotpActivatePost = (
+  variables: ActivationApiV1TwoFactorTotpActivatePostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseOutputActivationTOTPMethodDTO,
+    ActivationApiV1TwoFactorTotpActivatePostError,
+    undefined,
+    ActivationApiV1TwoFactorTotpActivatePostHeaders,
+    {},
+    {}
+  >({ url: "/2fa/totp/activate/", method: "post", ...variables, signal });
+
+export const useActivationApiV1TwoFactorTotpActivatePost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseOutputActivationTOTPMethodDTO,
+      ActivationApiV1TwoFactorTotpActivatePostError,
+      ActivationApiV1TwoFactorTotpActivatePostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseOutputActivationTOTPMethodDTO,
+    ActivationApiV1TwoFactorTotpActivatePostError,
+    ActivationApiV1TwoFactorTotpActivatePostVariables
+  >({
+    mutationFn: (
+      variables: ActivationApiV1TwoFactorTotpActivatePostVariables,
+    ) =>
+      fetchActivationApiV1TwoFactorTotpActivatePost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type DeactivateApiV1TwoFactorTotpDeactivatePostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type DeactivateApiV1TwoFactorTotpDeactivatePostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.TwoFaHTTPValidationError;
+      }
+  >;
+
+export type DeactivateApiV1TwoFactorTotpDeactivatePostVariables = {
+  headers: DeactivateApiV1TwoFactorTotpDeactivatePostHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchDeactivateApiV1TwoFactorTotpDeactivatePost = (
+  variables: DeactivateApiV1TwoFactorTotpDeactivatePostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseNoneType,
+    DeactivateApiV1TwoFactorTotpDeactivatePostError,
+    undefined,
+    DeactivateApiV1TwoFactorTotpDeactivatePostHeaders,
+    {},
+    {}
+  >({ url: "/2fa/totp/deactivate/", method: "post", ...variables, signal });
+
+export const useDeactivateApiV1TwoFactorTotpDeactivatePost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseNoneType,
+      DeactivateApiV1TwoFactorTotpDeactivatePostError,
+      DeactivateApiV1TwoFactorTotpDeactivatePostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseNoneType,
+    DeactivateApiV1TwoFactorTotpDeactivatePostError,
+    DeactivateApiV1TwoFactorTotpDeactivatePostVariables
+  >({
+    mutationFn: (
+      variables: DeactivateApiV1TwoFactorTotpDeactivatePostVariables,
+    ) =>
+      fetchDeactivateApiV1TwoFactorTotpDeactivatePost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type VerifyApiV1TwoFactorTotpVerifyPostQueryParams = {
+  code: number;
+};
+
+export type VerifyApiV1TwoFactorTotpVerifyPostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type VerifyApiV1TwoFactorTotpVerifyPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 401;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.TwoFaHTTPValidationError;
+    }
+>;
+
+export type VerifyApiV1TwoFactorTotpVerifyPostVariables = {
+  headers: VerifyApiV1TwoFactorTotpVerifyPostHeaders;
+  queryParams: VerifyApiV1TwoFactorTotpVerifyPostQueryParams;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchVerifyApiV1TwoFactorTotpVerifyPost = (
+  variables: VerifyApiV1TwoFactorTotpVerifyPostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseLoginResponseDTO,
+    VerifyApiV1TwoFactorTotpVerifyPostError,
+    undefined,
+    VerifyApiV1TwoFactorTotpVerifyPostHeaders,
+    VerifyApiV1TwoFactorTotpVerifyPostQueryParams,
+    {}
+  >({ url: "/2fa/totp/verify/", method: "post", ...variables, signal });
+
+export const useVerifyApiV1TwoFactorTotpVerifyPost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseLoginResponseDTO,
+      VerifyApiV1TwoFactorTotpVerifyPostError,
+      VerifyApiV1TwoFactorTotpVerifyPostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseLoginResponseDTO,
+    VerifyApiV1TwoFactorTotpVerifyPostError,
+    VerifyApiV1TwoFactorTotpVerifyPostVariables
+  >({
+    mutationFn: (variables: VerifyApiV1TwoFactorTotpVerifyPostVariables) =>
+      fetchVerifyApiV1TwoFactorTotpVerifyPost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type ActivationApiV1TwoFactorEmailActivatePostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type ActivationApiV1TwoFactorEmailActivatePostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 400;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 401;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.TwoFaHTTPValidationError;
+      }
+  >;
+
+export type ActivationApiV1TwoFactorEmailActivatePostVariables = {
+  headers: ActivationApiV1TwoFactorEmailActivatePostHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchActivationApiV1TwoFactorEmailActivatePost = (
+  variables: ActivationApiV1TwoFactorEmailActivatePostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseNoneType,
+    ActivationApiV1TwoFactorEmailActivatePostError,
+    undefined,
+    ActivationApiV1TwoFactorEmailActivatePostHeaders,
+    {},
+    {}
+  >({ url: "/2fa/email/activate/", method: "post", ...variables, signal });
+
+export const useActivationApiV1TwoFactorEmailActivatePost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseNoneType,
+      ActivationApiV1TwoFactorEmailActivatePostError,
+      ActivationApiV1TwoFactorEmailActivatePostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseNoneType,
+    ActivationApiV1TwoFactorEmailActivatePostError,
+    ActivationApiV1TwoFactorEmailActivatePostVariables
+  >({
+    mutationFn: (
+      variables: ActivationApiV1TwoFactorEmailActivatePostVariables,
+    ) =>
+      fetchActivationApiV1TwoFactorEmailActivatePost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type DeactivateApiV1TwoFactorEmailDeactivatePostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type DeactivateApiV1TwoFactorEmailDeactivatePostError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.TwoFaErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.TwoFaHTTPValidationError;
+      }
+  >;
+
+export type DeactivateApiV1TwoFactorEmailDeactivatePostVariables = {
+  headers: DeactivateApiV1TwoFactorEmailDeactivatePostHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchDeactivateApiV1TwoFactorEmailDeactivatePost = (
+  variables: DeactivateApiV1TwoFactorEmailDeactivatePostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseNoneType,
+    DeactivateApiV1TwoFactorEmailDeactivatePostError,
+    undefined,
+    DeactivateApiV1TwoFactorEmailDeactivatePostHeaders,
+    {},
+    {}
+  >({ url: "/2fa/email/deactivate/", method: "post", ...variables, signal });
+
+export const useDeactivateApiV1TwoFactorEmailDeactivatePost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseNoneType,
+      DeactivateApiV1TwoFactorEmailDeactivatePostError,
+      DeactivateApiV1TwoFactorEmailDeactivatePostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseNoneType,
+    DeactivateApiV1TwoFactorEmailDeactivatePostError,
+    DeactivateApiV1TwoFactorEmailDeactivatePostVariables
+  >({
+    mutationFn: (
+      variables: DeactivateApiV1TwoFactorEmailDeactivatePostVariables,
+    ) =>
+      fetchDeactivateApiV1TwoFactorEmailDeactivatePost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type SendCodeApiV1TwoFactorEmailSendCodePostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type SendCodeApiV1TwoFactorEmailSendCodePostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 401;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.TwoFaHTTPValidationError;
+    }
+>;
+
+export type SendCodeApiV1TwoFactorEmailSendCodePostVariables = {
+  headers: SendCodeApiV1TwoFactorEmailSendCodePostHeaders;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchSendCodeApiV1TwoFactorEmailSendCodePost = (
+  variables: SendCodeApiV1TwoFactorEmailSendCodePostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseNoneType,
+    SendCodeApiV1TwoFactorEmailSendCodePostError,
+    undefined,
+    SendCodeApiV1TwoFactorEmailSendCodePostHeaders,
+    {},
+    {}
+  >({ url: "/2fa/email/send-code/", method: "post", ...variables, signal });
+
+export const useSendCodeApiV1TwoFactorEmailSendCodePost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseNoneType,
+      SendCodeApiV1TwoFactorEmailSendCodePostError,
+      SendCodeApiV1TwoFactorEmailSendCodePostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseNoneType,
+    SendCodeApiV1TwoFactorEmailSendCodePostError,
+    SendCodeApiV1TwoFactorEmailSendCodePostVariables
+  >({
+    mutationFn: (variables: SendCodeApiV1TwoFactorEmailSendCodePostVariables) =>
+      fetchSendCodeApiV1TwoFactorEmailSendCodePost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
+export type VerifyApiV1TwoFactorEmailVerifyPostQueryParams = {
+  code: number;
+};
+
+export type VerifyApiV1TwoFactorEmailVerifyPostHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
+export type VerifyApiV1TwoFactorEmailVerifyPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 401;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 404;
+      payload: Schemas.TwoFaErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.TwoFaHTTPValidationError;
+    }
+>;
+
+export type VerifyApiV1TwoFactorEmailVerifyPostVariables = {
+  headers: VerifyApiV1TwoFactorEmailVerifyPostHeaders;
+  queryParams: VerifyApiV1TwoFactorEmailVerifyPostQueryParams;
+} & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchVerifyApiV1TwoFactorEmailVerifyPost = (
+  variables: VerifyApiV1TwoFactorEmailVerifyPostVariables,
+  signal?: AbortSignal,
+) =>
+  lawyersSiteApiFetch<
+    Schemas.TwoFaSuccessResponseLoginResponseDTO,
+    VerifyApiV1TwoFactorEmailVerifyPostError,
+    undefined,
+    VerifyApiV1TwoFactorEmailVerifyPostHeaders,
+    VerifyApiV1TwoFactorEmailVerifyPostQueryParams,
+    {}
+  >({ url: "/2fa/email/verify/", method: "post", ...variables, signal });
+
+export const useVerifyApiV1TwoFactorEmailVerifyPost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.TwoFaSuccessResponseLoginResponseDTO,
+      VerifyApiV1TwoFactorEmailVerifyPostError,
+      VerifyApiV1TwoFactorEmailVerifyPostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useLawyersSiteApiContext();
+  return reactQuery.useMutation<
+    Schemas.TwoFaSuccessResponseLoginResponseDTO,
+    VerifyApiV1TwoFactorEmailVerifyPostError,
+    VerifyApiV1TwoFactorEmailVerifyPostVariables
+  >({
+    mutationFn: (variables: VerifyApiV1TwoFactorEmailVerifyPostVariables) =>
+      fetchVerifyApiV1TwoFactorEmailVerifyPost(
+        deepMerge(fetcherOptions, variables),
+      ),
+    ...options,
+  });
+};
+
 export type CreateCompanyEntityApiV1CompaniesPostHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type CreateCompanyEntityApiV1CompaniesPostError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.EntityHTTPValidationError;
-}>;
+export type CreateCompanyEntityApiV1CompaniesPostError = Fetcher.ErrorWrapper<
+  | {
+      status: 401;
+      payload: Schemas.EntityErrorResponse;
+    }
+  | {
+      status: 403;
+      payload: Schemas.EntityErrorResponse;
+    }
+  | {
+      status: 409;
+      payload: Schemas.EntityErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.EntityErrorResponse;
+    }
+>;
 
 export type CreateCompanyEntityApiV1CompaniesPostVariables = {
   body: Schemas.EntityCompanyCreateFromUserDTO;
@@ -1114,7 +1979,7 @@ export const fetchCreateCompanyEntityApiV1CompaniesPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     CreateCompanyEntityApiV1CompaniesPostError,
     Schemas.EntityCompanyCreateFromUserDTO,
     CreateCompanyEntityApiV1CompaniesPostHeaders,
@@ -1125,7 +1990,7 @@ export const fetchCreateCompanyEntityApiV1CompaniesPost = (
 export const useCreateCompanyEntityApiV1CompaniesPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseCompanyOutputDTO,
       CreateCompanyEntityApiV1CompaniesPostError,
       CreateCompanyEntityApiV1CompaniesPostVariables
     >,
@@ -1134,7 +1999,7 @@ export const useCreateCompanyEntityApiV1CompaniesPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     CreateCompanyEntityApiV1CompaniesPostError,
     CreateCompanyEntityApiV1CompaniesPostVariables
   >({
@@ -1159,10 +2024,24 @@ export type UpdateCompanyEntityApiV1CompaniesEntityIdPutHeaders = {
 };
 
 export type UpdateCompanyEntityApiV1CompaniesEntityIdPutError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityErrorResponse;
+      }
+  >;
 
 export type UpdateCompanyEntityApiV1CompaniesEntityIdPutVariables = {
   body?: Schemas.EntityCompanyUpdateFromUserDTO;
@@ -1175,7 +2054,7 @@ export const fetchUpdateCompanyEntityApiV1CompaniesEntityIdPut = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     UpdateCompanyEntityApiV1CompaniesEntityIdPutError,
     Schemas.EntityCompanyUpdateFromUserDTO,
     UpdateCompanyEntityApiV1CompaniesEntityIdPutHeaders,
@@ -1191,7 +2070,7 @@ export const fetchUpdateCompanyEntityApiV1CompaniesEntityIdPut = (
 export const useUpdateCompanyEntityApiV1CompaniesEntityIdPut = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseCompanyOutputDTO,
       UpdateCompanyEntityApiV1CompaniesEntityIdPutError,
       UpdateCompanyEntityApiV1CompaniesEntityIdPutVariables
     >,
@@ -1200,7 +2079,7 @@ export const useUpdateCompanyEntityApiV1CompaniesEntityIdPut = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     UpdateCompanyEntityApiV1CompaniesEntityIdPutError,
     UpdateCompanyEntityApiV1CompaniesEntityIdPutVariables
   >({
@@ -1221,13 +2100,33 @@ export type GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetPathParams = {
   entityId: string;
 };
 
+export type GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetHeaders = {
+  ["X-User-Id"]: string;
+  ["X-User-Roles"]: string;
+};
+
 export type GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
 export type GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetVariables = {
+  headers: GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetHeaders;
   pathParams: GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetPathParams;
 } & LawyersSiteApiContext["fetcherOptions"];
 
@@ -1236,10 +2135,10 @@ export const fetchGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError,
     undefined,
-    {},
+    GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetHeaders,
     {},
     GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetPathParams
   >({
@@ -1253,7 +2152,9 @@ export function getCompanyByEntityIdEntityApiV1CompaniesEntityIdGetQuery(
   variables: GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseCompanyOutputDTO>;
 };
 
 export function getCompanyByEntityIdEntityApiV1CompaniesEntityIdGetQuery(
@@ -1262,7 +2163,11 @@ export function getCompanyByEntityIdEntityApiV1CompaniesEntityIdGetQuery(
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseCompanyOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getCompanyByEntityIdEntityApiV1CompaniesEntityIdGetQuery(
@@ -1288,12 +2193,12 @@ export function getCompanyByEntityIdEntityApiV1CompaniesEntityIdGetQuery(
 }
 
 export const useSuspenseGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseCompanyOutputDTO,
 >(
   variables: GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseCompanyOutputDTO,
       GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError,
       TData
     >,
@@ -1302,7 +2207,7 @@ export const useSuspenseGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError,
     TData
   >({
@@ -1315,14 +2220,14 @@ export const useSuspenseGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = <
 };
 
 export const useGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseCompanyOutputDTO,
 >(
   variables:
     | GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseCompanyOutputDTO,
       GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError,
       TData
     >,
@@ -1331,7 +2236,7 @@ export const useGetCompanyByEntityIdEntityApiV1CompaniesEntityIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
+    Schemas.EntitySuccessResponseCompanyOutputDTO,
     GetCompanyByEntityIdEntityApiV1CompaniesEntityIdGetError,
     TData
   >({
@@ -1351,10 +2256,20 @@ export type GetSchemaCompanyEntityApiV1CompaniesSchemaGetHeaders = {
 };
 
 export type GetSchemaCompanyEntityApiV1CompaniesSchemaGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
 export type GetSchemaCompanyEntityApiV1CompaniesSchemaGetVariables = {
   headers: GetSchemaCompanyEntityApiV1CompaniesSchemaGetHeaders;
@@ -1365,7 +2280,7 @@ export const fetchGetSchemaCompanyEntityApiV1CompaniesSchemaGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaCompanyEntityApiV1CompaniesSchemaGetError,
     undefined,
     GetSchemaCompanyEntityApiV1CompaniesSchemaGetHeaders,
@@ -1382,7 +2297,9 @@ export function getSchemaCompanyEntityApiV1CompaniesSchemaGetQuery(
   variables: GetSchemaCompanyEntityApiV1CompaniesSchemaGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>;
 };
 
 export function getSchemaCompanyEntityApiV1CompaniesSchemaGetQuery(
@@ -1391,7 +2308,11 @@ export function getSchemaCompanyEntityApiV1CompaniesSchemaGetQuery(
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getSchemaCompanyEntityApiV1CompaniesSchemaGetQuery(
@@ -1417,12 +2338,12 @@ export function getSchemaCompanyEntityApiV1CompaniesSchemaGetQuery(
 }
 
 export const useSuspenseGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseSchemaDTO,
 >(
   variables: GetSchemaCompanyEntityApiV1CompaniesSchemaGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaCompanyEntityApiV1CompaniesSchemaGetError,
       TData
     >,
@@ -1431,7 +2352,7 @@ export const useSuspenseGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaCompanyEntityApiV1CompaniesSchemaGetError,
     TData
   >({
@@ -1443,13 +2364,15 @@ export const useSuspenseGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <
   });
 };
 
-export const useGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <TData = void,>(
+export const useGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <
+  TData = Schemas.EntitySuccessResponseSchemaDTO,
+>(
   variables:
     | GetSchemaCompanyEntityApiV1CompaniesSchemaGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaCompanyEntityApiV1CompaniesSchemaGetError,
       TData
     >,
@@ -1458,7 +2381,7 @@ export const useGetSchemaCompanyEntityApiV1CompaniesSchemaGet = <TData = void,>(
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaCompanyEntityApiV1CompaniesSchemaGetError,
     TData
   >({
@@ -1478,10 +2401,20 @@ export type GetCompanyByUserIdEntityApiV1CompaniesUserGetHeaders = {
 };
 
 export type GetCompanyByUserIdEntityApiV1CompaniesUserGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
 export type GetCompanyByUserIdEntityApiV1CompaniesUserGetVariables = {
   headers: GetCompanyByUserIdEntityApiV1CompaniesUserGetHeaders;
@@ -1492,7 +2425,7 @@ export const fetchGetCompanyByUserIdEntityApiV1CompaniesUserGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseListCompanyOutputDTO,
     GetCompanyByUserIdEntityApiV1CompaniesUserGetError,
     undefined,
     GetCompanyByUserIdEntityApiV1CompaniesUserGetHeaders,
@@ -1504,7 +2437,9 @@ export function getCompanyByUserIdEntityApiV1CompaniesUserGetQuery(
   variables: GetCompanyByUserIdEntityApiV1CompaniesUserGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseListCompanyOutputDTO>;
 };
 
 export function getCompanyByUserIdEntityApiV1CompaniesUserGetQuery(
@@ -1513,7 +2448,11 @@ export function getCompanyByUserIdEntityApiV1CompaniesUserGetQuery(
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseListCompanyOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getCompanyByUserIdEntityApiV1CompaniesUserGetQuery(
@@ -1539,12 +2478,12 @@ export function getCompanyByUserIdEntityApiV1CompaniesUserGetQuery(
 }
 
 export const useSuspenseGetCompanyByUserIdEntityApiV1CompaniesUserGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseListCompanyOutputDTO,
 >(
   variables: GetCompanyByUserIdEntityApiV1CompaniesUserGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseListCompanyOutputDTO,
       GetCompanyByUserIdEntityApiV1CompaniesUserGetError,
       TData
     >,
@@ -1553,7 +2492,7 @@ export const useSuspenseGetCompanyByUserIdEntityApiV1CompaniesUserGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.EntitySuccessResponseListCompanyOutputDTO,
     GetCompanyByUserIdEntityApiV1CompaniesUserGetError,
     TData
   >({
@@ -1565,13 +2504,15 @@ export const useSuspenseGetCompanyByUserIdEntityApiV1CompaniesUserGet = <
   });
 };
 
-export const useGetCompanyByUserIdEntityApiV1CompaniesUserGet = <TData = void,>(
+export const useGetCompanyByUserIdEntityApiV1CompaniesUserGet = <
+  TData = Schemas.EntitySuccessResponseListCompanyOutputDTO,
+>(
   variables:
     | GetCompanyByUserIdEntityApiV1CompaniesUserGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseListCompanyOutputDTO,
       GetCompanyByUserIdEntityApiV1CompaniesUserGetError,
       TData
     >,
@@ -1580,7 +2521,7 @@ export const useGetCompanyByUserIdEntityApiV1CompaniesUserGet = <TData = void,>(
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
+    Schemas.EntitySuccessResponseListCompanyOutputDTO,
     GetCompanyByUserIdEntityApiV1CompaniesUserGetError,
     TData
   >({
@@ -1600,10 +2541,24 @@ export type CreateIndividualEntityApiV1IndividualsPostHeaders = {
 };
 
 export type CreateIndividualEntityApiV1IndividualsPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 409;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityErrorResponse;
+      }
+  >;
 
 export type CreateIndividualEntityApiV1IndividualsPostVariables = {
   body: Schemas.EntityCreateIndividualFromUserDTO;
@@ -1615,7 +2570,7 @@ export const fetchCreateIndividualEntityApiV1IndividualsPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
     CreateIndividualEntityApiV1IndividualsPostError,
     Schemas.EntityCreateIndividualFromUserDTO,
     CreateIndividualEntityApiV1IndividualsPostHeaders,
@@ -1626,7 +2581,7 @@ export const fetchCreateIndividualEntityApiV1IndividualsPost = (
 export const useCreateIndividualEntityApiV1IndividualsPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseIndividualOutputDTO,
       CreateIndividualEntityApiV1IndividualsPostError,
       CreateIndividualEntityApiV1IndividualsPostVariables
     >,
@@ -1635,7 +2590,7 @@ export const useCreateIndividualEntityApiV1IndividualsPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
     CreateIndividualEntityApiV1IndividualsPostError,
     CreateIndividualEntityApiV1IndividualsPostVariables
   >({
@@ -1662,10 +2617,24 @@ export type UpdateIndividualEntityApiV1IndividualsEntityIdPutHeaders = {
 };
 
 export type UpdateIndividualEntityApiV1IndividualsEntityIdPutError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityErrorResponse;
+      }
+  >;
 
 export type UpdateIndividualEntityApiV1IndividualsEntityIdPutVariables = {
   body?: Schemas.EntityUpdateIndividualFromUserDTO;
@@ -1678,7 +2647,7 @@ export const fetchUpdateIndividualEntityApiV1IndividualsEntityIdPut = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
     UpdateIndividualEntityApiV1IndividualsEntityIdPutError,
     Schemas.EntityUpdateIndividualFromUserDTO,
     UpdateIndividualEntityApiV1IndividualsEntityIdPutHeaders,
@@ -1694,7 +2663,7 @@ export const fetchUpdateIndividualEntityApiV1IndividualsEntityIdPut = (
 export const useUpdateIndividualEntityApiV1IndividualsEntityIdPut = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseIndividualOutputDTO,
       UpdateIndividualEntityApiV1IndividualsEntityIdPutError,
       UpdateIndividualEntityApiV1IndividualsEntityIdPutVariables
     >,
@@ -1703,7 +2672,7 @@ export const useUpdateIndividualEntityApiV1IndividualsEntityIdPut = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
     UpdateIndividualEntityApiV1IndividualsEntityIdPutError,
     UpdateIndividualEntityApiV1IndividualsEntityIdPutVariables
   >({
@@ -1723,10 +2692,20 @@ export type GetSchemaIndividualEntityApiV1IndividualsSchemaGetHeaders = {
 };
 
 export type GetSchemaIndividualEntityApiV1IndividualsSchemaGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
 export type GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables = {
   headers: GetSchemaIndividualEntityApiV1IndividualsSchemaGetHeaders;
@@ -1737,7 +2716,7 @@ export const fetchGetSchemaIndividualEntityApiV1IndividualsSchemaGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaIndividualEntityApiV1IndividualsSchemaGetError,
     undefined,
     GetSchemaIndividualEntityApiV1IndividualsSchemaGetHeaders,
@@ -1754,7 +2733,9 @@ export function getSchemaIndividualEntityApiV1IndividualsSchemaGetQuery(
   variables: GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>;
 };
 
 export function getSchemaIndividualEntityApiV1IndividualsSchemaGetQuery(
@@ -1763,7 +2744,11 @@ export function getSchemaIndividualEntityApiV1IndividualsSchemaGetQuery(
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getSchemaIndividualEntityApiV1IndividualsSchemaGetQuery(
@@ -1789,12 +2774,12 @@ export function getSchemaIndividualEntityApiV1IndividualsSchemaGetQuery(
 }
 
 export const useSuspenseGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseSchemaDTO,
 >(
   variables: GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaIndividualEntityApiV1IndividualsSchemaGetError,
       TData
     >,
@@ -1803,7 +2788,7 @@ export const useSuspenseGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaIndividualEntityApiV1IndividualsSchemaGetError,
     TData
   >({
@@ -1816,14 +2801,14 @@ export const useSuspenseGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
 };
 
 export const useGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseSchemaDTO,
 >(
   variables:
     | GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaIndividualEntityApiV1IndividualsSchemaGetError,
       TData
     >,
@@ -1832,7 +2817,7 @@ export const useGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaIndividualEntityApiV1IndividualsSchemaGetError,
     TData
   >({
@@ -1846,30 +2831,40 @@ export const useGetSchemaIndividualEntityApiV1IndividualsSchemaGet = <
   });
 };
 
-export type GetIndividualEntityApiV1IndividualsUserGetHeaders = {
+export type GetIndividualByUserEntityApiV1IndividualsUserGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type GetIndividualEntityApiV1IndividualsUserGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+export type GetIndividualByUserEntityApiV1IndividualsUserGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
-export type GetIndividualEntityApiV1IndividualsUserGetVariables = {
-  headers: GetIndividualEntityApiV1IndividualsUserGetHeaders;
+export type GetIndividualByUserEntityApiV1IndividualsUserGetVariables = {
+  headers: GetIndividualByUserEntityApiV1IndividualsUserGetHeaders;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchGetIndividualEntityApiV1IndividualsUserGet = (
-  variables: GetIndividualEntityApiV1IndividualsUserGetVariables,
+export const fetchGetIndividualByUserEntityApiV1IndividualsUserGet = (
+  variables: GetIndividualByUserEntityApiV1IndividualsUserGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetIndividualEntityApiV1IndividualsUserGetError,
+    Schemas.EntitySuccessResponseListIndividualOutputDTO,
+    GetIndividualByUserEntityApiV1IndividualsUserGetError,
     undefined,
-    GetIndividualEntityApiV1IndividualsUserGetHeaders,
+    GetIndividualByUserEntityApiV1IndividualsUserGetHeaders,
     {},
     {}
   >({
@@ -1879,49 +2874,58 @@ export const fetchGetIndividualEntityApiV1IndividualsUserGet = (
     signal,
   });
 
-export function getIndividualEntityApiV1IndividualsUserGetQuery(
-  variables: GetIndividualEntityApiV1IndividualsUserGetVariables,
+export function getIndividualByUserEntityApiV1IndividualsUserGetQuery(
+  variables: GetIndividualByUserEntityApiV1IndividualsUserGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseListIndividualOutputDTO>;
 };
 
-export function getIndividualEntityApiV1IndividualsUserGetQuery(
+export function getIndividualByUserEntityApiV1IndividualsUserGetQuery(
   variables:
-    | GetIndividualEntityApiV1IndividualsUserGetVariables
+    | GetIndividualByUserEntityApiV1IndividualsUserGetVariables
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseListIndividualOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getIndividualEntityApiV1IndividualsUserGetQuery(
+export function getIndividualByUserEntityApiV1IndividualsUserGetQuery(
   variables:
-    | GetIndividualEntityApiV1IndividualsUserGetVariables
+    | GetIndividualByUserEntityApiV1IndividualsUserGetVariables
     | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
       path: "/entities/individuals/user/",
-      operationId: "getIndividualEntityApiV1IndividualsUserGet",
+      operationId: "getIndividualByUserEntityApiV1IndividualsUserGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetIndividualEntityApiV1IndividualsUserGet(variables, signal),
+            fetchGetIndividualByUserEntityApiV1IndividualsUserGet(
+              variables,
+              signal,
+            ),
   };
 }
 
-export const useSuspenseGetIndividualEntityApiV1IndividualsUserGet = <
-  TData = void,
+export const useSuspenseGetIndividualByUserEntityApiV1IndividualsUserGet = <
+  TData = Schemas.EntitySuccessResponseListIndividualOutputDTO,
 >(
-  variables: GetIndividualEntityApiV1IndividualsUserGetVariables,
+  variables: GetIndividualByUserEntityApiV1IndividualsUserGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetIndividualEntityApiV1IndividualsUserGetError,
+      Schemas.EntitySuccessResponseListIndividualOutputDTO,
+      GetIndividualByUserEntityApiV1IndividualsUserGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -1929,11 +2933,11 @@ export const useSuspenseGetIndividualEntityApiV1IndividualsUserGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
-    GetIndividualEntityApiV1IndividualsUserGetError,
+    Schemas.EntitySuccessResponseListIndividualOutputDTO,
+    GetIndividualByUserEntityApiV1IndividualsUserGetError,
     TData
   >({
-    ...getIndividualEntityApiV1IndividualsUserGetQuery(
+    ...getIndividualByUserEntityApiV1IndividualsUserGetQuery(
       deepMerge(fetcherOptions, variables),
     ),
     ...options,
@@ -1941,14 +2945,16 @@ export const useSuspenseGetIndividualEntityApiV1IndividualsUserGet = <
   });
 };
 
-export const useGetIndividualEntityApiV1IndividualsUserGet = <TData = void,>(
+export const useGetIndividualByUserEntityApiV1IndividualsUserGet = <
+  TData = Schemas.EntitySuccessResponseListIndividualOutputDTO,
+>(
   variables:
-    | GetIndividualEntityApiV1IndividualsUserGetVariables
+    | GetIndividualByUserEntityApiV1IndividualsUserGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetIndividualEntityApiV1IndividualsUserGetError,
+      Schemas.EntitySuccessResponseListIndividualOutputDTO,
+      GetIndividualByUserEntityApiV1IndividualsUserGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -1956,11 +2962,11 @@ export const useGetIndividualEntityApiV1IndividualsUserGet = <TData = void,>(
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
-    GetIndividualEntityApiV1IndividualsUserGetError,
+    Schemas.EntitySuccessResponseListIndividualOutputDTO,
+    GetIndividualByUserEntityApiV1IndividualsUserGetError,
     TData
   >({
-    ...getIndividualEntityApiV1IndividualsUserGetQuery(
+    ...getIndividualByUserEntityApiV1IndividualsUserGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -1970,40 +2976,54 @@ export const useGetIndividualEntityApiV1IndividualsUserGet = <TData = void,>(
   });
 };
 
-export type GetIndividualEntityApiV1IndividualsEntityIdGetPathParams = {
+export type GetIndividualByIdEntityApiV1IndividualsEntityIdGetPathParams = {
   /**
    * @format uuid
    */
   entityId: string;
 };
 
-export type GetIndividualEntityApiV1IndividualsEntityIdGetHeaders = {
+export type GetIndividualByIdEntityApiV1IndividualsEntityIdGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type GetIndividualEntityApiV1IndividualsEntityIdGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+export type GetIndividualByIdEntityApiV1IndividualsEntityIdGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
-export type GetIndividualEntityApiV1IndividualsEntityIdGetVariables = {
-  headers: GetIndividualEntityApiV1IndividualsEntityIdGetHeaders;
-  pathParams: GetIndividualEntityApiV1IndividualsEntityIdGetPathParams;
+export type GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables = {
+  headers: GetIndividualByIdEntityApiV1IndividualsEntityIdGetHeaders;
+  pathParams: GetIndividualByIdEntityApiV1IndividualsEntityIdGetPathParams;
 } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchGetIndividualEntityApiV1IndividualsEntityIdGet = (
-  variables: GetIndividualEntityApiV1IndividualsEntityIdGetVariables,
+export const fetchGetIndividualByIdEntityApiV1IndividualsEntityIdGet = (
+  variables: GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetIndividualEntityApiV1IndividualsEntityIdGetError,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
+    GetIndividualByIdEntityApiV1IndividualsEntityIdGetError,
     undefined,
-    GetIndividualEntityApiV1IndividualsEntityIdGetHeaders,
+    GetIndividualByIdEntityApiV1IndividualsEntityIdGetHeaders,
     {},
-    GetIndividualEntityApiV1IndividualsEntityIdGetPathParams
+    GetIndividualByIdEntityApiV1IndividualsEntityIdGetPathParams
   >({
     url: "/entities/individuals/{entityId}",
     method: "get",
@@ -2011,52 +3031,58 @@ export const fetchGetIndividualEntityApiV1IndividualsEntityIdGet = (
     signal,
   });
 
-export function getIndividualEntityApiV1IndividualsEntityIdGetQuery(
-  variables: GetIndividualEntityApiV1IndividualsEntityIdGetVariables,
+export function getIndividualByIdEntityApiV1IndividualsEntityIdGetQuery(
+  variables: GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseIndividualOutputDTO>;
 };
 
-export function getIndividualEntityApiV1IndividualsEntityIdGetQuery(
+export function getIndividualByIdEntityApiV1IndividualsEntityIdGetQuery(
   variables:
-    | GetIndividualEntityApiV1IndividualsEntityIdGetVariables
+    | GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseIndividualOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getIndividualEntityApiV1IndividualsEntityIdGetQuery(
+export function getIndividualByIdEntityApiV1IndividualsEntityIdGetQuery(
   variables:
-    | GetIndividualEntityApiV1IndividualsEntityIdGetVariables
+    | GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables
     | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
       path: "/entities/individuals/{entityId}",
-      operationId: "getIndividualEntityApiV1IndividualsEntityIdGet",
+      operationId: "getIndividualByIdEntityApiV1IndividualsEntityIdGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetIndividualEntityApiV1IndividualsEntityIdGet(
+            fetchGetIndividualByIdEntityApiV1IndividualsEntityIdGet(
               variables,
               signal,
             ),
   };
 }
 
-export const useSuspenseGetIndividualEntityApiV1IndividualsEntityIdGet = <
-  TData = void,
+export const useSuspenseGetIndividualByIdEntityApiV1IndividualsEntityIdGet = <
+  TData = Schemas.EntitySuccessResponseIndividualOutputDTO,
 >(
-  variables: GetIndividualEntityApiV1IndividualsEntityIdGetVariables,
+  variables: GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetIndividualEntityApiV1IndividualsEntityIdGetError,
+      Schemas.EntitySuccessResponseIndividualOutputDTO,
+      GetIndividualByIdEntityApiV1IndividualsEntityIdGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -2064,11 +3090,11 @@ export const useSuspenseGetIndividualEntityApiV1IndividualsEntityIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    void,
-    GetIndividualEntityApiV1IndividualsEntityIdGetError,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
+    GetIndividualByIdEntityApiV1IndividualsEntityIdGetError,
     TData
   >({
-    ...getIndividualEntityApiV1IndividualsEntityIdGetQuery(
+    ...getIndividualByIdEntityApiV1IndividualsEntityIdGetQuery(
       deepMerge(fetcherOptions, variables),
     ),
     ...options,
@@ -2076,16 +3102,16 @@ export const useSuspenseGetIndividualEntityApiV1IndividualsEntityIdGet = <
   });
 };
 
-export const useGetIndividualEntityApiV1IndividualsEntityIdGet = <
-  TData = void,
+export const useGetIndividualByIdEntityApiV1IndividualsEntityIdGet = <
+  TData = Schemas.EntitySuccessResponseIndividualOutputDTO,
 >(
   variables:
-    | GetIndividualEntityApiV1IndividualsEntityIdGetVariables
+    | GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetIndividualEntityApiV1IndividualsEntityIdGetError,
+      Schemas.EntitySuccessResponseIndividualOutputDTO,
+      GetIndividualByIdEntityApiV1IndividualsEntityIdGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -2093,11 +3119,11 @@ export const useGetIndividualEntityApiV1IndividualsEntityIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
-    GetIndividualEntityApiV1IndividualsEntityIdGetError,
+    Schemas.EntitySuccessResponseIndividualOutputDTO,
+    GetIndividualByIdEntityApiV1IndividualsEntityIdGetError,
     TData
   >({
-    ...getIndividualEntityApiV1IndividualsEntityIdGetQuery(
+    ...getIndividualByIdEntityApiV1IndividualsEntityIdGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -2113,10 +3139,24 @@ export type CreateSoleProprietorEntityApiV1SoleProprietorsPostHeaders = {
 };
 
 export type CreateSoleProprietorEntityApiV1SoleProprietorsPostError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 409;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityErrorResponse;
+      }
+  >;
 
 export type CreateSoleProprietorEntityApiV1SoleProprietorsPostVariables = {
   body: Schemas.EntitySoleProprietorCreateFromUserDTO;
@@ -2128,7 +3168,7 @@ export const fetchCreateSoleProprietorEntityApiV1SoleProprietorsPost = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
     CreateSoleProprietorEntityApiV1SoleProprietorsPostError,
     Schemas.EntitySoleProprietorCreateFromUserDTO,
     CreateSoleProprietorEntityApiV1SoleProprietorsPostHeaders,
@@ -2144,7 +3184,7 @@ export const fetchCreateSoleProprietorEntityApiV1SoleProprietorsPost = (
 export const useCreateSoleProprietorEntityApiV1SoleProprietorsPost = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
       CreateSoleProprietorEntityApiV1SoleProprietorsPostError,
       CreateSoleProprietorEntityApiV1SoleProprietorsPostVariables
     >,
@@ -2153,7 +3193,7 @@ export const useCreateSoleProprietorEntityApiV1SoleProprietorsPost = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
     CreateSoleProprietorEntityApiV1SoleProprietorsPostError,
     CreateSoleProprietorEntityApiV1SoleProprietorsPostVariables
   >({
@@ -2181,10 +3221,24 @@ export type UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutHeaders = {
 };
 
 export type UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityErrorResponse;
+      }
+  >;
 
 export type UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutVariables =
   {
@@ -2198,7 +3252,7 @@ export const fetchUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
     UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutError,
     Schemas.EntitySoleProprietorUpdateFromUserDTO,
     UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutHeaders,
@@ -2214,7 +3268,7 @@ export const fetchUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut = (
 export const useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      void,
+      Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
       UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutError,
       UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutVariables
     >,
@@ -2223,7 +3277,7 @@ export const useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut = (
 ) => {
   const { fetcherOptions } = useLawyersSiteApiContext();
   return reactQuery.useMutation<
-    void,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
     UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutError,
     UpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPutVariables
   >({
@@ -2237,34 +3291,57 @@ export const useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut = (
   });
 };
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetPathParams = {
-  /**
-   * @format uuid
-   */
-  entityId: string;
-};
+export type GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetPathParams =
+  {
+    /**
+     * @format uuid
+     */
+    entityId: string;
+  };
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+export type GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetHeaders =
+  {
+    ["X-User-Id"]: string;
+    ["X-User-Roles"]: string;
+  };
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables = {
-  pathParams: GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetPathParams;
-} & LawyersSiteApiContext["fetcherOptions"];
+export type GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 404;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
-export const fetchGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet = (
-  variables: GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables,
+export type GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables =
+  {
+    headers: GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetHeaders;
+    pathParams: GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetPathParams;
+  } & LawyersSiteApiContext["fetcherOptions"];
+
+export const fetchGetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet = (
+  variables: GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
+    GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError,
     undefined,
+    GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetHeaders,
     {},
-    {},
-    GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetPathParams
+    GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetPathParams
   >({
     url: "/entities/sole-proprietors/{entityId}/",
     method: "get",
@@ -2272,51 +3349,57 @@ export const fetchGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet = (
     signal,
   });
 
-export function getSoleProprietorEntityApiV1SoleProprietorsEntityIdGetQuery(
-  variables: GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables,
+export function getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetQuery(
+  variables: GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseSoleProprietorOutputDTO>;
 };
 
-export function getSoleProprietorEntityApiV1SoleProprietorsEntityIdGetQuery(
+export function getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetQuery(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables
+    | GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseSoleProprietorOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getSoleProprietorEntityApiV1SoleProprietorsEntityIdGetQuery(
+export function getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetQuery(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables
+    | GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables
     | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
       path: "/entities/sole-proprietors/{entityId}/",
-      operationId: "getSoleProprietorEntityApiV1SoleProprietorsEntityIdGet",
+      operationId: "getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet(
+            fetchGetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet(
               variables,
               signal,
             ),
   };
 }
 
-export const useSuspenseGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet =
-  <TData = void,>(
-    variables: GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables,
+export const useSuspenseGetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet =
+  <TData = Schemas.EntitySuccessResponseSoleProprietorOutputDTO,>(
+    variables: GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables,
     options?: Omit<
       reactQuery.UseQueryOptions<
-        void,
-        GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError,
+        Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
+        GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError,
         TData
       >,
       "queryKey" | "queryFn" | "initialData"
@@ -2324,11 +3407,11 @@ export const useSuspenseGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet =
   ) => {
     const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
     return reactQuery.useSuspenseQuery<
-      void,
-      GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError,
+      Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
+      GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError,
       TData
     >({
-      ...getSoleProprietorEntityApiV1SoleProprietorsEntityIdGetQuery(
+      ...getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetQuery(
         deepMerge(fetcherOptions, variables),
       ),
       ...options,
@@ -2336,16 +3419,16 @@ export const useSuspenseGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet =
     });
   };
 
-export const useGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet = <
-  TData = void,
+export const useGetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet = <
+  TData = Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
 >(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables
+    | GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError,
+      Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
+      GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -2353,11 +3436,11 @@ export const useGetSoleProprietorEntityApiV1SoleProprietorsEntityIdGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
-    GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetError,
+    Schemas.EntitySuccessResponseSoleProprietorOutputDTO,
+    GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetError,
     TData
   >({
-    ...getSoleProprietorEntityApiV1SoleProprietorsEntityIdGetQuery(
+    ...getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -2374,10 +3457,20 @@ export type GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetHeaders =
   };
 
 export type GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
 export type GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetVariables =
   {
@@ -2389,7 +3482,7 @@ export const fetchGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError,
     undefined,
     GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetHeaders,
@@ -2406,7 +3499,9 @@ export function getSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetQuery(
   variables: GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>;
 };
 
 export function getSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetQuery(
@@ -2415,7 +3510,11 @@ export function getSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetQuery(
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseSchemaDTO>)
+    | reactQuery.SkipToken;
 };
 
 export function getSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetQuery(
@@ -2441,11 +3540,11 @@ export function getSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetQuery(
 }
 
 export const useSuspenseGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet =
-  <TData = void,>(
+  <TData = Schemas.EntitySuccessResponseSchemaDTO,>(
     variables: GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetVariables,
     options?: Omit<
       reactQuery.UseQueryOptions<
-        void,
+        Schemas.EntitySuccessResponseSchemaDTO,
         GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError,
         TData
       >,
@@ -2454,7 +3553,7 @@ export const useSuspenseGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaG
   ) => {
     const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
     return reactQuery.useSuspenseQuery<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError,
       TData
     >({
@@ -2467,14 +3566,14 @@ export const useSuspenseGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaG
   };
 
 export const useGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet = <
-  TData = void,
+  TData = Schemas.EntitySuccessResponseSchemaDTO,
 >(
   variables:
     | GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
+      Schemas.EntitySuccessResponseSchemaDTO,
       GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError,
       TData
     >,
@@ -2483,7 +3582,7 @@ export const useGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
+    Schemas.EntitySuccessResponseSchemaDTO,
     GetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGetError,
     TData
   >({
@@ -2497,30 +3596,41 @@ export const useGetSchemaSoleProprietorEntityApiV1SoleProprietorsSchemaGet = <
   });
 };
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsUserGetHeaders = {
+export type GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetHeaders = {
   ["X-User-Id"]: string;
   ["X-User-Roles"]: string;
 };
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsUserGetError =
-  Fetcher.ErrorWrapper<{
-    status: 422;
-    payload: Schemas.EntityHTTPValidationError;
-  }>;
+export type GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError =
+  Fetcher.ErrorWrapper<
+    | {
+        status: 401;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 403;
+        payload: Schemas.EntityErrorResponse;
+      }
+    | {
+        status: 422;
+        payload: Schemas.EntityHTTPValidationError;
+      }
+  >;
 
-export type GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables = {
-  headers: GetSoleProprietorEntityApiV1SoleProprietorsUserGetHeaders;
-} & LawyersSiteApiContext["fetcherOptions"];
+export type GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables =
+  {
+    headers: GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetHeaders;
+  } & LawyersSiteApiContext["fetcherOptions"];
 
-export const fetchGetSoleProprietorEntityApiV1SoleProprietorsUserGet = (
-  variables: GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables,
+export const fetchGetSoleProprietorByUserEntityApiV1SoleProprietorsUserGet = (
+  variables: GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables,
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    void,
-    GetSoleProprietorEntityApiV1SoleProprietorsUserGetError,
+    Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
+    GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError,
     undefined,
-    GetSoleProprietorEntityApiV1SoleProprietorsUserGetHeaders,
+    GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetHeaders,
     {},
     {}
   >({
@@ -2530,81 +3640,86 @@ export const fetchGetSoleProprietorEntityApiV1SoleProprietorsUserGet = (
     signal,
   });
 
-export function getSoleProprietorEntityApiV1SoleProprietorsUserGetQuery(
-  variables: GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables,
+export function getSoleProprietorByUserEntityApiV1SoleProprietorsUserGetQuery(
+  variables: GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<void>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseListSoleProprietorOutputDTO>;
 };
 
-export function getSoleProprietorEntityApiV1SoleProprietorsUserGetQuery(
+export function getSoleProprietorByUserEntityApiV1SoleProprietorsUserGetQuery(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables
+    | GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables
     | reactQuery.SkipToken,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: ((options: QueryFnOptions) => Promise<void>) | reactQuery.SkipToken;
+  queryFn:
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseListSoleProprietorOutputDTO>)
+    | reactQuery.SkipToken;
 };
 
-export function getSoleProprietorEntityApiV1SoleProprietorsUserGetQuery(
+export function getSoleProprietorByUserEntityApiV1SoleProprietorsUserGetQuery(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables
+    | GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables
     | reactQuery.SkipToken,
 ) {
   return {
     queryKey: queryKeyFn({
       path: "/entities/sole-proprietors/user/",
-      operationId: "getSoleProprietorEntityApiV1SoleProprietorsUserGet",
+      operationId: "getSoleProprietorByUserEntityApiV1SoleProprietorsUserGet",
       variables,
     }),
     queryFn:
       variables === reactQuery.skipToken
         ? reactQuery.skipToken
         : ({ signal }: QueryFnOptions) =>
-            fetchGetSoleProprietorEntityApiV1SoleProprietorsUserGet(
+            fetchGetSoleProprietorByUserEntityApiV1SoleProprietorsUserGet(
               variables,
               signal,
             ),
   };
 }
 
-export const useSuspenseGetSoleProprietorEntityApiV1SoleProprietorsUserGet = <
-  TData = void,
->(
-  variables: GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables,
-  options?: Omit<
-    reactQuery.UseQueryOptions<
-      void,
-      GetSoleProprietorEntityApiV1SoleProprietorsUserGetError,
-      TData
+export const useSuspenseGetSoleProprietorByUserEntityApiV1SoleProprietorsUserGet =
+  <TData = Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,>(
+    variables: GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables,
+    options?: Omit<
+      reactQuery.UseQueryOptions<
+        Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
+        GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError,
+        TData
+      >,
+      "queryKey" | "queryFn" | "initialData"
     >,
-    "queryKey" | "queryFn" | "initialData"
-  >,
-) => {
-  const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
-  return reactQuery.useSuspenseQuery<
-    void,
-    GetSoleProprietorEntityApiV1SoleProprietorsUserGetError,
-    TData
-  >({
-    ...getSoleProprietorEntityApiV1SoleProprietorsUserGetQuery(
-      deepMerge(fetcherOptions, variables),
-    ),
-    ...options,
-    ...queryOptions,
-  });
-};
+  ) => {
+    const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
+    return reactQuery.useSuspenseQuery<
+      Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
+      GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError,
+      TData
+    >({
+      ...getSoleProprietorByUserEntityApiV1SoleProprietorsUserGetQuery(
+        deepMerge(fetcherOptions, variables),
+      ),
+      ...options,
+      ...queryOptions,
+    });
+  };
 
-export const useGetSoleProprietorEntityApiV1SoleProprietorsUserGet = <
-  TData = void,
+export const useGetSoleProprietorByUserEntityApiV1SoleProprietorsUserGet = <
+  TData = Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
 >(
   variables:
-    | GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables
+    | GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables
     | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      void,
-      GetSoleProprietorEntityApiV1SoleProprietorsUserGetError,
+      Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
+      GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError,
       TData
     >,
     "queryKey" | "queryFn" | "initialData"
@@ -2612,11 +3727,11 @@ export const useGetSoleProprietorEntityApiV1SoleProprietorsUserGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    void,
-    GetSoleProprietorEntityApiV1SoleProprietorsUserGetError,
+    Schemas.EntitySuccessResponseListSoleProprietorOutputDTO,
+    GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetError,
     TData
   >({
-    ...getSoleProprietorEntityApiV1SoleProprietorsUserGetQuery(
+    ...getSoleProprietorByUserEntityApiV1SoleProprietorsUserGetQuery(
       variables === reactQuery.skipToken
         ? variables
         : deepMerge(fetcherOptions, variables),
@@ -2631,10 +3746,20 @@ export type GetAllEntitiesApiV1EntitiesGetHeaders = {
   ["X-User-Roles"]: string;
 };
 
-export type GetAllEntitiesApiV1EntitiesGetError = Fetcher.ErrorWrapper<{
-  status: 422;
-  payload: Schemas.EntityHTTPValidationError;
-}>;
+export type GetAllEntitiesApiV1EntitiesGetError = Fetcher.ErrorWrapper<
+  | {
+      status: 401;
+      payload: Schemas.EntityErrorResponse;
+    }
+  | {
+      status: 403;
+      payload: Schemas.EntityErrorResponse;
+    }
+  | {
+      status: 422;
+      payload: Schemas.EntityHTTPValidationError;
+    }
+>;
 
 export type GetAllEntitiesApiV1EntitiesGetVariables = {
   headers: GetAllEntitiesApiV1EntitiesGetHeaders;
@@ -2645,7 +3770,7 @@ export const fetchGetAllEntitiesApiV1EntitiesGet = (
   signal?: AbortSignal,
 ) =>
   lawyersSiteApiFetch<
-    Schemas.EntityResponseDTO,
+    Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
     GetAllEntitiesApiV1EntitiesGetError,
     undefined,
     GetAllEntitiesApiV1EntitiesGetHeaders,
@@ -2657,7 +3782,9 @@ export function getAllEntitiesApiV1EntitiesGetQuery(
   variables: GetAllEntitiesApiV1EntitiesGetVariables,
 ): {
   queryKey: reactQuery.QueryKey;
-  queryFn: (options: QueryFnOptions) => Promise<Schemas.EntityResponseDTO>;
+  queryFn: (
+    options: QueryFnOptions,
+  ) => Promise<Schemas.EntitySuccessResponseAllEntitiesOutputDTO>;
 };
 
 export function getAllEntitiesApiV1EntitiesGetQuery(
@@ -2665,7 +3792,9 @@ export function getAllEntitiesApiV1EntitiesGetQuery(
 ): {
   queryKey: reactQuery.QueryKey;
   queryFn:
-    | ((options: QueryFnOptions) => Promise<Schemas.EntityResponseDTO>)
+    | ((
+        options: QueryFnOptions,
+      ) => Promise<Schemas.EntitySuccessResponseAllEntitiesOutputDTO>)
     | reactQuery.SkipToken;
 };
 
@@ -2687,12 +3816,12 @@ export function getAllEntitiesApiV1EntitiesGetQuery(
 }
 
 export const useSuspenseGetAllEntitiesApiV1EntitiesGet = <
-  TData = Schemas.EntityResponseDTO,
+  TData = Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
 >(
   variables: GetAllEntitiesApiV1EntitiesGetVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      Schemas.EntityResponseDTO,
+      Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
       GetAllEntitiesApiV1EntitiesGetError,
       TData
     >,
@@ -2701,7 +3830,7 @@ export const useSuspenseGetAllEntitiesApiV1EntitiesGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useSuspenseQuery<
-    Schemas.EntityResponseDTO,
+    Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
     GetAllEntitiesApiV1EntitiesGetError,
     TData
   >({
@@ -2714,12 +3843,12 @@ export const useSuspenseGetAllEntitiesApiV1EntitiesGet = <
 };
 
 export const useGetAllEntitiesApiV1EntitiesGet = <
-  TData = Schemas.EntityResponseDTO,
+  TData = Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
 >(
   variables: GetAllEntitiesApiV1EntitiesGetVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      Schemas.EntityResponseDTO,
+      Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
       GetAllEntitiesApiV1EntitiesGetError,
       TData
     >,
@@ -2728,7 +3857,7 @@ export const useGetAllEntitiesApiV1EntitiesGet = <
 ) => {
   const { queryOptions, fetcherOptions } = useLawyersSiteApiContext(options);
   return reactQuery.useQuery<
-    Schemas.EntityResponseDTO,
+    Schemas.EntitySuccessResponseAllEntitiesOutputDTO,
     GetAllEntitiesApiV1EntitiesGetError,
     TData
   >({
@@ -2756,16 +3885,30 @@ export type QueryOperation =
       variables: GetByEntityIdApiV1ServicesGetVariables | reactQuery.SkipToken;
     }
   | {
-      path: "/services/service-fields/service/{serviceId}/";
-      operationId: "getByServiceIdApiV1ServiceFieldsServiceServiceIdGet";
+      path: "/services/{serviceId}/fields";
+      operationId: "getByServiceIdApiV1ServicesServiceIdFieldsGet";
       variables:
-        | GetByServiceIdApiV1ServiceFieldsServiceServiceIdGetVariables
+        | GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables
         | reactQuery.SkipToken;
     }
   | {
-      path: "/services/service-instances/";
-      operationId: "getApiV1ServiceInstancesGet";
-      variables: GetApiV1ServiceInstancesGetVariables | reactQuery.SkipToken;
+      path: "/instances/user/";
+      operationId: "getUserInstancesWithServicesApiV1ServiceInstancesUserGet";
+      variables:
+        | GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables
+        | reactQuery.SkipToken;
+    }
+  | {
+      path: "/instances/detail/{instanceId}";
+      operationId: "getInstanceDetailApiV1ServiceInstancesDetailInstanceIdGet";
+      variables:
+        | GetInstanceDetailApiV1ServiceInstancesDetailInstanceIdGetVariables
+        | reactQuery.SkipToken;
+    }
+  | {
+      path: "/2fa/user/";
+      operationId: "getUserByUserIdApiV1UserGet";
+      variables: GetUserByUserIdApiV1UserGetVariables | reactQuery.SkipToken;
     }
   | {
       path: "/entities/companies/{entityId}/";
@@ -2797,23 +3940,23 @@ export type QueryOperation =
     }
   | {
       path: "/entities/individuals/user/";
-      operationId: "getIndividualEntityApiV1IndividualsUserGet";
+      operationId: "getIndividualByUserEntityApiV1IndividualsUserGet";
       variables:
-        | GetIndividualEntityApiV1IndividualsUserGetVariables
+        | GetIndividualByUserEntityApiV1IndividualsUserGetVariables
         | reactQuery.SkipToken;
     }
   | {
       path: "/entities/individuals/{entityId}";
-      operationId: "getIndividualEntityApiV1IndividualsEntityIdGet";
+      operationId: "getIndividualByIdEntityApiV1IndividualsEntityIdGet";
       variables:
-        | GetIndividualEntityApiV1IndividualsEntityIdGetVariables
+        | GetIndividualByIdEntityApiV1IndividualsEntityIdGetVariables
         | reactQuery.SkipToken;
     }
   | {
       path: "/entities/sole-proprietors/{entityId}/";
-      operationId: "getSoleProprietorEntityApiV1SoleProprietorsEntityIdGet";
+      operationId: "getSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGet";
       variables:
-        | GetSoleProprietorEntityApiV1SoleProprietorsEntityIdGetVariables
+        | GetSoleProprietorByIdEntityApiV1SoleProprietorsEntityIdGetVariables
         | reactQuery.SkipToken;
     }
   | {
@@ -2825,9 +3968,9 @@ export type QueryOperation =
     }
   | {
       path: "/entities/sole-proprietors/user/";
-      operationId: "getSoleProprietorEntityApiV1SoleProprietorsUserGet";
+      operationId: "getSoleProprietorByUserEntityApiV1SoleProprietorsUserGet";
       variables:
-        | GetSoleProprietorEntityApiV1SoleProprietorsUserGetVariables
+        | GetSoleProprietorByUserEntityApiV1SoleProprietorsUserGetVariables
         | reactQuery.SkipToken;
     }
   | {

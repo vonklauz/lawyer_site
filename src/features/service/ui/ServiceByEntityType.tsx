@@ -4,7 +4,6 @@ import { FC, Fragment, useMemo } from "react";
 import { useGetService } from "../api/useGetService";
 import { ServiceItem } from "@/entities/serviceItem";
 import { ServiceProps } from "../model/types";
-import { useSuspenseGetApiV1ServiceInstancesGet } from "@/generated/lawyersSiteApiComponents";
 
 export const ServiceByEntityType: FC<ServiceProps> = ({ chosenEntity }) => {
   const getChosenEntityType = useMemo(() => {

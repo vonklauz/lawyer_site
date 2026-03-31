@@ -1,35 +1,58 @@
 "use client";
-import { ServiceItem } from "@/entities/serviceItem";
-import { useGetApiV1ServiceInstancesGet } from "@/generated/lawyersSiteApiComponents";
-import { FC } from "react";
+
+import { useGetServiceInstances } from "@/shared/hooks/useGetServiceInstances";
+import { Table } from "@/shared/Ui/Table";
+import { format } from "date-fns";
+import { FC, useMemo } from "react";
 
 export const ServiceOrderedList: FC<{ serviceId: string }> = ({
   serviceId,
 }) => {
-  const { data, isLoading, error } = useGetApiV1ServiceInstancesGet({
-    headers: {
-      //@ts-expect-error позже типизировать
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-    queryParams: {
-      service_id: serviceId,
-    },
-  });
+  const { data, isPending: isLoading } = useGetServiceInstances();
   const { data: serviceInstances = [] } = data || {};
-  console.log(serviceInstances);
+
+  const filterInstancesByServiceId = useMemo(() => {
+    const chosenInstanceServices = serviceInstances.find(
+      (instance) => instance.service_id === serviceId,
+    );
+
+    if (!chosenInstanceServices) {
+      return [];
+    }
+
+    return chosenInstanceServices?.instances?.map(
+      ({ id, current_state, created_at, title }) => ({
+        id,
+        name: title,
+        submissionDate: format(created_at, "dd.MM.yyyy"),
+        status: current_state,
+        detailsUrl: `/service/details?instanceId=${id}`,
+      }),
+    );
+  }, [serviceInstances, serviceId]);
+
+  console.log(filterInstancesByServiceId);
+
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-10">
-        {serviceInstances?.map(({ id }) => (
-          <ServiceItem
-            key={id}
-            title="Услуга"
-            description="Заказанная услуга"
-            link={`/service/form?serviceId=${id}`}
-            linkText="Посмотреть детали"
-          />
-        ))}
+      <div>
+        <Table
+          title="Статусы дел, находящихся в работе"
+          data={filterInstancesByServiceId}
+          isLoading={isLoading}
+        />
       </div>
+      {!filterInstancesByServiceId && (
+        <div>
+          <p>Созданные услуги по данному типу профиля отсутствуют. </p>
+          <a
+            href={`/service/form?serviceId=${serviceId}`}
+            className="text-blue-500 hover:underline!"
+          >
+            Создать новую услугу
+          </a>
+        </div>
+      )}
     </>
   );
 };

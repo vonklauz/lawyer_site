@@ -1,10 +1,5 @@
-/**
- * Типы для UserComponent
- * Следуют правилам Feature-Sliced Design (FSD)
- */
-
-import { Entities, EntityItem } from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { IBaseSuccessResponse } from "@/Models";
+import { Entities } from "@/shared/Store/EntitiesSlice/models";
 
 export interface UserEntitiesResponse extends IBaseSuccessResponse<Entities> {
   data: Entities;

@@ -12,6 +12,26 @@ export type AuthEnabling2FADTO = {
   user_id: string;
 };
 
+/**
+ * Детали ошибки, возвращаемые клиенту.
+ */
+export type AuthErrorDetail = {
+  code: number;
+  message: string;
+  field?: string | null;
+};
+
+/**
+ * Ответ API с ошибкой. Никогда не содержит поле data.
+ */
+export type AuthErrorResponse = {
+  /**
+   * @default false
+   */
+  success?: boolean;
+  error: AuthErrorDetail;
+};
+
 export type AuthHTTPValidationError = {
   detail?: AuthValidationError[];
 };
@@ -21,6 +41,16 @@ export type AuthInternalLoginDTO = {
    * @format uuid
    */
   user_id: string;
+};
+
+export type AuthLoginResponseDTO = {
+  access_token?: string | null;
+  refresh_token?: string | null;
+  pending_token?: string | null;
+  /**
+   * @default false
+   */
+  two_fa_required?: boolean | null;
 };
 
 export type AuthLoginUserDTO = {
@@ -39,6 +69,26 @@ export type AuthPasswordResetRequestDTO = {
   email: string;
 };
 
+export type AuthPresentationRoleDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  name: string;
+};
+
+export type AuthPresentationUserDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  email: string;
+  is_active: boolean;
+  is_2fa_enabled: boolean;
+  is_email_verified: boolean;
+  roles: AuthPresentationRoleDTO[];
+};
+
 export type AuthRegistrationDTO = {
   email: string;
   password: string;
@@ -46,6 +96,40 @@ export type AuthRegistrationDTO = {
 
 export type AuthRotationRefreshTokenRequestDTO = {
   refresh_token: string;
+};
+
+export type AuthSuccessResponseLoginResponseDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: AuthLoginResponseDTO;
+};
+
+export type AuthSuccessResponsePresentationUserDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: AuthPresentationUserDTO;
+};
+
+export type AuthSuccessResponseBool = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: boolean;
+};
+
+export type AuthSuccessResponseDict = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: {
+    [key: string]: any;
+  };
 };
 
 export type AuthValidationError = {
@@ -58,38 +142,8 @@ export type AuthVerifyEmailAfterRegistrationDTO = {
   token: string;
 };
 
-export type ServicesCreateRequestedFieldDTO = {
-  field_keys: string[];
-  /**
-   * @format uuid
-   */
-  instance_id: string;
-};
-
-export type ServicesCreateServiceDTO = {
+export type ServicesCreateServiceFieldFromUserDTO = {
   title: string;
-  description: string;
-  entity_type: ServicesEntityType;
-};
-
-export type ServicesCreateServiceFieldDTO = {
-  service_ids: string[];
-  name: string;
-  type: ServicesFieldType;
-  required: boolean;
-  options?:
-    | {
-        [key: string]: string;
-      }[]
-    | null;
-  key?: string | null;
-};
-
-export type ServicesCreateServiceFieldValueDTO = {
-  /**
-   * @format uuid
-   */
-  service_id: string;
   fields: ServicesServiceFieldValueDTO[];
 };
 
@@ -103,6 +157,26 @@ export type ServicesDataRequestedFieldDTO = {
 
 export type ServicesEntityType = "INDIVIDUAL" | "COMPANY" | "SOLE_PROPRIETOR";
 
+/**
+ * Детали ошибки, возвращаемые клиенту.
+ */
+export type ServicesErrorDetail = {
+  code: number;
+  message: string;
+  field?: string | null;
+};
+
+/**
+ * Ответ API с ошибкой. Никогда не содержит поле data.
+ */
+export type ServicesErrorResponse = {
+  /**
+   * @default false
+   */
+  success?: boolean;
+  error: ServicesErrorDetail;
+};
+
 export type ServicesFieldType =
   | "INTEGER"
   | "STRING"
@@ -110,11 +184,65 @@ export type ServicesFieldType =
   | "SELECT"
   | "URL"
   | "BOOL"
-  | "FILE"
-  | "{'integer': 'INTEGER', 'string': 'STRING', 'datetime': 'DATE', 'date': 'DATE', 'enumeration': 'SELECT', 'url': 'URL', 'boolean': 'BOOL', 'double': 'INTEGER', 'address': 'STRING', 'stageid': 'STRING'}";
+  | "FILE";
+
+/**
+ * DTO для вывода инстансов, сгруппированных по сервису.
+ */
+export type ServicesGroupedServiceInstanceOutputDTO = {
+  /**
+   * @format uuid
+   */
+  service_id: string;
+  service_title: string;
+  instances: ServicesSimpleServiceInstanceOutputDTO[];
+};
 
 export type ServicesHTTPValidationError = {
   detail?: ServicesValidationError[];
+};
+
+export type ServicesOutputRequestedFieldDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  /**
+   * @format uuid
+   */
+  field_id: string;
+  /**
+   * @format uuid
+   */
+  instance_id: string;
+  is_active: boolean;
+  field?: ServicesOutputServiceFieldDTO | null;
+};
+
+export type ServicesOutputServiceDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  title: string;
+  description: string;
+  entity_type: ServicesEntityType;
+};
+
+export type ServicesOutputServiceFieldDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  name: string;
+  type: ServicesFieldType;
+  required: boolean;
+  options?:
+    | {
+        [key: string]: string;
+      }[]
+    | null;
+  key?: string | null;
 };
 
 export type ServicesSaveRequestedFieldDTO = {
@@ -129,10 +257,202 @@ export type ServicesServiceFieldValueDTO = {
   value: string | number;
 };
 
+/**
+ * DTO для полного вывода инстанса со всей информацией.
+ */
+export type ServicesServiceInstanceOutputDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  /**
+   * @format uuid
+   */
+  user_id: string;
+  /**
+   * @format uuid
+   */
+  service_id: string;
+  current_state: string;
+  title: string;
+  bitrix_deal_id?: number | null;
+  external_metadata?: {
+    [key: string]: any;
+  } | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  requested_fields?: ServicesOutputServiceFieldDTO[] | null;
+};
+
+/**
+ * DTO для простого вывода инстанса (только ID).
+ */
+export type ServicesSimpleServiceInstanceOutputDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  current_state: string;
+  title: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+};
+
+export type ServicesSuccessResponseListGroupedServiceInstanceOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: ServicesGroupedServiceInstanceOutputDTO[];
+};
+
+export type ServicesSuccessResponseListOutputRequestedFieldDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: ServicesOutputRequestedFieldDTO[];
+};
+
+export type ServicesSuccessResponseListOutputServiceDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: ServicesOutputServiceDTO[];
+};
+
+export type ServicesSuccessResponseListOutputServiceFieldDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: ServicesOutputServiceFieldDTO[];
+};
+
+export type ServicesSuccessResponseNoneType = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: null;
+};
+
+export type ServicesSuccessResponseServiceInstanceOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: ServicesServiceInstanceOutputDTO;
+};
+
+export type ServicesSuccessResponseBool = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: boolean;
+};
+
 export type ServicesValidationError = {
   loc: (string | number)[];
   msg: string;
   type: string;
+};
+
+export type TwoFaErrorResponse = {
+  /**
+   * @default false
+   */
+  success?: boolean;
+  error: {
+    [key: string]: any;
+  };
+};
+
+export type TwoFaHTTPValidationError = {
+  detail?: TwoFaValidationError[];
+};
+
+export type TwoFaLoginResponseDTO = {
+  access_token: string;
+  refresh_token: string;
+  /**
+   * @default bearer
+   */
+  token_type?: string;
+};
+
+export type TwoFaOutputActivationTOTPMethodDTO = {
+  qr: string;
+  uri: string;
+};
+
+export type TwoFaOutputMethodDTO = {
+  /**
+   * @format uuid
+   */
+  id: string;
+  name: string;
+  description: string;
+};
+
+export type TwoFaSuccessResponseLoginResponseDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data?: TwoFaLoginResponseDTO | null;
+};
+
+export type TwoFaSuccessResponseNoneType = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data?: null;
+};
+
+export type TwoFaSuccessResponseOutputActivationTOTPMethodDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data?: TwoFaOutputActivationTOTPMethodDTO | null;
+};
+
+export type TwoFaSuccessResponseUserOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data?: TwoFaUserOutputDTO | null;
+};
+
+export type TwoFaUserOutputDTO = {
+  /**
+   * @format uuid
+   */
+  user_id: string;
+  method?: TwoFaOutputMethodDTO | null;
+  is_active: boolean;
+};
+
+export type TwoFaValidationError = {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+};
+
+/**
+ * DTO для вывода всех сущностей пользователя, сгруппированных по типу.
+ */
+export type EntityAllEntitiesOutputDTO = {
+  individual?: EntityIndividualOutputDTO[];
+  company?: EntityCompanyOutputDTO[];
+  sole_proprietor?: EntitySoleProprietorOutputDTO[];
 };
 
 export type EntityBlockSchemaDTO = {
@@ -183,11 +503,14 @@ export type EntityCompanyCreateFromUserDTO = {
   corr_account: string;
 };
 
+/**
+ * DTO для вывода данных компании.
+ */
 export type EntityCompanyOutputDTO = {
   /**
    * @format uuid
    */
-  entity_id: string;
+  id: string;
   name: string;
   registration_num: string;
   inn: string;
@@ -198,6 +521,14 @@ export type EntityCompanyOutputDTO = {
   bank_name: string;
   bik: string;
   corr_account: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
 };
 
 export type EntityCompanyUpdateFromUserDTO = {
@@ -233,14 +564,24 @@ export type EntityCreateIndividualFromUserDTO = {
   code_department: string;
 };
 
-export type EntityErrorDTO = {
+/**
+ * Детали ошибки, возвращаемые клиенту.
+ */
+export type EntityErrorDetail = {
   code: number;
-  message: EntityErrorFields | EntityErrorFields[];
+  message: string;
+  field?: string | null;
 };
 
-export type EntityErrorFields = {
-  field: string;
-  message: string;
+/**
+ * Ответ API с ошибкой. Никогда не содержит поле data.
+ */
+export type EntityErrorResponse = {
+  /**
+   * @default false
+   */
+  success?: boolean;
+  error: EntityErrorDetail;
 };
 
 export type EntityFieldSchemaDTO = {
@@ -255,11 +596,14 @@ export type EntityHTTPValidationError = {
   detail?: EntityValidationError[];
 };
 
+/**
+ * DTO для вывода данных физического лица.
+ */
 export type EntityIndividualOutputDTO = {
   /**
    * @format uuid
    */
-  entity_id: string;
+  id: string;
   first_name: string;
   last_name: string;
   middle_name: string | null;
@@ -267,33 +611,24 @@ export type EntityIndividualOutputDTO = {
    * @format date
    */
   birth_date: string;
+  passport_serial: string;
+  passport_number: string;
   issued_by: string;
   /**
    * @format date
    */
   issued_date: string;
+  code_department: string;
   place_of_birth: string;
   registration_address: string;
-  passport_number: string;
-  passport_serial: string;
-  code_department: string;
-};
-
-export type EntityResponseDTO = {
-  success: boolean;
-  data:
-    | EntityCompanyOutputDTO
-    | EntityCompanyOutputDTO[]
-    | EntityIndividualOutputDTO
-    | EntityIndividualOutputDTO[]
-    | EntitySchemaDTO
-    | EntitySoleProprietorOutputDTO
-    | EntitySoleProprietorOutputDTO[]
-    | {
-        [key: string]: any;
-      }
-    | null;
-  error: EntityErrorDTO | null;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
 };
 
 export type EntitySchemaDTO = {
@@ -317,11 +652,14 @@ export type EntitySoleProprietorCreateFromUserDTO = {
   corr_account: string;
 };
 
+/**
+ * DTO для вывода данных ИП.
+ */
 export type EntitySoleProprietorOutputDTO = {
   /**
    * @format uuid
    */
-  entity_id: string;
+  id: string;
   last_name: string;
   first_name: string;
   middle_name: string | null;
@@ -336,6 +674,14 @@ export type EntitySoleProprietorOutputDTO = {
   bank_name: string;
   bik: string;
   corr_account: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
 };
 
 export type EntitySoleProprietorUpdateFromUserDTO = {
@@ -350,6 +696,70 @@ export type EntitySoleProprietorUpdateFromUserDTO = {
   bank_name?: string | null;
   bik?: string | null;
   corr_account?: string | null;
+};
+
+export type EntitySuccessResponseAllEntitiesOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntityAllEntitiesOutputDTO;
+};
+
+export type EntitySuccessResponseCompanyOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntityCompanyOutputDTO;
+};
+
+export type EntitySuccessResponseIndividualOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntityIndividualOutputDTO;
+};
+
+export type EntitySuccessResponseListCompanyOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntityCompanyOutputDTO[];
+};
+
+export type EntitySuccessResponseListIndividualOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntityIndividualOutputDTO[];
+};
+
+export type EntitySuccessResponseListSoleProprietorOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntitySoleProprietorOutputDTO[];
+};
+
+export type EntitySuccessResponseSchemaDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntitySchemaDTO;
+};
+
+export type EntitySuccessResponseSoleProprietorOutputDTO = {
+  /**
+   * @default true
+   */
+  success?: boolean;
+  data: EntitySoleProprietorOutputDTO;
 };
 
 export type EntityUpdateIndividualFromUserDTO = {

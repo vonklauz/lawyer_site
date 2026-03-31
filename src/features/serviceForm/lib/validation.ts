@@ -11,9 +11,9 @@ export const mapSchemaFromServiceFormData = (data: ServiceFormFieldType[]) => {
     SELECT: string(),
     DATE: string(),
   };
-  data.forEach(({ id, type, required }) => {
+  data.forEach(({ id = "title", type = "STRING", required }) => {
     let fieldSchema = config[type];
-    if (required) {
+    if (required || id === "title") {
       fieldSchema = fieldSchema.required("Поле обязательно для заполнения");
     }
     schema[id] = fieldSchema;

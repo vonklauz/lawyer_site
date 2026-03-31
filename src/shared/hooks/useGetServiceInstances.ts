@@ -2,13 +2,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { skipToken } from "@tanstack/react-query";
 import {
-  useGetByServiceIdApiV1ServicesServiceIdFieldsGet,
+  useGetUserInstancesWithServicesApiV1ServiceInstancesUserGet,
   useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost,
 } from "@/generated/lawyersSiteApiComponents";
-import { handleLoginSuccess, handleLogoutSuccess } from "@/shared/lib";
-import { UNAUTHORIZED_PATH } from "@/shared/lib/consts";
+import { handleLoginSuccess, handleLogoutSuccess } from "../lib";
+import { UNAUTHORIZED_PATH } from "../lib/consts";
 
-export const useGetServiceFormById = (serviceId: string) => {
+export const useGetServiceInstances = () => {
   const [tries, setTries] = useState(0);
   const router = useRouter();
 
@@ -22,7 +22,6 @@ export const useGetServiceFormById = (serviceId: string) => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        pathParams: { serviceId },
       }
     : skipToken;
 
@@ -31,7 +30,7 @@ export const useGetServiceFormById = (serviceId: string) => {
     error: serviceInstancesError,
     isPending: isServiceInstancesPending,
     refetch,
-  } = useGetByServiceIdApiV1ServicesServiceIdFieldsGet(
+  } = useGetUserInstancesWithServicesApiV1ServiceInstancesUserGet(
     //@ts-expect-error позже типизировать
     queryVariables,
   );
@@ -79,24 +78,3 @@ export const useGetServiceFormById = (serviceId: string) => {
     isPending: isServiceInstancesPending || isRefreshTokensPending,
   };
 };
-
-// import { fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet, useGetByServiceIdApiV1ServicesServiceIdFieldsGet } from "@/generated/lawyersSiteApiComponents";
-// import { useInterceptor } from "@/shared/hooks/useInterceptor";
-// import { useCallback } from "react";
-
-// export const useGetServiceFormById = (serviceId: string) => {
-//   const getServiceByEntitytype = useCallback(async () => {
-//     const data = await fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet({
-//       headers: {
-//         //@ts-expect-error позже типизировать
-//         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-//       },
-//       pathParams: { serviceId },
-//     });
-//     return data;
-//   }, [serviceId]);
-//   //@ts-expect-error позже типизировать
-//   const [result, isLoading] = useInterceptor(getServiceByEntitytype);
-
-//   return [result, isLoading];
-// };

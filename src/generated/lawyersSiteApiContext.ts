@@ -5,7 +5,7 @@ import {
   type QueryKey,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import { QueryOperation } from "./lawyersSiteApiComponents";
+import type { QueryOperation } from "./lawyersSiteApiComponents";
 
 export type LawyersSiteApiContext<
   TQueryFnData = unknown,

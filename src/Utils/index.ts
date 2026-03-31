@@ -1,54 +1,61 @@
+import { AuthLoginResponseDTO } from "@/generated/lawyersSiteApiSchemas";
 import { LoginResponse, RegisterData, User } from "@/Models";
 // import { dispatch } from "@/Store";
 // import { setUser, getDefaultUser } from "@/Store/User/userSlice";
 import { format } from "date-fns";
 
-export const getDefaultUser = (): User => (
-    {
-        firstName: '',
-        secondName: '',
-        lastName: '',
-        userId: '',
-        email: '',
-        phone: ''
-    }
-)
-
+export const getDefaultUser = (): User => ({
+  firstName: "",
+  secondName: "",
+  lastName: "",
+  userId: "",
+  email: "",
+  phone: "",
+});
 
 export const parseJwt = (token: string) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join(""),
+  );
 
-    return JSON.parse(jsonPayload);
-}
+  return JSON.parse(jsonPayload);
+};
 
-export const handleLoginSuccess = (data: LoginResponse) => {
-    const accessToken = data.access_token;
-    const refreshToken = data.refresh_token;
-    const user = parseJwt(accessToken);
+export const handleLoginSuccess = (data: AuthLoginResponseDTO) => {
+  const accessToken = data.access_token || "";
+  const refreshToken = data.refresh_token || "";
+  const user = parseJwt(accessToken);
 
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('rawUser', JSON.stringify(user));
-}
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+  localStorage.setItem("rawUser", JSON.stringify(user));
+};
 
 export const handleOtpTokenRecieve = (data: LoginResponse) => {
-    const token = parseJwt(data.pending_token);
-    return token;
-}
+  const token = parseJwt(data.pending_token);
+  return token;
+};
 
 export const handleLogoutSuccess = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('rawUser');
-    sessionStorage.removeItem('user');
-    // dispatch(setUser(getDefaultUser()));
-}
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("rawUser");
+  sessionStorage.removeItem("user");
+  // dispatch(setUser(getDefaultUser()));
+};
 
-export const clearPhoneNumberString = (phone: string): string => phone.split('').filter((el) => !['(', ')', '-', ' '].includes(el)).join('');
+export const clearPhoneNumberString = (phone: string): string =>
+  phone
+    .split("")
+    .filter((el) => !["(", ")", "-", " "].includes(el))
+    .join("");
 
 // export const remapServerFieldToFrontFormat = (backendField: string): keyof RegisterData => {
 //     const fieldsMap: { [key: string]: keyof RegisterData } = {
@@ -60,18 +67,18 @@ export const clearPhoneNumberString = (phone: string): string => phone.split('')
 // }
 
 export const cloneDeep = <T>(data: T): T => {
-    return JSON.parse(JSON.stringify(data));
+  return JSON.parse(JSON.stringify(data));
 };
 
 /**
  * Возврашает дату в виде строки, ожидаемой сервером, если она валидна.
  * @param date Строка вида '31.05.1970'
- * @returns 
+ * @returns
  */
 export const getDateFromString = (date: string): string => {
-    const [day, month, year] = date.split('.').map(Number);
-    return format(new Date(year, month - 1, day), 'yyyy-MM-dd');
-}
+  const [day, month, year] = date.split(".").map(Number);
+  return format(new Date(year, month - 1, day), "yyyy-MM-dd");
+};
 
 /**
  * Проверяет пустой ли объект или массив.
@@ -79,15 +86,16 @@ export const getDateFromString = (date: string): string => {
  * @returns boolean
  */
 export const isEmpty = (value: any[] | object): boolean => {
-    if (Array.isArray(value)) {
-        return value.length === 0;
-    } else if (typeof value === 'object') {
-        return !Object.keys(value).length;
-    }
+  if (Array.isArray(value)) {
+    return value.length === 0;
+  } else if (typeof value === "object") {
+    return !Object.keys(value).length;
+  }
 
-    return false;
-}
+  return false;
+};
 
-export const isNullOrUndefined = (value: any): boolean => value === null || value === undefined;
+export const isNullOrUndefined = (value: any): boolean =>
+  value === null || value === undefined;
 
-export const isSkipToken = (value: any) => typeof value === 'symbol';
+export const isSkipToken = (value: any) => typeof value === "symbol";

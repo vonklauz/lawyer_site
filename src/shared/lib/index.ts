@@ -115,3 +115,6 @@ export const getDefaultRadioOptions = () => [
   { id: "true", value: "Да", label: "Да" },
   { id: "false", value: "Нет", label: "Нет" },
 ];
+
+export const isLastIndex = (index: number, array: any[]) =>
+  index === array.length - 1;

@@ -6,13 +6,16 @@ export const useSaveRequestedFields = (serviceId: string) => {
   const saveRequestedFields = useCallback(async () => {
     const data = await fetchSaveApiV1RequestedFieldsInstanceIdPost({
       headers: {
+        //@ts-expect-error позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
+      //@ts-expect-error позже типизировать
       pathParams: { serviceId },
     });
     return data;
   }, [serviceId]);
 
+  //@ts-expect-error позже типизировать
   const [result, isLoading] = useInterceptor(saveRequestedFields);
 
   return [result, isLoading];

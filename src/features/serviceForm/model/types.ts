@@ -13,3 +13,7 @@ export type ServiceFormFieldType = {
 export type ServiceFormData = {
   [id: string]: string | number | boolean;
 };
+
+export type ServiceFormProps = {
+  serviceId: string;
+};

@@ -1,1 +1,6 @@
-export const DEFAULT_PARAMS_STATE = { entityType: null, entityId: null, serviceId: '' };
+export const DEFAULT_PARAMS_STATE = {
+  entityType: null,
+  entityId: null,
+  serviceId: "",
+  instanceId: "",
+} as const;

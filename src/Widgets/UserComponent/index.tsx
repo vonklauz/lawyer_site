@@ -1,51 +1,63 @@
-"use client"
-import { UserThumb } from './UserThumb';
-import { useCallback, useEffect, useState } from 'react';
-import { fetchGetAllEntitiesApiV1EntitiesGet } from '@generated/lawyersSiteApiComponents';
-import useEntitiesStore, { isEmptyEntities, } from '@/shared/Store/EntitiesSlice/useEntitiesStore';
-import { skipToken } from '@tanstack/react-query';
-import { isSkipToken } from '@/Utils';
-import { UserEntitiesResponse } from './model/types';
-import { useInterceptor } from '@/shared/hooks/useInterceptor';
-import { Entities } from '@/shared/Store/EntitiesSlice/models';
+"use client";
+import { UserThumb } from "./UserThumb";
+import { useCallback, useEffect, useState } from "react";
+import { fetchGetAllEntitiesApiV1EntitiesGet } from "@generated/lawyersSiteApiComponents";
+import useEntitiesStore, {
+  isEmptyEntities,
+} from "@/shared/Store/EntitiesSlice/useEntitiesStore";
+import { skipToken } from "@tanstack/react-query";
+import { isSkipToken } from "@/Utils";
+import { UserEntitiesResponse } from "./model/types";
+import { useInterceptor } from "@/shared/hooks/useInterceptor";
+import { Entities } from "@/shared/Store/EntitiesSlice/models";
 
 export const UserComponent = () => {
-    const hasHydrated = useEntitiesStore((state) => state.hasHydrated);
-    const entities = useEntitiesStore((state) => state.entities);
-    const setEntities = useEntitiesStore((state) => state.setEntities);
-    const [isAuthorized, setIsAuthorized] = useState<undefined | boolean>();
+  const hasHydrated = useEntitiesStore((state) => state.hasHydrated);
+  const entities = useEntitiesStore((state) => state.entities);
+  const setEntities = useEntitiesStore((state) => state.setEntities);
+  const [isAuthorized, setIsAuthorized] = useState<undefined | boolean>();
 
-    const getUserEntities = useCallback(async () => {
-        const data = await fetchGetAllEntitiesApiV1EntitiesGet({
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        })
-        return data;
-    }, []);
-    const getEntitiesRq = hasHydrated ? (isEmptyEntities(entities) ? getUserEntities : skipToken) : skipToken;
-    const [response, isLoading] = useInterceptor<UserEntitiesResponse>(getEntitiesRq);
-    const isRenderSkeleton = isLoading || !hasHydrated;
+  const getUserEntities = useCallback(async () => {
+    const data = await fetchGetAllEntitiesApiV1EntitiesGet({
+      headers: {
+        //@ts-expect-error позже типизировать
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    return data;
+  }, []);
+  const getEntitiesRq = hasHydrated
+    ? isEmptyEntities(entities)
+      ? getUserEntities
+      : skipToken
+    : skipToken;
 
-    useEffect(() => {
-        if (hasHydrated && isSkipToken(getEntitiesRq)) {
-            setIsAuthorized(true);
-        }
-    }, [hasHydrated, getEntitiesRq]);
+  const [response, isLoading] =
+    //@ts-expect-error позже типизировать
+    useInterceptor<UserEntitiesResponse>(getEntitiesRq);
+  const isRenderSkeleton = isLoading || !hasHydrated;
 
-    useEffect(() => {
-        if (response?.success && response?.data) {
-            setEntities({ ...response?.data } as Entities);
-            setIsAuthorized(true);
-        }
-        if (response?.error) {
-            setIsAuthorized(false);
-        }
-    }, [response]);
-
-    if (isRenderSkeleton) {
-        return <div className='animate-pulse w-[100%] h-[100%] bg-gray-200 rounded' />;
+  useEffect(() => {
+    if (hasHydrated && isSkipToken(getEntitiesRq)) {
+      setIsAuthorized(true);
     }
+  }, [hasHydrated, getEntitiesRq]);
 
-    return <UserThumb options={entities} isAuthorized={isAuthorized} />;
-}
+  useEffect(() => {
+    if (response?.success && response?.data) {
+      setEntities({ ...response?.data } as Entities);
+      setIsAuthorized(true);
+    }
+    if (response?.error) {
+      setIsAuthorized(false);
+    }
+  }, [response]);
+
+  if (isRenderSkeleton) {
+    return (
+      <div className="animate-pulse w-[100%] h-[100%] bg-gray-200 rounded" />
+    );
+  }
+
+  return <UserThumb options={entities} isAuthorized={isAuthorized} />;
+};

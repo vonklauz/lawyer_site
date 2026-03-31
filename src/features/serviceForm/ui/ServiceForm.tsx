@@ -6,8 +6,12 @@ import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Button } from "@/shared/Ui/Button";
 import { Input } from "@/shared/Ui/Input";
 import { FormSelect } from "@/shared/Ui/formSelect";
-import { useCreateApiV1ServiceFieldValuePost } from "@/generated/lawyersSiteApiComponents";
-import { ServiceFormData, ServiceFormFieldType } from "../model/types";
+import { useCreateApiV1ServiceFieldValuesServiceServiceIdPost } from "@/generated/lawyersSiteApiComponents";
+import {
+  ServiceFormData,
+  ServiceFormFieldType,
+  ServiceFormProps,
+} from "../model/types";
 import { mapSchemaFromServiceFormData } from "../lib/validation";
 import { ObjectWithProps } from "@/Models";
 import { ValidationError } from "yup";
@@ -19,24 +23,30 @@ import { RadioButton } from "@/shared/Ui/radioButton";
 import { v4 as uuidv4 } from "uuid";
 import { MaskedInput } from "@/shared/Ui/MaskedInput";
 
-export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
+export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
   const [form, setForm] = useState<ServiceFormData>({});
+  const [title, setTitle] = useState("");
   const router = useRouter();
   const [errors, setErrors] = useState<ObjectWithProps<string>>({});
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [response, isLoading] = useGetServiceFormById(serviceId);
+  const {
+    data: response,
+    error: getFieldsError,
+    isPending: isLoading,
+  } = useGetServiceFormById(serviceId);
   const {
     mutate: submitForm,
     data: submitResponse,
     isPending,
     error,
     isSuccess,
-  } = useCreateApiV1ServiceFieldValuePost();
-  //@ts-expect-error позже типизровать
-  const { data: initialFormFields } = response || {};
+  } = useCreateApiV1ServiceFieldValuesServiceServiceIdPost();
+
+  console.log(errors);
+
+  const { data: initialFormFields = [] } = response || {};
 
   useEffect(() => {
-    //@ts-expect-error позже типизровать
     if (submitResponse?.success) {
       setIsConfirmModalOpen(false);
       toast("Услуга успешно зарегистрирована", {
@@ -63,12 +73,13 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
     }));
     submitForm({
       headers: {
-        //@ts-expect-error позже типизровать
+        //@ts-expect-error позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
+      pathParams: { serviceId },
       body: {
         service_id: serviceId,
-        //@ts-expect-error позже типизровать
+        // @ts-expect-error позже типизировать
         fields,
       },
     });
@@ -76,15 +87,15 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
 
   const onChange =
     (id: string) => (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      //@ts-expect-error позже типизровать
       const field = initialFormFields?.find((f) => f.id === id);
       const { value } = e.target;
       const formattedValue =
         field?.type === "INTEGER"
           ? Number(value)
-          : field.type === "SELECT"
-            ? getOptionIdByValue(field.options, value)
-            : field.type === "BOOL"
+          : field?.type === "SELECT"
+            ? //@ts-expect-error позже типизровать
+              getOptionIdByValue(field?.options, value)
+            : field?.type === "BOOL"
               ? value === "true"
               : value;
       const newForm = { ...form, [id]: formattedValue };
@@ -96,9 +107,14 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
     };
 
   const validateAndSend = (): void => {
-    const validationSchema = mapSchemaFromServiceFormData(initialFormFields);
+    const validationSchema = mapSchemaFromServiceFormData([
+      //@ts-expect-error позже типизровать
+      { id: "title", type: "STRING", required: true },
+      //@ts-expect-error позже типизровать
+      ...initialFormFields,
+    ]);
     try {
-      validationSchema.validateSync(form, { abortEarly: false });
+      validationSchema.validateSync({ ...form, title }, { abortEarly: false });
     } catch (err) {
       const validationErrors = err as ValidationError;
       const newErrors: ObjectWithProps<string> = {};
@@ -128,7 +144,18 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
       <h2>Форма услуги</h2>
       <div className="flex justify-center mt-3 lg:mt-5">
         <FormWrapper className="w-[100%] max-w-[500px]">
+          <div className="w-[100%]">
+            <Input
+              label="Наименование услуги"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              disabled={isLoading as boolean}
+              error={errors?.title}
+              maxLength={255}
+            />
+          </div>
           {initialFormFields?.map(
+            //@ts-expect-error позже типизровать
             ({ name, id, key, type, options }: ServiceFormFieldType) => {
               const isDateField = type === "DATE";
               const isSelectField = type === "SELECT";
@@ -182,7 +209,6 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
                 >
                   <Input
                     type={isDateField ? "date" : "text"}
-                    key={name}
                     label={name}
                     onChange={onChange(id)}
                     value={String(form[id] ?? "")}
@@ -204,8 +230,13 @@ export const ServiceForm: FC<{ serviceId: string }> = ({ serviceId }) => {
           </Button>
         </FormWrapper>
         <RequisitesModal
-          schema={initialFormFields}
-          details={form}
+          schema={[
+            //@ts-expect-error позже типизровать
+            { id: "title", type: "STRING", required: true },
+            //@ts-expect-error позже типизровать
+            ...initialFormFields,
+          ]}
+          details={{ ...form, title }}
           isOpen={isConfirmModalOpen}
           onConfirm={submitRequest}
           onEdit={() => setIsConfirmModalOpen(false)}

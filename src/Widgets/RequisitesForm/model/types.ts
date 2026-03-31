@@ -24,9 +24,13 @@ export interface SchemaResponse {
 }
 
 export interface EntityFormData extends ObjectWithProps<string> {
+  //@ts-ignore позже типизировать
   entity_id?: string;
+  //@ts-ignore позже типизировать
   id?: string;
+  //@ts-ignore позже типизировать
   created_at?: string;
+  //@ts-ignore позже типизировать
   updated_at?: string;
 }
 
