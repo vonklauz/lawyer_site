@@ -3,7 +3,10 @@ import { ServiceItem } from "@/shared/Ui/ServiceItem";
 import { TWO_FA_SETTINGS } from "./consts";
 import { useCallback, useEffect, useState } from "react";
 import { TwoFaModal } from "../TwoFaModal";
-import { fetchGetUserByUserIdApiV1UserGet } from "@generated/lawyersSiteApiComponents";
+import {
+  fetchGetUserByUserIdApiV1UserGet,
+  GetUserByUserIdApiV1UserGetVariables,
+} from "@generated/lawyersSiteApiComponents";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
 import { Skeleton } from "@/shared/Ui/Skeleton";
 import { TwoFaMode, TwoFaResponse } from "../TwoFaModal/model/types";
@@ -14,20 +17,21 @@ export const TwoFaSettings = () => {
   const [isOpen, setOpen] = useState(false);
 
   const getUser2FaType = useCallback(async (): Promise<TwoFaResponse> => {
-    const data = await fetchGetUserByUserIdApiV1UserGet({
+    const variables: GetUserByUserIdApiV1UserGetVariables = {
       headers: {
-        //@ts-ignore позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+      } as unknown as GetUserByUserIdApiV1UserGetVariables["headers"],
+    };
+    const data = await fetchGetUserByUserIdApiV1UserGet(variables);
     return data as unknown as TwoFaResponse;
   }, []);
 
-  const [response, isLoading] = useInterceptor<TwoFaResponse>(getUser2FaType);
+  const [response, isLoading] = useInterceptor(getUser2FaType);
 
   useEffect(() => {
-    if (response?.data?.method?.name) {
-      setOtpMethod(response?.data?.method.name);
+    const typedResponse = response as TwoFaResponse | undefined;
+    if (typedResponse?.data?.method?.name) {
+      setOtpMethod(typedResponse.data.method.name);
     }
   }, [response]);
 

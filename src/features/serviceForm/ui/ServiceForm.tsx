@@ -6,14 +6,21 @@ import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Button } from "@/shared/Ui/Button";
 import { Input } from "@/shared/Ui/Input";
 import { FormSelect } from "@/shared/Ui/formSelect";
-import { useCreateApiV1ServiceFieldValuesServiceServiceIdPost } from "@/generated/lawyersSiteApiComponents";
+import {
+  useCreateApiV1ServiceFieldValuesServiceServiceIdPost,
+  CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables,
+} from "@/generated/lawyersSiteApiComponents";
+import {
+  ServicesServiceFieldValueDTO,
+  ServicesOutputServiceFieldDTO,
+} from "@/generated/lawyersSiteApiSchemas";
 import {
   ServiceFormData,
   ServiceFormFieldType,
   ServiceFormProps,
 } from "../model/types";
 import { mapSchemaFromServiceFormData } from "../lib/validation";
-import { ObjectWithProps } from "@/Models";
+import { ObjectWithProps } from "@/shared/models/types";
 import { ValidationError } from "yup";
 import { RequisitesModal } from "@/entities/requisitesModal";
 import { getDefaultRadioOptions, getOptionIdByValue } from "@/shared/lib";
@@ -44,7 +51,7 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
 
   console.log(errors);
 
-  const { data: initialFormFields = [] } = response || {};
+  const initialFormFields: ServicesOutputServiceFieldDTO[] = response?.data ?? [];
 
   useEffect(() => {
     if (submitResponse?.success) {
@@ -67,22 +74,24 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
   }, [submitResponse]);
 
   const submitRequest = () => {
-    const fields = Object.entries(form).map(([key, value]) => ({
-      field_id: key,
-      value,
-    }));
-    submitForm({
-      headers: {
-        //@ts-expect-error позже типизировать
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      pathParams: { serviceId },
-      body: {
-        service_id: serviceId,
-        // @ts-expect-error позже типизировать
-        fields,
-      },
-    });
+    const fields: ServicesServiceFieldValueDTO[] = Object.entries(form)
+      .filter(([, value]) => typeof value !== "boolean")
+      .map(([key, value]) => ({
+        field_id: key,
+        value: value as string | number,
+      }));
+    const variables: CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables =
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        } as unknown as CreateApiV1ServiceFieldValuesServiceServiceIdPostVariables["headers"],
+        pathParams: { serviceId },
+        body: {
+          title,
+          fields,
+        },
+      };
+    submitForm(variables);
   };
 
   const onChange =
@@ -93,8 +102,9 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
         field?.type === "INTEGER"
           ? Number(value)
           : field?.type === "SELECT"
-            ? //@ts-expect-error позже типизровать
-              getOptionIdByValue(field?.options, value)
+            ? ((field?.options ?? []).find(
+                (opt) => (opt.VALUE ?? opt.value) === value,
+              )?.ID ?? value)
             : field?.type === "BOOL"
               ? value === "true"
               : value;
@@ -107,10 +117,14 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
     };
 
   const validateAndSend = (): void => {
+    const titleField: ServicesOutputServiceFieldDTO = {
+      id: "title",
+      name: "title",
+      type: "STRING",
+      required: true,
+    };
     const validationSchema = mapSchemaFromServiceFormData([
-      //@ts-expect-error позже типизровать
-      { id: "title", type: "STRING", required: true },
-      //@ts-expect-error позже типизровать
+      titleField,
       ...initialFormFields,
     ]);
     try {
@@ -129,12 +143,12 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
   };
 
   const mapOptions = (
-    options: Array<{ ID: string; VALUE: string; LABEL?: string }> = [],
+    options: Array<{ [key: string]: string }> | null | undefined = [],
   ) => {
-    return options?.map((option) => ({
-      value: option.VALUE,
-      label: option.LABEL || option.VALUE,
-      id: option.ID || uuidv4(),
+    return (options ?? []).map((option) => ({
+      value: option.VALUE ?? option.value ?? "",
+      label: option.LABEL ?? option.label ?? option.VALUE ?? option.value ?? "",
+      id: option.ID ?? option.id ?? uuidv4(),
     }));
   };
 
@@ -155,7 +169,6 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
             />
           </div>
           {initialFormFields?.map(
-            //@ts-expect-error позже типизровать
             ({ name, id, key, type, options }: ServiceFormFieldType) => {
               const isDateField = type === "DATE";
               const isSelectField = type === "SELECT";
@@ -231,10 +244,13 @@ export const ServiceForm: FC<ServiceFormProps> = ({ serviceId }) => {
         </FormWrapper>
         <RequisitesModal
           schema={[
-            //@ts-expect-error позже типизровать
-            { id: "title", type: "STRING", required: true },
-            //@ts-expect-error позже типизровать
-            ...initialFormFields,
+            { name: "title", title: "Наименование услуги", type: "STRING" as const },
+            ...initialFormFields.map((f) => ({
+              name: f.id,
+              title: f.name,
+              type: f.type,
+              id: f.id,
+            })),
           ]}
           details={{ ...form, title }}
           isOpen={isConfirmModalOpen}

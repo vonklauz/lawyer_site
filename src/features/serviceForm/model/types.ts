@@ -1,14 +1,9 @@
-import { ServiceSelectOption } from "@/shared/models/types";
+import { ServicesOutputServiceFieldDTO } from "@/generated/lawyersSiteApiSchemas";
 
-export type ServiceFormFieldType = {
-  id: string;
-  name: string;
-  key?: string;
-  value: string | number | boolean;
-  type: "STRING" | "INTEGER" | "BOOL" | "SELECT" | "DATE";
-  required: boolean;
-  options?: ServiceSelectOption[];
-};
+/**
+ * Поле формы услуги — совпадает с generated DTO.
+ */
+export type ServiceFormFieldType = ServicesOutputServiceFieldDTO;
 
 export type ServiceFormData = {
   [id: string]: string | number | boolean;

@@ -1,7 +1,6 @@
-import { loginSchema } from "@/Utils/validation";
+import { loginSchema } from "@/shared/lib/validation";
 import { useLogin } from "../api/useLogin";
-import { LoginResponse } from "./types";
-import { handleLoginSuccess } from "@/Utils";
+import { handleLoginSuccess } from "@/shared/lib";
 import { useVerifyOtp } from "../api/useVerifyOtp";
 import { AuthLoginResponseDTO } from "@/generated/lawyersSiteApiSchemas";
 

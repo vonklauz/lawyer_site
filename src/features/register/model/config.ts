@@ -1,4 +1,4 @@
-import { loginSchema } from "@/Utils/validation";
+import { loginSchema } from "@/shared/lib/validation";
 import { useRegister } from "../api/useLogin";
 
 export const REGISTER_CONFIG = {

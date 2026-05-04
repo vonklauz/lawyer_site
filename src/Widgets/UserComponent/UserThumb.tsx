@@ -1,7 +1,7 @@
 "use client";
 import { Select } from "@/shared/Ui/Select";
 import styles from "./User.module.css";
-import { TSelectOption } from "@/Models";
+import { TSelectOption } from "@/shared/models/types";
 import { useRouter } from "next/navigation";
 
 import { UserThumbProps } from "./model/types";

@@ -1,26 +1,27 @@
 "use client";
 
 import useEntitiesStore from "@/shared/Store/EntitiesSlice/useEntitiesStore";
-import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/Utils";
+import { handleLoginSuccess, handleLogoutSuccess, isSkipToken } from "@/shared/lib";
 import { useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost } from "@generated/lawyersSiteApiComponents";
 import { SkipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { IBaseSuccessResponse } from "@/Models";
+import { IBaseSuccessResponse } from "@/shared/models/types";
 
-export const useInterceptor = <T extends IBaseSuccessResponse<any>>(
+type ApiResponse = { success?: boolean; data?: unknown; error?: { code?: number } };
+
+export const useInterceptor = <T extends { success?: boolean; data?: unknown; error?: { code?: number } }>(
   request: (() => Promise<T>) | SkipToken,
-): [T | IBaseSuccessResponse<any>, boolean] => {
+): [T | { success?: boolean; data?: unknown; error?: { code?: number } }, boolean] => {
   const [tries, setTries] = useState(0);
   const [isPropRequestLoading, setIsPropRequestLoading] = useState(true);
   const [propRequestResponse, setPropRequestResponse] = useState<
-    T | IBaseSuccessResponse<any>
+    T | { success?: boolean; data?: unknown; error?: { code?: number } }
   >({} as T);
   const clearEntities = useEntitiesStore((state) => state.clearEntities);
   const rq = useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost();
   const {
     mutate: refreshTokensRq,
     data: refreshTokensData,
-    error: refreshTokensError,
     isPending: isRefreshTokensPending,
   } = rq;
   const isLoading = isRefreshTokensPending || isPropRequestLoading;
@@ -43,10 +44,10 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(
     }
     try {
       setIsPropRequestLoading(true);
-      const data = await request();
+      const data = await (request as () => Promise<T>)();
       setPropRequestResponse(data);
     } catch (error) {
-      setPropRequestResponse(error as any);
+      setPropRequestResponse(error as IBaseSuccessResponse<unknown>);
       setIsPropRequestLoading(false);
     }
   };
@@ -67,7 +68,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(
   }, [request, tries]);
 
   useEffect(() => {
-    const response = propRequestResponse as any;
+    const response = propRequestResponse as ApiResponse;
     if (response?.error?.code === 401) {
       if (tries < 3) {
         refreshTokens();
@@ -80,7 +81,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(
   }, [propRequestResponse]);
 
   useEffect(() => {
-    const data = refreshTokensData as any;
+    const data = refreshTokensData as { error?: unknown; data?: unknown; success?: boolean } | undefined;
     if (data?.error) {
       setTries(tries + 2);
       clearEntities();
@@ -88,7 +89,7 @@ export const useInterceptor = <T extends IBaseSuccessResponse<any>>(
       return;
     }
     if (data?.data) {
-      handleLoginSuccess(data?.data);
+      handleLoginSuccess(data.data as Parameters<typeof handleLoginSuccess>[0]);
       setTries(tries + 1);
     }
   }, [refreshTokensData]);

@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 import { CYRILLIC_REGEXP, PHONE_REGEXP } from './regexps';
-import { ObjectWithProps } from '@/Models';
+import { ObjectWithProps } from '@/shared/models/types';
 
 const REQUIRED_ERROR_MESSAGE = 'Поле обязательно для заполнения';
 

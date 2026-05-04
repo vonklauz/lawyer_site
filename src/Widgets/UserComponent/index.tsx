@@ -1,12 +1,15 @@
 "use client";
 import { UserThumb } from "./UserThumb";
 import { useCallback, useEffect, useState } from "react";
-import { fetchGetAllEntitiesApiV1EntitiesGet } from "@generated/lawyersSiteApiComponents";
+import {
+  fetchGetAllEntitiesApiV1EntitiesGet,
+  GetAllEntitiesApiV1EntitiesGetVariables,
+} from "@generated/lawyersSiteApiComponents";
 import useEntitiesStore, {
   isEmptyEntities,
 } from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { skipToken } from "@tanstack/react-query";
-import { isSkipToken } from "@/Utils";
+import { isSkipToken } from "@/shared/lib";
 import { UserEntitiesResponse } from "./model/types";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
 import { Entities } from "@/shared/Store/EntitiesSlice/models";
@@ -18,23 +21,24 @@ export const UserComponent = () => {
   const [isAuthorized, setIsAuthorized] = useState<undefined | boolean>();
 
   const getUserEntities = useCallback(async () => {
-    const data = await fetchGetAllEntitiesApiV1EntitiesGet({
+    const variables: GetAllEntitiesApiV1EntitiesGetVariables = {
       headers: {
-        //@ts-expect-error позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+      } as unknown as GetAllEntitiesApiV1EntitiesGetVariables["headers"],
+    };
+    const data = await fetchGetAllEntitiesApiV1EntitiesGet(variables);
     return data;
   }, []);
+
   const getEntitiesRq = hasHydrated
     ? isEmptyEntities(entities)
       ? getUserEntities
       : skipToken
     : skipToken;
 
-  const [response, isLoading] =
-    //@ts-expect-error позже типизировать
-    useInterceptor<UserEntitiesResponse>(getEntitiesRq);
+  const [response, isLoading] = useInterceptor(
+    getEntitiesRq as (() => Promise<UserEntitiesResponse>) | typeof skipToken,
+  );
   const isRenderSkeleton = isLoading || !hasHydrated;
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export const UserComponent = () => {
 
   useEffect(() => {
     if (response?.success && response?.data) {
-      setEntities({ ...response?.data } as Entities);
+      setEntities({ ...response.data } as Entities);
       setIsAuthorized(true);
     }
     if (response?.error) {

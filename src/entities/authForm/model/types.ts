@@ -1,4 +1,4 @@
-import { ObjectWithProps, RegisterData } from "@/Models";
+import { ObjectWithProps, RegisterData } from "@/shared/models/types";
 
 export interface IAuthFormProps {
     title: string;

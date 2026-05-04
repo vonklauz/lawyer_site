@@ -2,11 +2,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { skipToken } from "@tanstack/react-query";
 import {
+  GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables,
   useGetUserInstancesWithServicesApiV1ServiceInstancesUserGet,
   useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost,
 } from "@/generated/lawyersSiteApiComponents";
 import { handleLoginSuccess, handleLogoutSuccess } from "../lib";
 import { UNAUTHORIZED_PATH } from "../lib/consts";
+import { AuthLoginResponseDTO } from "@/generated/lawyersSiteApiSchemas";
 
 export const useGetServiceInstances = () => {
   const [tries, setTries] = useState(0);
@@ -17,13 +19,14 @@ export const useGetServiceInstances = () => {
   const refreshToken =
     typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
 
-  const queryVariables = accessToken
-    ? {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    : skipToken;
+  const queryVariables: GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables | typeof skipToken =
+    accessToken
+      ? {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          } as unknown as GetUserInstancesWithServicesApiV1ServiceInstancesUserGetVariables["headers"],
+        }
+      : skipToken;
 
   const {
     data: serviceInstancesData,
@@ -31,7 +34,6 @@ export const useGetServiceInstances = () => {
     isPending: isServiceInstancesPending,
     refetch,
   } = useGetUserInstancesWithServicesApiV1ServiceInstancesUserGet(
-    //@ts-expect-error позже типизировать
     queryVariables,
   );
 
@@ -43,12 +45,8 @@ export const useGetServiceInstances = () => {
   } = useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost();
 
   useEffect(() => {
-    if (
-      //@ts-expect-error позже типизировать
-      serviceInstancesError?.error?.code === 401 &&
-      tries < 1 &&
-      refreshToken
-    ) {
+    const error = serviceInstancesError as { error?: { code?: number } } | null;
+    if (error?.error?.code === 401 && tries < 1 && refreshToken) {
       setTries(tries + 1);
       refreshTokensRq({
         headers: {
@@ -63,8 +61,7 @@ export const useGetServiceInstances = () => {
 
   useEffect(() => {
     if (refreshTokensData?.success) {
-      //@ts-expect-error позже типизировать
-      handleLoginSuccess(refreshTokensData?.data);
+      handleLoginSuccess(refreshTokensData?.data as AuthLoginResponseDTO);
       refetch();
     } else if (refreshTokensData?.success === false) {
       handleLogoutSuccess();

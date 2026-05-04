@@ -1,16 +1,11 @@
-export interface User {
-    firstName: string;
-    lastName: string;
-    secondName?: string;
-    userId: string;
-    phone: string;
-    email: string;
-}
+import { User } from "@/shared/models/types";
+
+export type { User };
 
 export interface UserState {
-    user: User;
-    setUser: (newUser: User) => void;
-    removeUser: () => void;
-    hasHydrated: boolean
-    setHasHydrated: (state: boolean) => void
+  user: User;
+  setUser: (newUser: User) => void;
+  removeUser: () => void;
+  hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
 }
