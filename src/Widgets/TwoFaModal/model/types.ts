@@ -3,7 +3,7 @@
  * Следуют правилам Feature-Sliced Design (FSD)
  */
 
-import { IBaseSuccessResponse } from "@/Models";
+import { IBaseSuccessResponse } from "@/shared/models/types";
 
 export interface TwoFaMethod {
   name: string;

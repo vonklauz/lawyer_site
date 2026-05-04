@@ -1,36 +1,26 @@
-import { LoginResponse, RegisterData, User } from "@/Models";
-// import { dispatch } from "@/Store";
-// import { setUser, getDefaultUser } from "@/Store/User/userSlice";
 import { format } from "date-fns";
-import { ServiceSelectOption } from "../models/types";
+import { AuthLoginResponseDTO } from "@/generated/lawyersSiteApiSchemas";
+import { ServiceSelectOption, User } from "@/shared/models/types";
+import { getDefaultUser } from "@/shared/Store/UserSlice/utils";
 
-export const getDefaultUser = (): User => ({
-  firstName: "",
-  secondName: "",
-  lastName: "",
-  userId: "",
-  email: "",
-  phone: "",
-});
+export { getDefaultUser };
 
 export const parseJwt = (token: string) => {
-  var base64Url = token.split(".")[1];
-  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const jsonPayload = decodeURIComponent(
     atob(base64)
       .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
+      .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
       .join(""),
   );
 
   return JSON.parse(jsonPayload);
 };
 
-export const handleLoginSuccess = (data: LoginResponse) => {
-  const accessToken = data.access_token;
-  const refreshToken = data.refresh_token;
+export const handleLoginSuccess = (data: AuthLoginResponseDTO) => {
+  const accessToken = data.access_token ?? "";
+  const refreshToken = data.refresh_token ?? "";
   const user = parseJwt(accessToken);
 
   localStorage.setItem("accessToken", accessToken);
@@ -38,8 +28,8 @@ export const handleLoginSuccess = (data: LoginResponse) => {
   localStorage.setItem("rawUser", JSON.stringify(user));
 };
 
-export const handleOtpTokenRecieve = (data: LoginResponse) => {
-  const token = parseJwt(data.pending_token);
+export const handleOtpTokenRecieve = (data: AuthLoginResponseDTO) => {
+  const token = parseJwt(data.pending_token ?? "");
   return token;
 };
 
@@ -48,7 +38,6 @@ export const handleLogoutSuccess = () => {
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("rawUser");
   sessionStorage.removeItem("user");
-  // dispatch(setUser(getDefaultUser()));
 };
 
 export const clearPhoneNumberString = (phone: string): string =>
@@ -57,23 +46,13 @@ export const clearPhoneNumberString = (phone: string): string =>
     .filter((el) => !["(", ")", "-", " "].includes(el))
     .join("");
 
-// export const remapServerFieldToFrontFormat = (backendField: string): keyof RegisterData => {
-//     const fieldsMap: { [key: string]: keyof RegisterData } = {
-//         'first_name': 'firstName',
-//         'last_name': 'lastName',
-//         'second_name': 'secondName',
-//     }
-//     return fieldsMap[backendField] || backendField;
-// }
-
 export const cloneDeep = <T>(data: T): T => {
   return JSON.parse(JSON.stringify(data));
 };
 
 /**
- * Возврашает дату в виде строки, ожидаемой сервером, если она валидна.
+ * Возвращает дату в виде строки, ожидаемой сервером, если она валидна.
  * @param date Строка вида '31.05.1970'
- * @returns
  */
 export const getDateFromString = (date: string): string => {
   const [day, month, year] = date.split(".").map(Number);
@@ -82,23 +61,20 @@ export const getDateFromString = (date: string): string => {
 
 /**
  * Проверяет пустой ли объект или массив.
- * @param value массив или объект
- * @returns boolean
  */
-export const isEmpty = (value: any[] | object): boolean => {
+export const isEmpty = (value: unknown[] | object): boolean => {
   if (Array.isArray(value)) {
     return value.length === 0;
-  } else if (typeof value === "object") {
+  } else if (typeof value === "object" && value !== null) {
     return !Object.keys(value).length;
   }
-
   return false;
 };
 
-export const isNullOrUndefined = (value: any): boolean =>
+export const isNullOrUndefined = (value: unknown): boolean =>
   value === null || value === undefined;
 
-export const isSkipToken = (value: any) => typeof value === "symbol";
+export const isSkipToken = (value: unknown) => typeof value === "symbol";
 
 export const getOptionIdByValue = (
   options: ServiceSelectOption[],
@@ -106,9 +82,9 @@ export const getOptionIdByValue = (
   isReverse = false,
 ): string => {
   if (!isReverse) {
-    return options.find((option) => option.VALUE === value)?.ID as string;
+    return options.find((option) => option.VALUE === value)?.ID ?? "";
   }
-  return options.find((option) => option.ID === value)?.VALUE as string;
+  return options.find((option) => option.ID === value)?.VALUE ?? "";
 };
 
 export const getDefaultRadioOptions = () => [
@@ -116,5 +92,5 @@ export const getDefaultRadioOptions = () => [
   { id: "false", value: "Нет", label: "Нет" },
 ];
 
-export const isLastIndex = (index: number, array: any[]) =>
+export const isLastIndex = (index: number, array: unknown[]) =>
   index === array.length - 1;

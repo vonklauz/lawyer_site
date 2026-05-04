@@ -1,7 +1,7 @@
 "use client";
 import styles from "./Header.module.css";
-import { useScreenSize } from "@/Hooks/useScreenSize";
-import { Link } from "@/Models";
+import { useScreenSize } from "@/shared/hooks/useScreenSize";
+import { Link } from "@/shared/models/types";
 import { UserComponent } from "@/Widgets/UserComponent";
 
 interface IHeaderProps {

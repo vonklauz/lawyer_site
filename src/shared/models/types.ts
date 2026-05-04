@@ -1,11 +1,10 @@
-import { LoginResponse } from "@/features/login/model/types";
-
 export type Link = {
   label: string;
   path: string;
   isProtected?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ObjectWithProps<T = any> = Record<string, T>;
 
 export type FormAction = (formData: FormData) => void;
@@ -34,10 +33,7 @@ export interface Login {
 }
 
 export interface RegisterData extends Login {
-  // firstName: string;
-  // lastName: string;
-  // secondName?: string;
-  // phone: string;
+  [key: string]: string;
 }
 
 export type RoleName = "User";
@@ -56,8 +52,6 @@ export interface IRegisterResponse {
   roles: Role[];
 }
 
-export interface AuthResponse extends IRegisterResponse, LoginResponse {}
-
 export interface User {
   firstName: string;
   lastName: string;
@@ -71,8 +65,6 @@ export type TSelectOption<T = string> = {
   label: string;
   value: T;
 };
-
-export type { LoginResponse };
 
 export type ServiceSelectOption = {
   ID: string;

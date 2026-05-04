@@ -1,12 +1,12 @@
 "use client";
-import { ObjectWithProps } from "@/Models";
+import { ObjectWithProps } from "@/shared/models/types";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
 import useEntitiesStore from "@/shared/Store/EntitiesSlice/useEntitiesStore";
 import { Button } from "@/shared/Ui/Button";
 import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Input } from "@/shared/Ui/Input";
 import { FormSkeleton } from "@/shared/Ui/Skeleton/FormSkeleton";
-import { mapSchemaFromData } from "@/Utils/validation";
+import { mapSchemaFromData } from "@/shared/lib/validation";
 import {
   fetchGetSchemaCompanyEntityApiV1CompaniesSchemaGet,
   fetchGetSchemaIndividualEntityApiV1IndividualsSchemaGet,
@@ -17,6 +17,7 @@ import {
   useUpdateCompanyEntityApiV1CompaniesEntityIdPut,
   useUpdateIndividualEntityApiV1IndividualsEntityIdPut,
   useUpdateSoleProprietorEntityApiV1SoleProprietorsEntityIdPut,
+  GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables,
 } from "@generated/lawyersSiteApiComponents";
 import {
   ChangeEvent,
@@ -27,8 +28,8 @@ import {
   useState,
 } from "react";
 import { ValidationError } from "yup";
-import { RequisitesFormProps } from "./models";
 import {
+  RequisitesFormProps,
   SchemaField,
   SchemaResponse,
   EntityFormData,
@@ -82,11 +83,10 @@ export const RequisitesForm: FC<RequisitesFormProps> = ({
   const getSchema = useCallback(async (): Promise<SchemaResponse> => {
     const data = await REQUISITES_FORM_CONFIG[entityType].getSchemaRq({
       headers: {
-        // @ts-expect-error позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      } as unknown as GetSchemaIndividualEntityApiV1IndividualsSchemaGetVariables["headers"],
     });
-    return data as any;
+    return data as SchemaResponse;
   }, [entityType, entityId]);
 
   const [schemaResponse, isSchemaLoading] =

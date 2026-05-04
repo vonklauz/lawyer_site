@@ -2,7 +2,7 @@
 import formStyles from "@/shared/Ui/FormCustom/Form.module.css";
 import { Input } from "@/shared/Ui/Input";
 import { InputPassword } from "@/shared/Ui/Input/InputPassword";
-import { getDefaultUser } from "@/Utils";
+import { getDefaultUser } from "@/shared/lib";
 import { FormWrapper } from "@/shared/Ui/FormCustom/FormWrapper";
 import { Button } from "@/shared/Ui/Button";
 import { IAuthFormProps } from "../model/types";

@@ -1,9 +1,9 @@
-/**
- * Типы для RequisitesForm
- * Следуют правилам Feature-Sliced Design (FSD)
- */
+import { ObjectWithProps } from "@/shared/models/types";
 
-import { ObjectWithProps } from "@/Models";
+export interface RequisitesFormProps {
+  entityType: "individual" | "sole_proprietor" | "company";
+  entityId?: string;
+}
 
 export interface SchemaField {
   name: string;
@@ -23,16 +23,7 @@ export interface SchemaResponse {
   };
 }
 
-export interface EntityFormData extends ObjectWithProps<string> {
-  //@ts-ignore позже типизировать
-  entity_id?: string;
-  //@ts-ignore позже типизировать
-  id?: string;
-  //@ts-ignore позже типизировать
-  created_at?: string;
-  //@ts-ignore позже типизировать
-  updated_at?: string;
-}
+export type EntityFormData = Record<string, string>;
 
 export interface RequestParams {
   headers: Record<string, string>;

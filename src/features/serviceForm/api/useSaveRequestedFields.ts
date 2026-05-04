@@ -1,21 +1,23 @@
-import { fetchSaveApiV1RequestedFieldsInstanceIdPost } from "@/generated/lawyersSiteApiComponents";
+import {
+  fetchSaveApiV1RequestedFieldsInstanceIdPost,
+  SaveApiV1RequestedFieldsInstanceIdPostVariables,
+} from "@/generated/lawyersSiteApiComponents";
 import { useInterceptor } from "@/shared/hooks/useInterceptor";
 import { useCallback } from "react";
 
-export const useSaveRequestedFields = (serviceId: string) => {
+export const useSaveRequestedFields = (instanceId: string) => {
   const saveRequestedFields = useCallback(async () => {
-    const data = await fetchSaveApiV1RequestedFieldsInstanceIdPost({
+    const variables: SaveApiV1RequestedFieldsInstanceIdPostVariables = {
       headers: {
-        //@ts-expect-error позже типизировать
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      //@ts-expect-error позже типизировать
-      pathParams: { serviceId },
-    });
+      } as unknown as SaveApiV1RequestedFieldsInstanceIdPostVariables["headers"],
+      pathParams: { instanceId },
+      body: { fields: [] },
+    };
+    const data = await fetchSaveApiV1RequestedFieldsInstanceIdPost(variables);
     return data;
-  }, [serviceId]);
+  }, [instanceId]);
 
-  //@ts-expect-error позже типизировать
   const [result, isLoading] = useInterceptor(saveRequestedFields);
 
   return [result, isLoading];

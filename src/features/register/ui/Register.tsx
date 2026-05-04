@@ -1,7 +1,7 @@
 "use client";
-import { REDIRECT_TIMING } from "@/Consts";
-import { ObjectWithProps, RegisterData } from "@/Models";
-import { clearPhoneNumberString, getDefaultUser } from "@/Utils";
+import { REDIRECT_TIMING } from "@/shared/lib/consts";
+import { ObjectWithProps, RegisterData } from "@/shared/models/types";
+import { clearPhoneNumberString, getDefaultUser } from "@/shared/lib";
 import { REGISTER_CONFIG as CONFIG } from "../model/config";
 import { useRouter } from "next/navigation";
 import { useState, useActionState, useEffect } from "react";
@@ -31,7 +31,7 @@ export const Register = () => {
       );
     } catch (err) {
       const validationErrors = err as ValidationError;
-      const newErrors: ObjectWithProps = {};
+      const newErrors: ObjectWithProps<string> = {};
       validationErrors.inner.forEach((e) => {
         newErrors[e.path as string] = e.message;
       });

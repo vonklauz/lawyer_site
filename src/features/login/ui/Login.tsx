@@ -1,6 +1,6 @@
 "use client";
-import { ObjectWithProps, RegisterData } from "@/Models";
-import { clearPhoneNumberString, getDefaultUser } from "@/Utils";
+import { ObjectWithProps, RegisterData } from "@/shared/models/types";
+import { clearPhoneNumberString, getDefaultUser } from "@/shared/lib";
 import { LOGIN_CONFIG as CONFIG } from "../model/config";
 import { useRouter } from "next/navigation";
 import { useState, useActionState, useEffect } from "react";
@@ -47,7 +47,7 @@ export const Login = () => {
       );
     } catch (err) {
       const validationErrors = err as ValidationError;
-      const newErrors: ObjectWithProps = {};
+      const newErrors: ObjectWithProps<string> = {};
       validationErrors.inner.forEach((e) => {
         newErrors[e.path as string] = e.message;
       });

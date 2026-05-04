@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { RequisitesForm } from "../RequisitesForm";
-import { RequisitesFormProps } from "./models";
+import { RequisitesFormProps } from "./model/types";
 
 const REQUISITES_FORM_TITLES = {
     individual: "Реквизиты физического лица",

@@ -2,11 +2,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { skipToken } from "@tanstack/react-query";
 import {
+  GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables,
   useGetByServiceIdApiV1ServicesServiceIdFieldsGet,
   useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost,
 } from "@/generated/lawyersSiteApiComponents";
 import { handleLoginSuccess, handleLogoutSuccess } from "@/shared/lib";
 import { UNAUTHORIZED_PATH } from "@/shared/lib/consts";
+import { AuthLoginResponseDTO } from "@/generated/lawyersSiteApiSchemas";
 
 export const useGetServiceFormById = (serviceId: string) => {
   const [tries, setTries] = useState(0);
@@ -17,24 +19,22 @@ export const useGetServiceFormById = (serviceId: string) => {
   const refreshToken =
     typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
 
-  const queryVariables = accessToken
-    ? {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        pathParams: { serviceId },
-      }
-    : skipToken;
+  const queryVariables: GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables | typeof skipToken =
+    accessToken
+      ? {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          } as unknown as GetByServiceIdApiV1ServicesServiceIdFieldsGetVariables["headers"],
+          pathParams: { serviceId },
+        }
+      : skipToken;
 
   const {
     data: serviceInstancesData,
     error: serviceInstancesError,
     isPending: isServiceInstancesPending,
     refetch,
-  } = useGetByServiceIdApiV1ServicesServiceIdFieldsGet(
-    //@ts-expect-error позже типизировать
-    queryVariables,
-  );
+  } = useGetByServiceIdApiV1ServicesServiceIdFieldsGet(queryVariables);
 
   const {
     mutate: refreshTokensRq,
@@ -44,12 +44,8 @@ export const useGetServiceFormById = (serviceId: string) => {
   } = useRotateRefreshTokenApiV1AuthJwtRotateRefreshPost();
 
   useEffect(() => {
-    if (
-      //@ts-expect-error позже типизировать
-      serviceInstancesError?.error?.code === 401 &&
-      tries < 1 &&
-      refreshToken
-    ) {
+    const error = serviceInstancesError as { error?: { code?: number } } | null;
+    if (error?.error?.code === 401 && tries < 1 && refreshToken) {
       setTries(tries + 1);
       refreshTokensRq({
         headers: {
@@ -64,8 +60,7 @@ export const useGetServiceFormById = (serviceId: string) => {
 
   useEffect(() => {
     if (refreshTokensData?.success) {
-      //@ts-expect-error позже типизировать
-      handleLoginSuccess(refreshTokensData?.data);
+      handleLoginSuccess(refreshTokensData?.data as AuthLoginResponseDTO);
       refetch();
     } else if (refreshTokensData?.success === false) {
       handleLogoutSuccess();
@@ -79,24 +74,3 @@ export const useGetServiceFormById = (serviceId: string) => {
     isPending: isServiceInstancesPending || isRefreshTokensPending,
   };
 };
-
-// import { fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet, useGetByServiceIdApiV1ServicesServiceIdFieldsGet } from "@/generated/lawyersSiteApiComponents";
-// import { useInterceptor } from "@/shared/hooks/useInterceptor";
-// import { useCallback } from "react";
-
-// export const useGetServiceFormById = (serviceId: string) => {
-//   const getServiceByEntitytype = useCallback(async () => {
-//     const data = await fetchGetByServiceIdApiV1ServicesServiceIdFieldsGet({
-//       headers: {
-//         //@ts-expect-error позже типизировать
-//         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-//       },
-//       pathParams: { serviceId },
-//     });
-//     return data;
-//   }, [serviceId]);
-//   //@ts-expect-error позже типизировать
-//   const [result, isLoading] = useInterceptor(getServiceByEntitytype);
-
-//   return [result, isLoading];
-// };
